@@ -5,6 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ProteoVilamoura 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+  import { getDatabase, ref, set, get, onValue, update } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBUzXWVdprS2NNdUBMyCbbE9YWn9SrAJLQ",
+    authDomain: "proteovilamoura.firebaseapp.com",
+    databaseURL: "https://proteovilamoura-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "proteovilamoura",
+    storageBucket: "proteovilamoura.firebasestorage.app",
+    messagingSenderId: "401607696447",
+    appId: "1:401607696447:web:96ea75087c6c1fd448d88a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Expose Firebase functions to global scope for use in app
+  window._fb = { db, ref, set, get, onValue, update };
+  window._fbReady = true;
+
+  // Load initial state from Firebase
+  window._fbLoad = async function() {
+    try {
+      const snap = await get(ref(db, 'state'));
+      if (snap.exists()) {
+        const data = snap.val();
+        if (data.votes) S.votes = data.votes;
+        if (data.locked) S.locked = data.locked;
+        if (data.editRequests) S.editRequests = data.editRequests;
+        if (data.evaluators) S.evaluators = data.evaluators;
+        if (data.attendees) S.attendees = data.attendees;
+        if (data.registeredEvaluators) S.registeredEvaluators = data.registeredEvaluators;
+      }
+    } catch(e) { console.warn('Firebase load error:', e); }
+  };
+
+  // Save full state to Firebase
+  window._fbSave = async function() {
+    try {
+      await set(ref(db, 'state'), {
+        votes: S.votes,
+        locked: S.locked,
+        editRequests: S.editRequests,
+        evaluators: S.evaluators,
+        attendees: S.attendees,
+        registeredEvaluators: S.registeredEvaluators,
+        lastUpdated: Date.now()
+      });
+    } catch(e) { console.warn('Firebase save error:', e); }
+  };
+
+  // Listen for real-time changes (so admin sees updates live)
+  window._fbListen = function(onUpdate) {
+    onValue(ref(db, 'state'), (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.val();
+      // Only update if the change came from another session
+      if (data.votes) S.votes = data.votes;
+      if (data.locked) S.locked = data.locked;
+      if (data.editRequests) S.editRequests = data.editRequests;
+      if (data.evaluators) S.evaluators = data.evaluators;
+      if (data.attendees) S.attendees = data.attendees;
+      if (data.registeredEvaluators) S.registeredEvaluators = data.registeredEvaluators;
+      if (onUpdate) onUpdate();
+    });
+  };
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
@@ -564,7 +633,11 @@ header{padding:16px 32px;display:flex;align-items:center;justify-content:space-b
         <button class="role-tab active" onclick="setRoleTab('evaluator')">Avaliador</button>
         <button class="role-tab" onclick="setRoleTab('attendee')">Attendee</button>
       </div>
-      <div class="field"><label>Nome completo</label><input type="text" id="lName" placeholder="ex: Prof. Ana Silva" /></div>
+      <div class="field"><label>Nome</label><input type="text" id="lName" placeholder="ex: Prof. Ana Silva" /></div>
+      <div class="field" id="evalPassField">
+        <label>Password</label>
+        <input type="password" id="lEvalPass" placeholder="••••••••" />
+      </div>
       <div id="attendeeExtraFields" style="display:none">
         <div class="field"><label>Instituição</label><input type="text" id="lInst" placeholder="ex: Universidade de Lisboa" /></div>
         <div class="field">
@@ -613,6 +686,7 @@ header{padding:16px 32px;display:flex;align-items:center;justify-content:space-b
       <div class="admin-actions">
         <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ Configurar</button>
         <button class="export-btn" onclick="exportCSV()">↓ CSV</button>
+        <button class="export-btn" onclick="resetAllData()" style="color:var(--red);border-color:rgba(239,68,68,0.3)">Limpar dados</button>
       </div>
     </div>
     <div class="stats-row" id="statsRow"></div>
@@ -770,12 +844,17 @@ header{padding:16px 32px;display:flex;align-items:center;justify-content:space-b
 
 <!-- Add Evaluator Modal -->
 <div class="overlay" id="addEvalModal" style="display:none">
-  <div class="modal" style="max-width:460px">
+  <div class="modal" style="max-width:480px">
     <h2>Adicionar avaliador</h2>
-    <div class="modal-sub">Defina o nome e as secções atribuídas a este avaliador.</div>
+    <div class="modal-sub">Defina o nome, password e secções atribuídas a este avaliador.</div>
     <div class="modal-sec">
       <h3>Nome</h3>
       <div class="irow"><input type="text" id="newEvalName" placeholder="ex: Prof. Ana Silva" /></div>
+    </div>
+    <div class="modal-sec">
+      <h3>Password de acesso</h3>
+      <div class="irow"><input type="password" id="newEvalPass" placeholder="Escolha uma password" /></div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">O avaliador usará este nome + password para entrar na área de votação.</div>
     </div>
     <div class="modal-sec">
       <h3>Secções atribuídas</h3>
@@ -1013,6 +1092,51 @@ const S = {
 const GUEST_WEIGHT = 0.3;
 
 // ═══════════════════════════════════════════════════
+//  PERSISTENCE — Firebase Realtime Database
+// ═══════════════════════════════════════════════════
+
+function saveState() {
+  // Debounce: avoid hammering Firebase on every keystroke
+  clearTimeout(saveState._t);
+  saveState._t = setTimeout(() => {
+    if (window._fbSave) window._fbSave();
+    else {
+      // Fallback to localStorage if Firebase not ready
+      try {
+        localStorage.setItem('pv_backup', JSON.stringify({
+          votes:S.votes, locked:S.locked, editRequests:S.editRequests,
+          evaluators:S.evaluators, attendees:S.attendees,
+          registeredEvaluators:S.registeredEvaluators
+        }));
+      } catch(e) {}
+    }
+  }, 500);
+}
+
+function loadState() {
+  // Firebase loads async — handled in init()
+  // Fallback: localStorage backup
+  try {
+    const raw = localStorage.getItem('pv_backup');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.votes) S.votes = data.votes;
+    if (data.locked) S.locked = data.locked;
+    if (data.editRequests) S.editRequests = data.editRequests;
+    if (data.evaluators) S.evaluators = data.evaluators;
+    if (data.attendees) S.attendees = data.attendees;
+    if (data.registeredEvaluators) S.registeredEvaluators = data.registeredEvaluators;
+  } catch(e) {}
+}
+
+function clearAllData() {
+  S.votes = {}; S.locked = {}; S.editRequests = [];
+  S.evaluators = []; S.attendees = []; S.registeredEvaluators = [];
+  try { localStorage.removeItem('pv_backup'); } catch(e) {}
+  if (window._fbSave) window._fbSave();
+}
+
+// ═══════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════
 function gotoPage(page) {
@@ -1241,6 +1365,8 @@ function setRoleTab(r) {
     (i===0&&r==='evaluator')||(i===1&&r==='attendee')));
   const extra = document.getElementById('attendeeExtraFields');
   if (extra) extra.style.display = r==='attendee' ? 'block' : 'none';
+  const evalPass = document.getElementById('evalPassField');
+  if (evalPass) evalPass.style.display = r==='evaluator' ? 'block' : 'none';
   document.getElementById('lErr').classList.remove('show');
 }
 
@@ -1257,6 +1383,7 @@ function doLogin() {
     S.currentUser = name; S.userRole = 'attendee';
     if (!S.attendees.find(a=>a.name===name)) {
       S.attendees.push({ name, inst, country });
+      saveState();
     }
     setHdr(name, 'attendee');
     // Pre-fill card fields
@@ -1266,7 +1393,17 @@ function doLogin() {
     document.getElementById('navCard').style.display='';
     renderEval(); gotoPage('eval');
   } else {
-    // Evaluator
+    // Evaluator — validate against registered evaluators
+    const pass = document.getElementById('lEvalPass')?.value || '';
+    const reg = S.registeredEvaluators.find(e => e.name === name);
+    if (!reg) {
+      showErr('Avaliador não encontrado. Contacte o administrador.');
+      return;
+    }
+    if (reg.pass && reg.pass !== pass) {
+      showErr('Password incorrecta.');
+      return;
+    }
     S.currentUser = name; S.userRole = 'evaluator';
     if (!S.evaluators.includes(name)) S.evaluators.push(name);
     setHdr(name, 'evaluator');
@@ -1302,15 +1439,16 @@ function handleCountrySelect(val) {
 }
 
 function clearUserCache() {
-  // Remove all data associated with the current user to prevent residual cache
-  if (S.currentUser) {
-    delete S.votes[S.currentUser];
-    delete S.locked[S.currentUser];
-    S.evaluators = S.evaluators.filter(e => e !== S.currentUser);
-    S.attendees = S.attendees.filter(a => a.name !== S.currentUser);
-    S.editRequests = S.editRequests.filter(r => r.evalName !== S.currentUser);
-    S.registeredEvaluators = S.registeredEvaluators.filter(e => e.name !== S.currentUser);
-  }
+  // On logout, do NOT wipe votes/locked — those should persist.
+  // Only clear the session identity.
+  // (votes, locked etc are saved to localStorage and restored next session)
+}
+
+function resetAllData() {
+  if (!confirm('Atenção: isto apaga TODOS os votos, avaliadores e dados. Continuar?')) return;
+  clearAllData();
+  renderAdmin();
+  showToast('Todos os dados foram apagados.', 'red');
 }
 
 function setHdr(name,role) {
@@ -1329,6 +1467,7 @@ function logout() {
   const adminBtn=document.getElementById('hAdminBtn'); if(adminBtn) adminBtn.style.display='';
   document.getElementById('lName').value='';
   const lPassEl=document.getElementById('lPass'); if(lPassEl) lPassEl.value='';
+  const lEvalPassEl=document.getElementById('lEvalPass'); if(lEvalPassEl) lEvalPassEl.value='';
   document.getElementById('lErr').classList.remove('show');
   // Reset login form fully
   const lInst = document.getElementById('lInst'); if(lInst) lInst.value='';
@@ -1513,6 +1652,7 @@ function castVote(presId, score) {
   if ((S.locked[name]||{})[presId]) return;
   if (!S.votes[name]) S.votes[name]={};
   S.votes[name][presId]=score;
+  saveState();
   renderSectionTabs(); renderPresList();
 }
 
@@ -1531,6 +1671,7 @@ function confirmSectionVotes() {
     }
   });
   if (count>0) {
+    saveState();
     updateProg(); renderSectionTabs(); renderPresList();
     showToast(`${count} voto${count!==1?'s':''} confirmado${count!==1?'s':''} e bloqueado${count!==1?'s':''}!`,'green');
   }
@@ -1552,6 +1693,7 @@ function requestEdit(presId) {
   if (S.editRequests.find(r=>r.evalName===name&&r.presId===presId&&r.status==='pending')) return;
   const p=ALL_PRES[presId];
   S.editRequests.push({id:Date.now(),evalName:name,presId,presTitle:p?p.title:'',requestedAt:new Date().toLocaleTimeString('pt-PT'),status:'pending'});
+  saveState();
   renderPresList(); showToast('Pedido enviado ao administrador.','orange');
 }
 
@@ -1562,22 +1704,43 @@ function renderAdmin() {
   renderStats(); renderRequests(); renderEvalStatus(); renderAdminSecTabs(); renderAdminResults();
 }
 
+function getTotalVoteCount() {
+  // Count all confirmed (locked) votes across all users
+  let total = 0;
+  Object.entries(S.votes).forEach(([user, vmap]) => {
+    const myL = S.locked[user] || {};
+    Object.keys(vmap).forEach(pid => {
+      if (myL[pid]) total++;
+    });
+  });
+  return total;
+}
+
 function getWeightedScores(secKey) {
   return Object.values(ALL_PRES).filter(p=>p.sectionKey===secKey).map(p => {
-    let wSum=0, wTot=0, rawCount=0;
+    let wSum=0, wTot=0, rawCount=0, lockedCount=0;
     Object.entries(S.votes).forEach(([evalName, vmap]) => {
       const score = vmap[p.id];
       if (score===undefined) return;
       const w = S.attendees.find(a=>a.name===evalName) ? GUEST_WEIGHT : 1;
-      wSum += score * w; wTot += w; rawCount++;
+      const isLocked = !!(S.locked[evalName]||{})[p.id];
+      // Count all votes for display; weight locked votes only for avg
+      rawCount++;
+      if (isLocked) { lockedCount++; wSum += score * w; wTot += w; }
     });
     const avg = wTot>0 ? (wSum/wTot).toFixed(2) : null;
-    return {...p, rawCount, avg, wSum, wTot};
+    return {...p, rawCount, lockedCount, avg, wSum, wTot};
   }).sort((a,b)=>{ if(!a.avg&&!b.avg)return 0; if(!a.avg)return 1; if(!b.avg)return -1; return parseFloat(b.avg)-parseFloat(a.avg); });
 }
 
 function renderStats() {
-  const totalV=Object.values(S.votes).reduce((a,v)=>a+Object.keys(v).length,0);
+  // Count confirmed (locked) votes only
+  let totalV = 0;
+  Object.entries(S.votes).forEach(([user, vmap]) => {
+    const myL = S.locked[user] || {};
+    Object.keys(vmap).forEach(pid => { if (myL[pid]) totalV++; });
+  });
+  const totalVPending = Object.values(S.votes).reduce((a,v)=>a+Object.keys(v).length,0) - totalV;
   const pend=S.editRequests.filter(r=>r.status==='pending').length;
   const totalEvals = S.evaluators.length;
   const totalAtts = S.attendees.length;
@@ -1586,6 +1749,7 @@ function renderStats() {
     <div class="stat-box"><div class="stat-lbl">Avaliadores</div><div class="stat-val c-gold">${totalEvals}</div></div>
     <div class="stat-box"><div class="stat-lbl">Attendees</div><div class="stat-val c-purple">${totalAtts}</div></div>
     <div class="stat-box"><div class="stat-lbl">Votos confirmados</div><div class="stat-val c-green">${totalV}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Votos por confirmar</div><div class="stat-val" style="color:var(--gold);font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700">${totalVPending}</div></div>
     <div class="stat-box"><div class="stat-lbl">Secções</div><div class="stat-val c-cyan">${SECTIONS.length}</div></div>
     <div class="stat-box"><div class="stat-lbl">Pedidos</div><div class="stat-val c-orange">${pend}</div></div>`;
 }
@@ -1618,11 +1782,14 @@ function approveReq(id) {
   const r=S.editRequests.find(x=>x.id===id); if(!r) return;
   r.status='approved';
   if (S.locked[r.evalName]) delete S.locked[r.evalName][r.presId];
+  saveState();
   renderAdmin(); showToast(`Edição aprovada para ${r.evalName}.`,'green');
 }
 function rejectReq(id) {
   const r=S.editRequests.find(x=>x.id===id); if(!r) return;
-  r.status='rejected'; renderAdmin(); showToast(`Pedido de ${r.evalName} rejeitado.`,'red');
+  r.status='rejected';
+  saveState();
+  renderAdmin(); showToast(`Pedido de ${r.evalName} rejeitado.`,'red');
 }
 
 function renderEvalStatus() {
@@ -1634,29 +1801,27 @@ function renderEvalStatus() {
   const rows = S.registeredEvaluators.map(ev => {
     const myV = S.votes[ev.name]||{};
     const myL = S.locked[ev.name]||{};
-    // For each assigned section, check completion
-    const secPills = ev.sections.map(sk => {
+    const secPills = (ev.sections||[]).map(sk => {
       const sec=SECTIONS.find(s=>s.key===sk);
       const pres=Object.values(ALL_PRES).filter(p=>p.sectionKey===sk);
       const lockedCount=pres.filter(p=>myL[p.id]).length;
       const votedCount=pres.filter(p=>myV[p.id]!==undefined).length;
       let cls='sec-pill-empty', status='Por iniciar';
       if (lockedCount===pres.length && pres.length>0) { cls='sec-pill-done'; status='Completo'; }
-      else if (votedCount>0 || lockedCount>0) { cls='sec-pill-partial'; status=`${lockedCount}/${pres.length} confirmados`; }
+      else if (votedCount>0||lockedCount>0) { cls='sec-pill-partial'; status=`${lockedCount}/${pres.length} bloqueados`; }
       return `<span class="sec-pill ${cls}">${sec?sec.short:sk} · ${status}</span>`;
     }).join('');
-
-    // Overall status
-    const allPres=ev.sections.flatMap(sk=>Object.values(ALL_PRES).filter(p=>p.sectionKey===sk)); // section completion
+    const allPres=(ev.sections||[]).flatMap(sk=>Object.values(ALL_PRES).filter(p=>p.sectionKey===sk));
     const totalLocked=allPres.filter(p=>myL[p.id]).length;
     const totalVoted=allPres.filter(p=>myV[p.id]!==undefined).length;
     let overallCls='overall-empty', overallTxt='Não iniciou';
     if (totalLocked===allPres.length && allPres.length>0) { overallCls='overall-done'; overallTxt='Concluído'; }
-    else if (totalVoted>0||totalLocked>0) { overallCls='overall-partial'; overallTxt=`${totalLocked}/${allPres.length} bloqueados`; }
-
+    else if (totalVoted>0||totalLocked>0) { overallCls='overall-partial'; overallTxt=`${totalVoted} votados · ${totalLocked} bloqueados`; }
+    // Show password hint for admin
+    const passHint = ev.pass ? `<span style="font-size:0.7rem;color:var(--muted)">pass: ${ev.pass}</span>` : '';
     return `<tr>
-      <td><span class="eval-name-cell">${ev.name}</span></td>
-      <td>${secPills||'<span style="color:var(--muted);font-size:0.8rem">Nenhuma secção atribuída</span>'}</td>
+      <td><span class="eval-name-cell">${ev.name}</span><br>${passHint}</td>
+      <td>${secPills||'<span style="color:var(--muted);font-size:0.8rem">Nenhuma secção</span>'}</td>
       <td><span class="overall-badge ${overallCls}">${overallTxt}</span></td>
       <td><button class="req-edit-btn" onclick="removeEval('${ev.name}')">Remover</button></td>
     </tr>`;
@@ -1672,11 +1837,14 @@ function renderEvalStatus() {
 
 function removeEval(name) {
   S.registeredEvaluators=S.registeredEvaluators.filter(e=>e.name!==name);
+  S.evaluators=S.evaluators.filter(e=>e!==name);
+  saveState();
   renderAdmin();
 }
 
 function openAddEval() {
   document.getElementById('newEvalName').value='';
+  document.getElementById('newEvalPass').value='';
   document.getElementById('evalSecChecks').innerHTML=SECTIONS.map(s=>
     `<input type="checkbox" class="sec-ck" id="eck-${s.key}" value="${s.key}">
      <label class="sec-ck-lbl" for="eck-${s.key}">${s.short}</label>`
@@ -1686,11 +1854,14 @@ function openAddEval() {
 function closeAddEval() { document.getElementById('addEvalModal').style.display='none'; }
 function saveNewEval() {
   const name=document.getElementById('newEvalName').value.trim();
+  const pass=document.getElementById('newEvalPass').value.trim();
   if (!name) { showToast('Introduza um nome.','red'); return; }
-  const sections=[...document.querySelectorAll('.sec-ck:checked')].map(c=>c.value);
+  if (!pass) { showToast('Introduza uma password.','red'); return; }
   if (S.registeredEvaluators.find(e=>e.name===name)) { showToast('Nome já existe.','red'); return; }
-  S.registeredEvaluators.push({name, sections});
+  const sections=[...document.querySelectorAll('.sec-ck:checked')].map(c=>c.value);
+  S.registeredEvaluators.push({name, pass, sections});
   if (!S.evaluators.includes(name)) S.evaluators.push(name);
+  saveState();
   closeAddEval(); renderAdmin(); showToast(`${name} adicionado.`,'green');
 }
 
@@ -2064,12 +2235,29 @@ function exportCardPDF() {
 document.getElementById('lName').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 function init() {
+  loadState(); // sync fallback from localStorage
   autoSelectDay();
-  // Small defer so DOM is fully ready before rendering
-  requestAnimationFrame(() => {
-    renderProgramme();
-  });
-  setInterval(()=>{ if(S.userRole==='admin') renderAdmin(); }, 5000);
+
+  // Wait for Firebase to be ready, then load + listen
+  const tryFirebase = () => {
+    if (window._fbLoad) {
+      window._fbLoad().then(() => {
+        // Start real-time listener so admin sees votes instantly
+        window._fbListen(() => {
+          if (S.userRole === 'admin') renderAdmin();
+          if (S.userRole === 'evaluator' || S.userRole === 'attendee') {
+            renderSectionTabs(); updateProg();
+          }
+        });
+        requestAnimationFrame(() => renderProgramme());
+      });
+    } else {
+      // Firebase module still loading — retry
+      setTimeout(tryFirebase, 100);
+    }
+  };
+  tryFirebase();
+
   setInterval(()=>{ try { renderNowChip(); } catch(e){} }, 15000);
 }
 
