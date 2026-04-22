@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProteoVilamoura 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  /* ProteoVilamoura brand palette */
+  --bg:#061520; --surface:#0a2030; --surface2:#0e2d40; --border:#164055;
+  --accent:#1e8fab; --accent2:#27b5a0; --gold:#e8a020;
+  --green:#1db88a; --red:#e05555; --orange:#e07830; --purple:#5b8fc9;
+  --text:#d8eaf2; --muted:#5a8099; --card:#081c2a;
+  /* brand gradient anchors */
+  --brand-dark:#0d3349; --brand-mid:#106080; --brand-teal:#208080;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(30,143,171,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,143,171,0.03) 1px,transparent 1px);
+  background-size:52px 52px;pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;}
+
+/* HEADER */
+header{padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:rgba(6,21,32,0.92);
+  backdrop-filter:blur(16px);position:sticky;top:0;z-index:200;}
+.logo{display:flex;align-items:center;}
+.logo-img{height:36px;width:auto;object-fit:contain;filter:brightness(1.15) saturate(1.1);}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.badge{padding:4px 11px;border-radius:20px;font-size:0.72rem;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;}
+.badge-evaluator{background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.25);}
+.badge-admin{background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);}
+.badge-guest{background:rgba(168,85,247,0.12);color:#d8b4fe;border:1px solid rgba(168,85,247,0.25);}
+.btn{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;transition:all 0.18s;
+  display:inline-flex;align-items:center;gap:6px;}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--text);border-color:rgba(59,130,246,0.5);}
+.btn-primary{background:linear-gradient(135deg,var(--brand-mid),var(--brand-teal));color:#fff;}
+.btn-primary:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 4px 16px rgba(30,143,171,0.4);}
+.btn-sm{padding:5px 12px;font-size:0.78rem;}
+
+/* NAV TABS (top-level pages) */
+.nav-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);
+  background:rgba(6,21,32,0.7);backdrop-filter:blur(8px);}
+.nav-tab{padding:14px 24px;font-size:0.85rem;font-weight:500;color:var(--muted);
+  cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--accent);}
+
+/* SCREENS */
+.screen{display:none;}.screen.active{display:block;}
+
+/* ═══════════ LANDING PAGE ═══════════ */
+.landing{max-width:1100px;margin:0 auto;padding:40px 24px;}
+
+/* Hero */
+.hero{text-align:center;padding:56px 20px 48px;position:relative;}
+.hero-eyebrow{font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:14px;}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;
+  line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px;}
+.hero-title span{background:linear-gradient(135deg,#7fd4e8,#27b5a0,#1e8fab);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:520px;margin:0 auto 28px;line-height:1.6;}
+.hero-meta{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+.hero-pill{display:flex;align-items:center;gap:7px;padding:8px 16px;
+  border:1px solid var(--border);border-radius:20px;font-size:0.82rem;color:var(--muted);}
+.hero-pill strong{color:var(--text);}
+
+/* Day selector */
+.day-nav{display:flex;gap:6px;margin-bottom:32px;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;padding:5px;}
+.day-btn{flex:1;padding:12px 8px;border-radius:10px;border:none;
+  background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
+  font-size:0.83rem;font-weight:500;cursor:pointer;transition:all 0.2s;text-align:center;}
+.day-btn .d-date{font-size:0.75rem;opacity:0.7;display:block;margin-bottom:2px;}
+.day-btn .d-name{font-weight:600;}
+.day-btn .d-status{font-size:0.68rem;margin-top:3px;display:block;}
+.day-btn.active{background:var(--surface2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.day-btn.today .d-status{color:var(--green);}
+.day-btn.active .d-status{color:var(--accent2);}
+
+/* Half selector */
+.half-toggle{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:4px;width:fit-content;margin-bottom:28px;}
+.half-btn{padding:10px 28px;border-radius:8px;border:none;background:transparent;
+  color:var(--muted);font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:600;
+  cursor:pointer;transition:all 0.22s;letter-spacing:0.02em;}
+.half-btn.active{background:linear-gradient(135deg,var(--brand-mid),var(--brand-teal));color:#fff;box-shadow:0 2px 12px rgba(30,143,171,0.4);}
+.half-btn:hover:not(.active){color:var(--text);}
+
+/* Current-time chip */
+.now-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;
+  background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
+  border-radius:8px;font-size:0.84rem;font-weight:500;color:var(--green);
+  transition:all 0.2s;}
+.now-chip:hover{background:rgba(16,185,129,0.18);border-color:rgba(16,185,129,0.5);}
+.now-chip-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;
+  color:rgba(16,185,129,0.7);display:block;}
+.now-chip-time{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;}
+.now-dot{width:8px;height:8px;border-radius:50%;background:var(--green);
+  animation:pulse 1.8s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* Programme blocks */
+.programme{display:grid;gap:10px;}
+
+.prog-block{background:var(--card);border:1px solid var(--border);
+  border-radius:13px;overflow:hidden;transition:all 0.2s;}
+.prog-block:hover{border-color:rgba(59,130,246,0.25);}
+.prog-block.happening{border-color:var(--green);
+  box-shadow:0 0 0 1px rgba(29,184,138,0.2),0 4px 32px rgba(29,184,138,0.15);}
+
+.prog-block-header{padding:16px 20px;display:flex;align-items:flex-start;gap:14px;
+  border-bottom:1px solid rgba(28,42,64,0.6);}
+.prog-block-header.no-body{border-bottom:none;}
+.prog-time{font-size:0.77rem;color:#fff;font-weight:600;white-space:nowrap;
+  min-width:112px;padding-top:2px;}
+.prog-kind{padding:3px 9px;border-radius:6px;font-size:0.67rem;font-weight:700;
+  letter-spacing:0.07em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.kind-section{background:rgba(30,143,171,0.2);color:#7fd4e8;}
+.kind-invited{background:rgba(232,160,32,0.18);color:#f0b84a;}
+.kind-break{background:rgba(90,128,153,0.12);color:#8ab4cc;}
+.kind-special{background:rgba(168,85,247,0.1);color:var(--purple);}
+.kind-flash{background:rgba(224,120,48,0.2);color:#f0a070;}
+.kind-oral{background:rgba(6,182,212,0.1);color:var(--accent2);}
+.kind-social{background:rgba(29,184,138,0.15);color:#3dd6a8;}
+
+.prog-block-title-wrap{flex:1;}
+.prog-section-number{font-size:0.7rem;font-weight:700;color:#7fd4e8;
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+.prog-block-title{font-size:1rem;font-weight:600;line-height:1.4;color:#fff;}
+.prog-block-subtitle{font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;}
+
+.now-badge{padding:4px 12px;border-radius:6px;font-size:0.7rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;background:var(--green);
+  color:#fff;white-space:nowrap;flex-shrink:0;
+  box-shadow:0 0 12px rgba(16,185,129,0.4);}
+
+.prog-block-body{padding:4px 0 8px;}
+.talk-item{padding:9px 20px;border-bottom:1px solid rgba(28,42,64,0.4);
+  display:flex;align-items:flex-start;gap:12px;}
+.talk-item:last-child{border-bottom:none;}
+.talk-time{font-size:0.71rem;color:rgba(255,255,255,0.75);min-width:100px;padding-top:3px;white-space:nowrap;}
+.talk-type-pill{padding:2px 7px;border-radius:4px;font-size:0.65rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.tp-oral{background:rgba(6,182,212,0.12);color:var(--accent2);}
+.tp-flash{background:rgba(249,115,22,0.12);color:var(--orange);}
+.tp-poster{background:rgba(168,85,247,0.12);color:var(--purple);}
+.talk-title{font-size:0.84rem;line-height:1.45;flex:1;}
+.talk-author{color:var(--accent2);font-size:0.77rem;margin-top:2px;}
+
+.empty-half{text-align:center;padding:64px 24px;color:var(--muted);}
+.empty-half p{font-size:0.9rem;}
+
+/* ═══════════ LOGIN ═══════════ */
+.login-wrap{min-height:calc(100vh - 115px);display:flex;align-items:center;
+  justify-content:center;padding:40px 20px;}
+.login-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:22px;padding:48px;width:100%;max-width:420px;position:relative;overflow:hidden;}
+.login-card::after{content:'';position:absolute;top:-100px;right:-100px;
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(6,182,212,0.06),transparent 65%);pointer-events:none;}
+.login-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:700;margin-bottom:4px;}
+.login-sub{color:var(--muted);font-size:0.86rem;margin-bottom:26px;line-height:1.5;}
+.role-tabs{display:flex;background:var(--bg);border-radius:10px;padding:3px;
+  margin-bottom:22px;border:1px solid var(--border);}
+.role-tab{flex:1;padding:8px;text-align:center;border-radius:8px;cursor:pointer;
+  font-size:0.82rem;font-weight:500;color:var(--muted);transition:all 0.2s;
+  border:none;background:transparent;font-family:'DM Sans',sans-serif;}
+.role-tab.active{background:var(--surface2);color:var(--text);}
+.field{margin-bottom:15px;}
+.field label{display:block;font-size:0.74rem;color:var(--muted);margin-bottom:5px;
+  font-weight:500;letter-spacing:0.05em;text-transform:uppercase;}
+.field input{width:100%;padding:10px 13px;background:var(--bg);
+  border:1px solid var(--border);border-radius:9px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;transition:border-color 0.2s;}
+.field input:focus{outline:none;border-color:var(--accent);}
+.err{color:var(--red);font-size:0.79rem;margin-top:8px;display:none;}
+.err.show{display:block;}
+.attendee-info{background:rgba(168,85,247,0.07);border:1px solid rgba(168,85,247,0.18);
+  border-radius:10px;padding:13px;font-size:0.8rem;color:#d8b4fe;margin-bottom:18px;line-height:1.5;}
+.attendee-info strong{display:block;margin-bottom:4px;}
+
+/* ═══════════ EVALUATOR / GUEST VOTING ═══════════ */
+.eval-container{max-width:1000px;margin:0 auto;padding:36px 24px;}
+.page-title{font-family:'Syne',sans-serif;font-size:1.65rem;font-weight:700;}
+.page-sub{color:var(--muted);font-size:0.87rem;margin-top:4px;margin-bottom:22px;}
+.progress-wrap{margin-bottom:22px;}
+.progress-info{display:flex;justify-content:space-between;margin-bottom:6px;
+  font-size:0.79rem;color:var(--muted);}
+.progress-track{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--brand-mid),var(--brand-teal));
+  border-radius:2px;transition:width 0.5s ease;}
+
+/* Section tabs (sections from programme) */
+.section-tabs-wrap{margin-bottom:20px;overflow-x:auto;padding-bottom:4px;}
+.section-tabs{display:flex;gap:2px;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;padding:5px;width:max-content;min-width:100%;}
+.section-tab-btn{padding:10px 14px;border-radius:10px;border:none;
+  background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap;}
+.section-tab-btn .st-num{width:24px;height:24px;border-radius:6px;
+  background:var(--surface2);color:var(--muted);font-family:'Syne',sans-serif;
+  font-size:0.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;}
+.section-tab-btn .st-name{font-size:0.72rem;letter-spacing:0.02em;}
+.section-tab-btn .st-count{font-size:0.65rem;padding:1px 6px;border-radius:9px;
+  background:var(--surface2);color:var(--muted);transition:all 0.2s;}
+.section-tab-btn.active{background:var(--surface2);color:var(--text);}
+.section-tab-btn.active .st-num{background:var(--accent);color:#fff;}
+.section-tab-btn.active .st-count{background:var(--accent);color:#fff;}
+
+/* Type filter chips */
+.type-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.type-chip{padding:4px 12px;border-radius:14px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-size:0.77rem;cursor:pointer;
+  transition:all 0.18s;font-family:'DM Sans',sans-serif;}
+.type-chip.active{background:rgba(6,182,212,0.12);color:var(--accent2);
+  border-color:rgba(6,182,212,0.3);}
+.type-chip:hover:not(.active){border-color:var(--accent);color:var(--text);}
+
+/* Cards */
+.pres-list{display:grid;gap:13px;}
+.pres-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:20px;
+  align-items:start;transition:border-color 0.2s;position:relative;overflow:hidden;}
+.pres-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--border);border-radius:2px 0 0 2px;transition:background 0.3s;}
+.pres-card.voted::before{background:var(--green);}
+.pres-card.voted{border-color:rgba(16,185,129,0.2);}
+.pres-card:hover:not(.locked-card){border-color:rgba(59,130,246,0.3);}
+.pres-card.guest-card::before{background:rgba(168,85,247,0.5);}
+.pres-card.guest-card.voted::before{background:var(--purple);}
+.pres-section-tag{font-size:0.71rem;color:var(--muted);margin-bottom:5px;
+  text-transform:uppercase;letter-spacing:0.06em;}
+.pres-title{font-size:1.05rem;font-weight:500;margin-bottom:6px;line-height:1.45;color:var(--text);}
+.pres-author{color:var(--accent2);font-size:0.88rem;font-weight:500;}
+.pres-type-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
+  border-radius:5px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;margin-top:7px;}
+.pt-oral{background:rgba(6,182,212,0.1);color:var(--accent2);}
+.pt-flash{background:rgba(249,115,22,0.1);color:var(--orange);}
+.pt-poster{background:rgba(168,85,247,0.1);color:var(--purple);}
+.rating-side{text-align:right;min-width:250px;}
+.rating-lbl{font-size:0.73rem;color:var(--muted);margin-bottom:10px;
+  text-transform:uppercase;letter-spacing:0.06em;}
+.score-btns{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap;}
+.sc-btn{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);
+  background:var(--bg);color:var(--muted);font-size:0.82rem;font-weight:600;
+  cursor:pointer;transition:all 0.13s;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;}
+.sc-btn:hover:not(:disabled){background:rgba(59,130,246,0.18);color:var(--accent);
+  border-color:var(--accent);transform:scale(1.1);}
+.sc-btn.sel{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid);
+  box-shadow:0 0 10px rgba(30,143,171,0.45);}
+.sc-btn.locked-sel{background:rgba(16,185,129,0.14);color:var(--green);
+  border-color:rgba(16,185,129,0.35);cursor:not-allowed;}
+.sc-btn.guest-sel{background:rgba(168,85,247,0.2);color:#d8b4fe;
+  border-color:rgba(168,85,247,0.4);box-shadow:0 0 10px rgba(168,85,247,0.3);}
+.sc-btn.guest-locked-sel{background:rgba(168,85,247,0.12);color:#d8b4fe;
+  border-color:rgba(168,85,247,0.3);cursor:not-allowed;}
+.sc-btn:disabled{cursor:not-allowed;}
+.vfeedback{margin-top:9px;display:flex;align-items:center;justify-content:flex-end;
+  gap:7px;flex-wrap:wrap;}
+.v-ok{color:var(--green);font-size:0.84rem;font-weight:500;}
+.v-ok-attendee{color:#d8b4fe;font-size:0.84rem;font-weight:500;}
+.v-pending{color:var(--muted);font-size:0.84rem;}
+.v-sel{color:var(--accent);font-size:0.84rem;}
+.req-edit-btn{padding:5px 11px;border-radius:6px;border:1px solid rgba(249,115,22,0.28);
+  background:rgba(249,115,22,0.07);color:var(--orange);font-size:0.78rem;font-weight:500;
+  cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.req-edit-btn:hover:not(:disabled){background:rgba(249,115,22,0.16);}
+.req-edit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.req-pending-lbl{font-size:0.78rem;color:var(--orange);font-style:italic;}
+.req-approved-lbl{font-size:0.78rem;color:#34d399;}
+.empty-tab{text-align:center;padding:52px 20px;color:var(--muted);font-size:0.9rem;}
+
+/* Section confirm bar */
+.section-confirm-bar{margin-top:20px;padding:18px 22px;background:var(--surface);
+  border:1px solid var(--border);border-radius:13px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.section-confirm-info{font-size:0.9rem;color:var(--muted);line-height:1.5;}
+.section-confirm-info strong{color:var(--text);display:block;font-size:1rem;margin-bottom:2px;}
+.section-confirm-info span{font-size:0.82rem;color:var(--muted);}
+/* Country select */
+#lCountrySelect option{background:var(--bg);color:var(--text);}
+#lCountrySelect{-webkit-appearance:none;}
+.section-confirm-btn{padding:12px 32px;border-radius:9px;border:none;
+  background:linear-gradient(135deg,var(--brand-mid),var(--brand-teal));color:#fff;font-family:'Syne',sans-serif;
+  font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;
+  box-shadow:0 2px 12px rgba(59,130,246,0.3);white-space:nowrap;}
+.section-confirm-btn:hover{filter:brightness(1.12);transform:translateY(-1px);
+  box-shadow:0 4px 18px rgba(59,130,246,0.45);}
+.section-confirm-btn:disabled{opacity:0.38;cursor:not-allowed;transform:none;box-shadow:none;}
+.confirm-warn{color:var(--orange)!important;}
+.confirm-ok{color:var(--green)!important;}
+.section-confirm-btn.guest-btn{background:var(--purple);box-shadow:0 2px 12px rgba(168,85,247,0.3);}
+.section-confirm-btn.guest-btn:hover{background:#9333ea;}
+
+/* ═══════════ ADMIN ═══════════ */
+.admin-container{max-width:1100px;margin:0 auto;padding:36px 24px;}
+.admin-header{display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:26px;flex-wrap:wrap;gap:12px;}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  gap:11px;margin-bottom:26px;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:17px;}
+.stat-lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700;line-height:1;}
+.c-blue{color:var(--accent);}.c-gold{color:var(--gold);}.c-green{color:var(--green);}
+.c-cyan{color:var(--accent2);}.c-orange{color:var(--orange);}.c-purple{color:var(--purple);}
+
+.req-panel{background:var(--card);border:1px solid rgba(249,115,22,0.22);
+  border-radius:13px;margin-bottom:22px;overflow:hidden;}
+.req-panel-hdr{padding:13px 19px;background:rgba(249,115,22,0.05);
+  border-bottom:1px solid rgba(249,115,22,0.18);
+  display:flex;align-items:center;justify-content:space-between;}
+.req-panel-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;
+  color:var(--orange);display:flex;align-items:center;gap:8px;}
+.req-badge{background:var(--orange);color:#fff;font-size:0.69rem;
+  padding:2px 7px;border-radius:10px;font-weight:700;}
+.req-item{padding:13px 19px;border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;gap:13px;align-items:center;}
+.req-item:last-child{border-bottom:none;}
+.req-item-title{font-size:0.85rem;font-weight:500;margin-bottom:2px;}
+.req-item-meta{font-size:0.75rem;color:var(--muted);}
+.req-btns{display:flex;gap:6px;}
+.btn-approve{padding:5px 10px;border-radius:7px;border:1px solid rgba(16,185,129,0.3);
+  background:rgba(16,185,129,0.08);color:var(--green);font-size:0.76rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.18s;}
+.btn-approve:hover{background:rgba(16,185,129,0.18);}
+.btn-reject{padding:5px 10px;border-radius:7px;border:1px solid rgba(239,68,68,0.25);
+  background:rgba(239,68,68,0.06);color:var(--red);font-size:0.76rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.18s;}
+.btn-reject:hover{background:rgba(239,68,68,0.16);}
+.no-req{padding:17px 19px;color:var(--muted);font-size:0.82rem;}
+
+.section-lbl{font-family:'Syne',sans-serif;font-size:0.93rem;font-weight:600;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-lbl small{font-family:'DM Sans',sans-serif;font-size:0.73rem;color:var(--muted);font-weight:400;}
+
+/* Evaluator status table */
+.eval-status-wrap{background:var(--card);border:1px solid var(--border);
+  border-radius:13px;overflow:hidden;margin-bottom:26px;}
+.eval-status-hdr{padding:14px 20px;background:var(--surface2);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.eval-status-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;}
+.eval-add-btn{padding:6px 14px;border-radius:7px;border:1px solid rgba(59,130,246,0.3);
+  background:rgba(59,130,246,0.08);color:var(--accent);font-size:0.78rem;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.18s;}
+.eval-add-btn:hover{background:rgba(59,130,246,0.16);}
+.eval-status-table{width:100%;border-collapse:collapse;}
+.eval-status-table th{padding:10px 20px;font-size:0.7rem;font-weight:600;letter-spacing:0.07em;
+  text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);
+  background:var(--bg);text-align:left;}
+.eval-status-table td{padding:14px 20px;border-bottom:1px solid rgba(28,42,64,0.5);
+  font-size:0.86rem;vertical-align:middle;}
+.eval-status-table tr:last-child td{border-bottom:none;}
+.eval-status-table tr:hover td{background:rgba(59,130,246,0.025);}
+.eval-name-cell{font-weight:500;font-size:0.9rem;}
+.eval-name-cell span{font-size:0.75rem;color:var(--purple);margin-left:6px;}
+.sec-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
+  border-radius:6px;font-size:0.73rem;font-weight:500;margin:2px;border:1px solid transparent;}
+.sec-pill-done{background:rgba(16,185,129,0.1);color:var(--green);border-color:rgba(16,185,129,0.25);}
+.sec-pill-partial{background:rgba(245,158,11,0.1);color:var(--gold);border-color:rgba(245,158,11,0.25);}
+.sec-pill-empty{background:rgba(239,68,68,0.07);color:var(--red);border-color:rgba(239,68,68,0.2);}
+.overall-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;
+  border-radius:20px;font-size:0.75rem;font-weight:600;white-space:nowrap;}
+.overall-done{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.25);}
+.overall-partial{background:rgba(245,158,11,0.1);color:var(--gold);border:1px solid rgba(245,158,11,0.25);}
+.overall-empty{background:rgba(239,68,68,0.07);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.no-evals-msg{padding:24px 20px;color:var(--muted);font-size:0.85rem;text-align:center;}
+
+/* Add evaluator form inside modal extension */
+.eval-form-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;align-items:start;}
+.eval-sec-checks{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.sec-ck{display:none;}
+.sec-ck-lbl{padding:4px 10px;border-radius:6px;border:1px solid var(--border);
+  font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.18s;user-select:none;}
+.sec-ck:checked+.sec-ck-lbl{background:rgba(59,130,246,0.15);
+  color:var(--accent);border-color:rgba(59,130,246,0.35);}
+
+/* Admin results */
+.admin-sec-tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:3px;margin-bottom:16px;overflow-x:auto;}
+.admin-sec-tab{flex:1;padding:8px 12px;border-radius:8px;border:none;background:transparent;
+  color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.admin-sec-tab.active{background:var(--surface2);color:var(--text);}
+
+.res-box{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.res-box table{width:100%;border-collapse:collapse;}
+.res-box th{padding:10px 16px;font-size:0.69rem;font-weight:600;letter-spacing:0.07em;
+  text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);
+  background:var(--surface2);text-align:left;}
+.res-box td{padding:12px 16px;border-bottom:1px solid rgba(28,42,64,0.5);
+  font-size:0.84rem;vertical-align:middle;}
+.res-box tr:last-child td{border-bottom:none;}
+.res-box tr:hover td{background:rgba(59,130,246,0.025);}
+/* Top 3 row highlights per type */
+.top1-oral td{background:rgba(6,182,212,0.09)!important;}
+.top2-oral td{background:rgba(6,182,212,0.05)!important;}
+.top3-oral td{background:rgba(6,182,212,0.025)!important;}
+.top1-flash td{background:rgba(249,115,22,0.09)!important;}
+.top2-flash td{background:rgba(249,115,22,0.05)!important;}
+.top3-flash td{background:rgba(249,115,22,0.025)!important;}
+.top1-poster td{background:rgba(168,85,247,0.09)!important;}
+.top2-poster td{background:rgba(168,85,247,0.05)!important;}
+.top3-poster td{background:rgba(168,85,247,0.025)!important;}
+.rnum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:0.78rem;}
+.r1{background:rgba(245,158,11,0.16);color:var(--gold);}
+.r2{background:rgba(148,163,184,0.1);color:#94a3b8;}
+.r3{background:rgba(205,127,50,0.13);color:#cd7f32;}
+.rn{background:var(--surface2);color:var(--muted);}
+.bar-w{display:flex;align-items:center;gap:9px;min-width:140px;}
+.bar-bg{flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;}
+.bar-fill-oral{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--brand-mid),var(--brand-teal));transition:width 0.6s;}
+.bar-fill-flash{height:100%;border-radius:3px;background:linear-gradient(90deg,#f97316,#fbbf24);transition:width 0.6s;}
+.bar-fill-poster{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--purple),#c084fc);transition:width 0.6s;}
+.bar-sc{font-weight:600;font-size:0.85rem;min-width:30px;text-align:right;}
+.vcnt{padding:2px 7px;border-radius:5px;font-size:0.7rem;background:var(--surface2);color:var(--muted);}
+.empty-row{text-align:center;color:var(--muted);font-size:0.82rem;}
+.res-group-lbl{font-size:0.73rem;color:var(--muted);font-weight:500;letter-spacing:0.06em;
+  text-transform:uppercase;margin-bottom:7px;margin-top:4px;}
+.weighted-note{font-size:0.72rem;color:var(--muted);font-style:italic;margin-top:4px;}
+/* Type sub-header inside table */
+.type-row-hdr td{background:var(--surface2)!important;padding:8px 16px;
+  font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.type-label-oral{color:var(--accent2);}
+.type-label-flash{color:var(--orange);}
+.type-label-poster{color:var(--purple);}
+
+/* SETUP MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(10px);
+  z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:34px;width:100%;max-width:580px;max-height:88vh;overflow-y:auto;}
+.modal h2{font-family:'Syne',sans-serif;font-size:1.2rem;margin-bottom:4px;}
+.modal-sub{color:var(--muted);font-size:0.83rem;margin-bottom:18px;}
+.modal-sec{margin-bottom:20px;}
+.modal-sec h3{font-size:0.71rem;text-transform:uppercase;letter-spacing:0.07em;
+  color:var(--muted);margin-bottom:9px;}
+.info-pill{background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.18);
+  border-radius:9px;padding:11px 14px;font-size:0.79rem;color:#93c5fd;margin-bottom:17px;}
+.irow{display:flex;gap:7px;margin-bottom:7px;}
+.irow input,.irow select{flex:1;padding:7px 9px;background:var(--bg);border:1px solid var(--border);
+  border-radius:7px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;}
+.irow input:focus,.irow select:focus{outline:none;border-color:var(--accent);}
+.pib{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px;margin-bottom:7px;}
+.pi-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:5px;}
+.pi-row:last-child{margin-bottom:0;}
+.pib input,.pib select{width:100%;padding:6px 8px;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:0.79rem;}
+.pib input:focus,.pib select:focus{outline:none;border-color:var(--accent);}
+.flbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;}
+.add-r-btn{width:100%;padding:8px;border:1px dashed var(--border);border-radius:9px;
+  background:transparent;color:var(--muted);cursor:pointer;font-size:0.8rem;
+  transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.add-r-btn:hover{border-color:var(--accent);color:var(--accent);}
+.rm-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(239,68,68,0.28);
+  background:rgba(239,68,68,0.07);color:var(--red);cursor:pointer;font-size:0.95rem;
+  display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0;}
+.rm-btn:hover{background:rgba(239,68,68,0.18);}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;right:22px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;padding:10px 16px;
+  font-size:0.83rem;color:var(--text);display:flex;align-items:center;gap:8px;
+  transform:translateY(70px);opacity:0;transition:all 0.3s;z-index:999;
+  box-shadow:0 8px 28px rgba(0,0,0,0.45);}
+#toast.show{transform:translateY(0);opacity:1;}
+.tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.export-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-size:0.78rem;cursor:pointer;
+  transition:all 0.18s;font-family:'DM Sans',sans-serif;}
+.export-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+@media(max-width:640px){
+  header{padding:13px 16px;}
+  .nav-tab{padding:11px 14px;font-size:0.8rem;}
+  .login-card{padding:28px 20px;}
+  .pres-card{grid-template-columns:1fr;}
+  .rating-side{text-align:left;min-width:unset;}
+  .score-btns{justify-content:flex-start;}
+  .vfeedback{justify-content:flex-start;}
+  .confirm-btn-wrap{justify-content:flex-start;}
+  .admin-container,.eval-container,.landing{padding:22px 14px;}
+  .hero{padding:36px 10px 32px;}
+  .day-nav{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <img src="https://proteo-vilamoura.sci-meet.net/img/proteo-vilamoura.sci-meet.net/3e43a443-0406-41ce-874f-826688ab0e5d/Logo-proteovilamoral1.png?q=100&fit=max&crop=2825%2C871%2C0%2C0&s=41b3f5c0a7da78ab26677346af93c84f" alt="ProteoVilamoura 2026" class="logo-img" />
+  </div>
+  <div class="header-right">
+    <span id="hBadge" class="badge" style="display:none"></span>
+    <span id="hUser" style="font-size:0.81rem;color:var(--muted);display:none"></span>
+    <button id="hLogout" class="btn btn-ghost btn-sm" style="display:none" onclick="logout()">Sair</button>
+    <button id="hAdminBtn" class="btn btn-ghost btn-sm" onclick="openAdminLogin()" style="font-size:0.78rem;border-color:rgba(232,160,32,0.3);color:var(--gold);">Admin</button>
+  </div>
+</header>
+
+<!-- TOP NAV -->
+<div class="nav-tabs" id="navTabs">
+  <button class="nav-tab active" onclick="gotoPage('programme')">Programa</button>
+  <button class="nav-tab" onclick="gotoPage('login')">Votação</button>
+  <button class="nav-tab" id="navCard" onclick="gotoPage('card')" style="display:none">O meu cartão</button>
+</div>
+
+<!-- PROGRAMME PAGE -->
+<div id="sProgram" class="screen active">
+  <div class="landing">
+    <div class="hero">
+      <div class="hero-eyebrow">20–22 Maio 2026 · Vilamoura, Portugal</div>
+      <h1 class="hero-title">Proteo<span>Vilamoura</span><br>2026</h1>
+      <p class="hero-sub">Congresso ibérico de proteómica — Encontre investigadores, descubra ciência de topo e vote nas melhores apresentações.</p>
+    </div>
+
+    <!-- Day selector -->
+    <div class="day-nav" id="dayNav"></div>
+
+    <!-- Morning / Afternoon toggle -->
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+      <div class="half-toggle">
+        <button class="half-btn active" id="halfMorn" onclick="setHalf('morning')">Manhã</button>
+        <button class="half-btn" id="halfAft" onclick="setHalf('afternoon')">Tarde</button>
+      </div>
+      <div class="now-chip" id="nowChip" onclick="scrollToHappening()" style="cursor:pointer;" title="Ir para o que está a acontecer agora">
+        <span class="now-dot"></span>
+        <span id="nowTime"></span>
+      </div>
+    </div>
+
+    <div class="programme" id="programmeBlocks"></div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="sLogin" class="screen">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-title">Acesso à Votação</div>
+      <div class="login-sub">Identifique-se para avaliar as apresentações</div>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRoleTab('evaluator')">Avaliador</button>
+        <button class="role-tab" onclick="setRoleTab('attendee')">Attendee</button>
+      </div>
+      <div class="field"><label>Nome completo</label><input type="text" id="lName" placeholder="ex: Prof. Ana Silva" /></div>
+      <div id="attendeeExtraFields" style="display:none">
+        <div class="field"><label>Instituição</label><input type="text" id="lInst" placeholder="ex: Universidade de Lisboa" /></div>
+        <div class="field">
+          <label>País</label>
+          <select id="lCountrySelect" onchange="handleCountrySelect(this.value)" style="width:100%;padding:10px 38px 10px 13px;background:var(--bg) url('data:image/svg+xml;charset=utf-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22><path d=%22M0 0l6 8 6-8z%22 fill=%22%235a8099%22/></svg>') no-repeat right 13px center;background-size:10px;border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;-webkit-appearance:none;appearance:none;cursor:pointer;">
+            <option value="Portugal">Portugal</option>
+            <option value="Espanha">Espanha</option>
+            <option value="França">França</option>
+            <option value="Outro">Outro</option>
+          </select>
+          <div id="lCountryOther" style="display:none;margin-top:8px">
+            <input type="text" id="lCountryOtherInput" placeholder="Qual o seu país?" style="width:100%;padding:10px 13px;background:var(--bg);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;" />
+          </div>
+        </div>
+      </div>
+      <div class="err" id="lErr">Introduza o seu nome.</div>
+      <button class="btn btn-primary" style="width:100%;padding:12px;margin-top:8px;justify-content:center;font-size:0.95rem;" onclick="doLogin()">Entrar</button>
+      <div style="margin-top:14px;font-size:0.74rem;color:var(--muted);text-align:center">Sem registo necessário · identificação por nome</div>
+    </div>
+  </div>
+</div>
+
+<!-- EVALUATOR / GUEST VOTING -->
+<div id="sEval" class="screen">
+  <div class="eval-container">
+    <div class="page-title" id="evalTitle">Olá</div>
+    <div class="page-sub" id="evalSub">Avalie as apresentações de 1 a 10</div>
+    <div class="progress-wrap">
+      <div class="progress-info"><span id="progTxt">0 avaliadas</span><span id="progPct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progBar" style="width:0%"></div></div>
+    </div>
+    <div class="section-tabs-wrap"><div class="section-tabs" id="sectionTabs"></div></div>
+    <div class="type-filter" id="typeFilter"></div>
+    <div class="pres-list" id="presList"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="sAdmin" class="screen">
+  <div class="admin-container">
+    <div class="admin-header">
+      <div>
+        <div class="page-title">Backoffice — ProteoVilamoura 2026</div>
+        <div class="page-sub" style="margin-top:4px">Votos, médias e classificações em tempo real · todos os avaliadores e attendees</div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ Configurar</button>
+        <button class="export-btn" onclick="exportCSV()">↓ CSV</button>
+      </div>
+    </div>
+    <div class="stats-row" id="statsRow"></div>
+    <div class="req-panel">
+      <div class="req-panel-hdr">
+        <div class="req-panel-title">Pedidos de edição de voto <span class="req-badge" id="reqCount">0</span></div>
+      </div>
+      <div id="reqList"><div class="no-req">Nenhum pedido pendente.</div></div>
+    </div>
+
+    <!-- Evaluator status -->
+    <div class="eval-status-wrap">
+      <div class="eval-status-hdr">
+        <div class="eval-status-title">Avaliadores registados</div>
+        <button class="eval-add-btn" onclick="openAddEval()">+ Adicionar avaliador</button>
+      </div>
+      <div id="evalStatusBody"></div>
+    </div>
+
+    <div class="section-lbl">Resultados por secção</div>
+    <div class="admin-sec-tabs" id="adminSecTabs"></div>
+    <div id="adminResults"></div>
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="overlay" id="setupModal" style="display:none">
+  <div class="modal">
+    <h2>⚙ Configurar evento</h2>
+    <div class="modal-sub">Secções, apresentações e credenciais.</div>
+    <div class="info-pill">Senha actual: <strong id="curPass"></strong></div>
+    <div class="modal-sec">
+      <h3>Secções temáticas</h3>
+      <div id="topicInputs"></div>
+      <button class="add-r-btn" onclick="addTopicInput()">+ Adicionar secção</button>
+    </div>
+    <div class="modal-sec">
+      <h3>Apresentações</h3>
+      <div id="presInputs"></div>
+      <button class="add-r-btn" onclick="addPresInput()" style="margin-top:4px">+ Adicionar apresentação</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeSetup()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveSetup()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ATTENDEE CARD SCREEN -->
+<div id="sCard" class="screen">
+  <div class="eval-container" style="max-width:900px">
+    <div class="page-title">O meu cartão</div>
+    <div class="page-sub">O seu cartão profissional de participante — partilhe, guarde ou exporte.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;align-items:start;">
+      <!-- Edit form -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;
+          text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:14px;">
+          Informação profissional
+        </div>
+        <div style="display:grid;gap:12px;">
+          <div class="field"><label>Nome completo</label>
+            <input type="text" id="cardName" oninput="updateCard()" placeholder="Prof. Ana Silva" /></div>
+          <div class="field"><label>Cargo / Título</label>
+            <input type="text" id="cardRole" oninput="updateCard()" placeholder="ex: Professor Associado" /></div>
+          <div class="field"><label>Especialização</label>
+            <input type="text" id="cardSpec" oninput="updateCard()" placeholder="ex: Proteomics, Mass Spectrometry" /></div>
+          <div class="field"><label>Instituição / Entidade</label>
+            <input type="text" id="cardInst" oninput="updateCard()" placeholder="ex: Universidade de Lisboa" /></div>
+          <div class="field"><label>País</label>
+            <input type="text" id="cardCountry" oninput="updateCard()" placeholder="ex: Portugal" /></div>
+          <div class="field"><label>Email (opcional)</label>
+            <input type="text" id="cardEmail" oninput="updateCard()" placeholder="ex: ana.silva@fc.ul.pt" /></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportCardPDF()">Exportar PDF</button>
+          <button class="btn btn-ghost" onclick="exportCardJPG()">Guardar JPG</button>
+        </div>
+      </div>
+
+      <!-- Card preview -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;
+          text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:14px;">
+          Pré-visualização
+        </div>
+        <div id="cardPreview" style="
+          background:linear-gradient(145deg,#0a2030,#0e2d40,#061a28);
+          border:1px solid #164055;border-radius:16px;padding:28px;
+          position:relative;overflow:hidden;min-height:220px;">
+          <!-- Brand accent top bar -->
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;
+            background:linear-gradient(90deg,#0d3349,#106080,#208080,#27b5a0);"></div>
+          <!-- Watermark -->
+          <div style="position:absolute;bottom:-20px;right:-20px;
+            width:140px;height:140px;border-radius:50%;
+            background:radial-gradient(circle,rgba(30,143,171,0.08),transparent 70%);
+            pointer-events:none;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+            <div style="flex:1">
+              <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;
+                text-transform:uppercase;color:#27b5a0;margin-bottom:10px;">
+                ProteoVilamoura 2026 · Vilamoura, Portugal
+              </div>
+              <div id="cn" style="font-family:'Syne',sans-serif;font-size:1.45rem;
+                font-weight:700;color:#fff;margin-bottom:4px;line-height:1.2;">—</div>
+              <div id="cr" style="font-size:0.88rem;color:#7fd4e8;margin-bottom:3px;font-weight:500;">—</div>
+              <div id="cs" style="font-size:0.8rem;color:var(--muted);margin-bottom:10px;">—</div>
+              <div style="width:100%;height:1px;background:rgba(22,64,85,0.8);margin-bottom:10px;"></div>
+              <div id="ci" style="font-size:0.82rem;color:var(--text);margin-bottom:2px;font-weight:500;">—</div>
+              <div id="cc" style="font-size:0.78rem;color:var(--muted);">—</div>
+              <div id="ce" style="font-size:0.75rem;color:#7fd4e8;margin-top:4px;"></div>
+            </div>
+            <div>
+              <div id="qrContainer" style="background:#fff;padding:8px;border-radius:10px;
+                width:90px;height:90px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <div id="qrCanvas" style="width:74px;height:74px;"></div>
+              </div>
+              <div style="font-size:0.6rem;color:var(--muted);text-align:center;
+                margin-top:5px;width:90px;">Scan para info</div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:12px;right:16px;font-size:0.6rem;
+            color:rgba(90,128,153,0.5);font-family:'Syne',sans-serif;letter-spacing:0.05em;">
+            20–22 MAI 2026
+          </div>
+        </div>
+        <!-- QR scan preview note -->
+        <div style="margin-top:12px;padding:12px 14px;background:var(--surface);
+          border:1px solid var(--border);border-radius:10px;font-size:0.78rem;color:var(--muted);
+          line-height:1.5;">
+          O QR Code abre uma página com as suas informações que pode guardar como JPG ou PDF.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="overlay" id="adminLoginModal" style="display:none">
+  <div class="modal" style="max-width:380px">
+    <h2 style="margin-bottom:6px">Acesso de Administrador</h2>
+    <div class="modal-sub">Introduza a senha para aceder ao painel de gestão.</div>
+    <div class="field"><label>Senha</label><input type="password" id="adminModalPass" placeholder="••••••••" /></div>
+    <div class="err" id="adminModalErr" style="display:none;color:var(--red);font-size:0.8rem;margin-bottom:8px">Senha incorrecta.</div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeAdminLogin()">Cancelar</button>
+      <button class="btn btn-primary" onclick="doAdminLogin()">Entrar como Admin</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Evaluator Modal -->
+<div class="overlay" id="addEvalModal" style="display:none">
+  <div class="modal" style="max-width:460px">
+    <h2>Adicionar avaliador</h2>
+    <div class="modal-sub">Defina o nome e as secções atribuídas a este avaliador.</div>
+    <div class="modal-sec">
+      <h3>Nome</h3>
+      <div class="irow"><input type="text" id="newEvalName" placeholder="ex: Prof. Ana Silva" /></div>
+    </div>
+    <div class="modal-sec">
+      <h3>Secções atribuídas</h3>
+      <div class="eval-sec-checks" id="evalSecChecks"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeAddEval()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveNewEval()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span class="tdot" id="tdot"></span><span id="tmsg"></span></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  PROGRAMME DATA  (from ProteoVilamoura-Programme)
+// ═══════════════════════════════════════════════════
+const PROGRAMME = {
+  wed: {
+    label: 'Quarta', date: '20 Mai', full: '20 Maio 2026 — Quarta-feira',
+    morning: [
+      { time:'9:00–12:00', kind:'special', title:'Pre-congress course on Python', talks:[] },
+      { time:'11:00–13:00', kind:'break', title:'Registo / Registration', talks:[] },
+      { time:'13:00–13:15', kind:'special', title:'Sessão de Abertura / Welcoming Session', talks:[] },
+    ],
+    afternoon: [
+      { time:'13:15–13:45', kind:'invited', title:'Invited Speaker — Nelson Soares', talks:[] },
+      {
+        time:'13:45–14:45', kind:'section', title:'Section 1 — Proteomics in the Clinic: From Biomarkers to Precision Medicine (Oral)',
+        sectionKey:'sec1',
+        talks:[
+          { time:'13:45–14:00', title:'Deep plasma EV proteomics by Data-Independent Acquisition reveals circulating signatures of cardiac tissue injury in a preclinical Atrial Fibrillation model', author:'Estefanía Núñez', type:'oral', id:101 },
+          { time:'14:00–14:15', title:'Expanding the knowledge on diagnostic autoantibodies in colorectal cancer through proteomics and immunosensing platforms', author:'Javier Velázquez Gutiérrez', type:'oral', id:102 },
+          { time:'14:15–14:30', title:'Mapping the circulating extracellular vesicle proteome in Marfan syndrome patients using minimal plasma volume', author:'Diego Mena Santos', type:'oral', id:103 },
+          { time:'14:30–14:45', title:'Methylthioadenosine: harnessing a natural metabolite to counteract cholestasis progression', author:'Irene Blázquez García', type:'oral', id:104 },
+        ]
+      },
+      { time:'14:45–15:00', kind:'special', title:'Sponsor Talk', talks:[] },
+      { time:'15:00–15:45', kind:'break', title:'Coffee Break + Poster Session 1', talks:[] },
+      {
+        time:'15:45–16:45', kind:'section', title:'Section 2 — Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies',
+        sectionKey:'sec2',
+        talks:[
+          { time:'15:45–16:15', kind:'invited', title:'Invited Speaker — Cherine Bechara', talks:[] },
+          { time:'16:15–16:30', title:'Integrative single-cell proteomics identifies pro-regenerative fingerprints in a sub-population of adult cardiomyocytes', author:'CONSUELO MARIN-VICENTE', type:'oral', id:105 },
+          { time:'16:30–16:45', title:'Benchmarking single-cell FACS-assisted strategies: effects on cellular component bias and post-translational modification detection', author:'Samuel Lozano Juárez', type:'oral', id:106 },
+        ]
+      },
+      { time:'16:45–17:15', kind:'special', title:'Sponsor Talks', talks:[] },
+      {
+        time:'17:15–17:51', kind:'flash', title:'Flash Presentations — Section 2',
+        sectionKey:'sec2',
+        talks:[
+          { time:'17:15–17:19', title:"In depth-analysis of Alzheimer's disease brain tissue reveals novel Aβ interactors", author:'Ana Montero Calle', type:'flash', id:107 },
+          { time:'17:19–17:23', title:'Proteomic and functional characterization of SLC8A1 in colorectal cancer development and metastasis', author:'Sara Batuecas Domínguez', type:'flash', id:108 },
+          { time:'17:23–17:27', title:'Phenotypic remodelling of smooth muscle cells in atherosclerosis: a low-input and single-cell proteomics approach', author:'David del Rio Aledo', type:'flash', id:109 },
+          { time:'17:27–17:31', title:'BiasTracker: a bioinformatics tool for quantifying physicochemical and functional biases in mass spectrometry-based proteomics', author:'Gaelle Loutfi', type:'flash', id:110 },
+          { time:'17:31–17:35', title:'MALDI-MSI as a Platform for Spatial Multi-Omics in Glioblastoma Research', author:'Cristina María López Vázquez', type:'flash', id:111 },
+          { time:'17:35–17:39', title:'When One is Enough: A Minimalistic "On-Pot" Proteomic Workflow for Global Profiling of Single Caenorhabditis elegans', author:'Ibon Iloro Manzano', type:'flash', id:112 },
+          { time:'17:39–17:43', title:'Beyond Acquisition: Turning Astral-Scale Data into Discovery', author:'Marta Isasa', type:'flash', id:113 },
+          { time:'17:43–17:47', title:'From Microbes to Ecosystems: Proteomic Insights into Agro-Environmental Interactions', author:'Francisco Javier Fernandez Acero', type:'flash', id:114 },
+          { time:'17:47–17:51', title:'Secretome analysis to understand the intracellular traffic networks in fungi', author:'Silvia Rodríguez Pires', type:'flash', id:115 },
+        ]
+      },
+      { time:'18:10–19:15', kind:'special', title:'Parallel Societies Section', talks:[] },
+      { time:'19:30', kind:'social', title:'Cocktail Reception + Sci BINGO — Young Investigators in Proteomics (SEPROT)', talks:[] },
+    ]
+  },
+  thu: {
+    label: 'Quinta', date: '21 Mai', full: '21 Maio 2026 — Quinta-feira',
+    morning: [
+      { time:'6:30–7:30', kind:'social', title:'Run by the beach', talks:[] },
+      { time:'8:30–9:00', kind:'invited', title:'Invited Speaker — Celso Reis — Glycomics and glycoproteomics in cancer: from oncogenic mechanisms to clinical applications', talks:[] },
+      {
+        time:'9:00–10:00', kind:'section', title:'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine (Oral)',
+        sectionKey:'sec3',
+        talks:[
+          { time:'9:00–9:15', title:'Glycoproteomics uncovers a paucimannosylated proteome associated with tumour aggressiveness and poor clinical outcome in gastric cancer', author:'Dylan Ferreira', type:'oral', id:201 },
+          { time:'9:15–9:30', title:'Artificial intelligence-based clinical models predict plasma proteomic endotypes enabling precision medicine in knee osteoarthritis', author:'Patricia Quaranta Díaz', type:'oral', id:202 },
+          { time:'9:30–9:45', title:'Proteomic biomarkers predictive of response to antiangiogenic treatment: toward personalized medicine in neovascular age-related macular degeneration', author:'Antonio Cañizo Outeiriño', type:'oral', id:203 },
+          { time:'9:45–10:00', title:'Unravelling the proteome of human embryo implantation: new biomarkers and metabolic signatures', author:'Girard Océane', type:'oral', id:204 },
+        ]
+      },
+      { time:'10:00–10:15', kind:'special', title:'Sponsor Talk', talks:[] },
+      { time:'10:20–11:00', kind:'break', title:'Coffee Break + Poster Session 2', talks:[] },
+      { time:'11:00–11:30', kind:'invited', title:'Invited Speaker — Etienne Coyaud', talks:[] },
+      {
+        time:'11:30–12:30', kind:'section', title:'Section 4 — Networks in Action: Interactomes, Signalling & Bioinformatics Innovation (Oral)',
+        sectionKey:'sec4',
+        talks:[
+          { time:'11:30–11:45', title:'Deciphering protein-protein interactions in live neurons using XL-MS', author:'Hugo GIZARDIN-FREDON', type:'oral', id:205 },
+          { time:'11:45–12:00', title:"Proteomic profiling of the interactome of phosphorylated Tau aggregates identifies modulators of Alzheimer's disease progression", author:'Sofía Jiménez de Ocaña', type:'oral', id:206 },
+          { time:'12:00–12:15', title:'GLYCOAVATARS: BEAD-COATED MEMBRANE MODELS FOR STUDYING THE CANCER-IMMUNE CELLS INTERACTOME', author:'Andreia Rafaela Linhares Miranda', type:'oral', id:207 },
+          { time:'12:15–12:30', title:'Orai1 facilitates angiogenesis after myocardial infarction through Notch1 signaling pathway', author:'Isabel María Galeano Otero', type:'oral', id:208 },
+        ]
+      },
+      { time:'12:30–12:50', kind:'special', title:'Sponsor Talk', talks:[] },
+    ],
+    afternoon: [
+      { time:'13:00–14:30', kind:'break', title:'Almoço / Lunch Break', talks:[] },
+      { time:'14:30–15:00', kind:'invited', title:'Invited Speaker — Ana Martinez del Val', talks:[] },
+      {
+        time:'15:00–16:00', kind:'section', title:'Section 5 — PTMs: Deciphering the Dynamics of Protein Regulation (Oral)',
+        sectionKey:'sec5',
+        talks:[
+          { time:'15:00–15:15', title:'EXPERIMENTAL DESIGN AND MULTIVARIATE ANALYSIS APPROACHES FOR GLYCOPROTEOMICS', author:'Estela Giménez López', type:'oral', id:301 },
+          { time:'15:15–15:30', title:"Study of the links between the dysregulations of metabolism and epigenetics marks in Huntington's disease", author:'Hisham ALTOUFAILY', type:'oral', id:302 },
+          { time:'15:30–15:45', title:'Phosphoproteomics as a tool to dissect the molecular mechanisms underlying a novel combinatorial therapeutic strategy in pseudomyxoma peritonei', author:'ANTONIO ROMERO-RUIZ', type:'oral', id:303 },
+          { time:'15:45–16:00', title:'Quantitative proteomic characterization of metastasis-associated succinylome in colorectal cancer', author:'Raquel Rejas González', type:'oral', id:304 },
+        ]
+      },
+      { time:'16:00–16:45', kind:'break', title:'Coffee Break + Poster Session 1 + Group Photo', talks:[] },
+      { time:'16:45–17:15', kind:'invited', title:'Invited Speaker — Melisande Blein-Nicolas', talks:[] },
+      {
+        time:'17:15–18:15', kind:'section', title:'Section 6 — Proteomics Exploration in Non-Model Systems (Oral)',
+        sectionKey:'sec6',
+        talks:[
+          { time:'17:15–17:30', title:'Geographical origin differentiation of tiger nut (Cyperus Esculentus) through liquid chromatography-high resolution mass spectrometry analysis', author:'Enrique Sentandreu', type:'oral', id:305 },
+          { time:'17:30–17:45', title:'Transforming Invasion into Innovation: Proteomics of Rugulopteryx okamurae for Monitoring, Degradation and Biomass Valorization', author:'Almudena Escobar Niño', type:'oral', id:306 },
+          { time:'17:45–18:00', title:'Proteomic characterization of baculovirus expression vector system (BEVS)-derived extracellular vesicles engineered for Gla-Rich Protein (GRP) γ-carboxylation', author:'Carla Alexandra São Bento Viegas', type:'oral', id:307 },
+          { time:'18:00–18:15', title:'Authentication of A2 bovine milk by routine LC-MS proteomic analysis', author:'Lorea R. Beldarrain', type:'oral', id:308 },
+        ]
+      },
+      {
+        time:'18:15–18:47', kind:'flash', title:'Flash Presentations — Section 6',
+        sectionKey:'sec6',
+        talks:[
+          { time:'18:15–18:19', title:'Comprehensive nucleolar proteome profiling reveals metastasis-associated remodeling in colorectal cancer', author:'Elisa Carral Ibarra', type:'flash', id:309 },
+          { time:'18:19–18:23', title:'In-depth serum glycoproteomics reveals stage-dependent a2,6-sialylation and systemic prothrombotic signalling in gastric cancer', author:'Lisandra Gabriela Fernandes Cruz', type:'flash', id:310 },
+          { time:'18:23–18:27', title:'Multi-omics characterization of SIRT3 metabolism and its adaptation to the presence of amyloid-beta oligomers in nasal epithelial cells', author:'Paz Cartas Cejudo', type:'flash', id:311 },
+          { time:'18:27–18:31', title:'Extending Proteome Profiling to Red Blood Cells using an Aptamer Platform', author:'Luis André Botelho de Carvalho', type:'flash', id:312 },
+          { time:'18:31–18:35', title:'Comparative HLA-DR immunopeptidomics reveals disease- and genotype-associated signatures in rheumatoid arthritis', author:'Jaxaira Maggi', type:'flash', id:313 },
+          { time:'18:35–18:39', title:'Scaling-up low input spatial proteomics using Evosep Whisper Zoom on the timsTOF Ultra AIP', author:'Beatriz Rocha Loureda', type:'flash', id:314 },
+          { time:'18:39–18:43', title:'Optimizing tissue disruption strategies to characterize in vivo subcellular proteome remodelling', author:'María Cinta Picos Mora', type:'flash', id:315 },
+        ]
+      },
+      { time:'20:00', kind:'social', title:'Conference Dinner (sujeito a registo e pagamento)', talks:[] },
+    ]
+  },
+  fri: {
+    label: 'Sexta', date: '22 Mai', full: '22 Maio 2026 — Sexta-feira',
+    morning: [
+      { time:'6:30–7:30', kind:'social', title:'Run by the beach', talks:[] },
+      { time:'8:30–9:00', kind:'invited', title:"Invited Speaker — Enrique Santamaria — Olfactory proteomics: Emerging mechanisms and translational opportunities in neurological disorders", talks:[] },
+      {
+        time:'9:00–10:00', kind:'section', title:'Section 7 — Quantitative and Computational Proteomics (Oral)',
+        sectionKey:'sec7',
+        talks:[
+          { time:'9:00–9:15', title:'Global protein turnover dynamics in pluripotency', author:'Orhi Barroso Gomila', type:'oral', id:401 },
+          { time:'9:15–9:30', title:'Defining the Topology of Proteins in sEV Isolates by Protein Correlation Profiling', author:'Joanes Etxeberria Ugartemendia', type:'oral', id:402 },
+          { time:'9:30–9:45', title:'Are Your Replicates Independent? - Defining Experimental Units in Primary Neuron Proteomics', author:'Miguel Maria Varandas Anão Rosado', type:'oral', id:403 },
+          { time:'9:45–10:00', title:'Continuous telemetry-driven quality control for proactive LC–MS performance in proteomics core facilities', author:'Daniel Lopez-Ferrer', type:'oral', id:404 },
+        ]
+      },
+      { time:'10:00–10:15', kind:'special', title:'Sponsor Talk', talks:[] },
+      { time:'10:15–11:00', kind:'break', title:'Coffee Break + Poster Session 2', talks:[] },
+      { time:'11:00–11:30', kind:'invited', title:'Invited Speaker — Guadalupe Gómez Baena', talks:[] },
+      {
+        time:'11:30–12:30', kind:'section', title:'Section 8 — Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental Omics (Oral)',
+        sectionKey:'sec8',
+        talks:[
+          { time:'11:30–11:45', title:'High-Throughput PISA–TMT Proteomics Enables Target Identification of Novel Antimicrobial Small Molecules', author:'Gonçalo Raposo Matos', type:'oral', id:405 },
+          { time:'11:45–12:00', title:'Molecular responses of Staphylococcus epidermidis to pH and endogenous antimicrobial fatty acids are strain-specific', author:'Ana Maria Varela Coelho', type:'oral', id:406 },
+          { time:'12:00–12:15', title:'Sewage protein information mining: A new frontier in community health and industrial surveillance', author:'Montserrat Carrascal Perez', type:'oral', id:407 },
+          { time:'12:15–12:30', title:'Seasonal dynamics of urinary protein profiles in the Iberian Lynx (Lynx pardinus)', author:'Beatriz Ortiz-Guisado', type:'oral', id:408 },
+        ]
+      },
+      { time:'12:30', kind:'special', title:'Closing Session — Awards', talks:[] },
+    ],
+    afternoon: []
+  }
+};
+
+// Poster presentations (dummy data until real abstracts are received)
+const POSTER_PRES = [
+  { id:501, title:'Plasma proteomics in type 2 diabetes: identification of novel biomarkers for early diagnosis', author:'A. Fernández et al.', type:'poster', sectionKey:'posters' },
+  { id:502, title:'Multi-omics integration reveals metabolic rewiring in pancreatic ductal adenocarcinoma', author:'B. Costa et al.', type:'poster', sectionKey:'posters' },
+  { id:503, title:'Phosphoproteomic mapping of kinase signalling cascades in triple-negative breast cancer', author:'C. Dupont et al.', type:'poster', sectionKey:'posters' },
+  { id:504, title:'Spatial proteomics of the tumour microenvironment in hepatocellular carcinoma', author:'D. Silva et al.', type:'poster', sectionKey:'posters' },
+  { id:505, title:'Label-free quantitative proteomics of cerebrospinal fluid in Parkinson\u2019s disease', author:'E. García et al.', type:'poster', sectionKey:'posters' },
+  { id:506, title:'Characterisation of the secretome of adipose-derived mesenchymal stem cells under hypoxia', author:'F. Moreau et al.', type:'poster', sectionKey:'posters' },
+  { id:507, title:'Proteogenomic analysis of rare childhood leukaemia subtypes', author:'G. Santos et al.', type:'poster', sectionKey:'posters' },
+  { id:508, title:'N-glycoproteomics of serum exosomes as liquid biopsy for lung cancer staging', author:'H. López et al.', type:'poster', sectionKey:'posters' },
+  { id:509, title:'Thermal proteome profiling identifies novel targets of a putative anti-inflammatory compound', author:'I. Martins et al.', type:'poster', sectionKey:'posters' },
+  { id:510, title:'Cross-species proteomics of plant-pathogen interactions in grapevine downy mildew', author:'J. Pérez et al.', type:'poster', sectionKey:'posters' },
+  { id:511, title:'Single-cell proteomics of human peripheral blood mononuclear cells in autoimmune disease', author:'K. Bernard et al.', type:'poster', sectionKey:'posters' },
+  { id:512, title:'Urinary proteome signatures predict acute kidney injury in critically ill patients', author:'L. Alves et al.', type:'poster', sectionKey:'posters' },
+  { id:513, title:'Interactome of the SARS-CoV-2 nucleocapsid protein in human lung epithelial cells', author:'M. Ribeiro et al.', type:'poster', sectionKey:'posters' },
+  { id:514, title:'Data-independent acquisition proteomics of formalin-fixed paraffin-embedded tumour tissue', author:'N. Ruiz et al.', type:'poster', sectionKey:'posters' },
+  { id:515, title:'Comparative secretome analysis of probiotic Lactobacillus strains under acid stress', author:'O. Mendes et al.', type:'poster', sectionKey:'posters' },
+];
+
+// All votable presentations (flat, keyed by id)
+const ALL_PRES = {};
+Object.values(PROGRAMME).forEach(day => {
+  ['morning','afternoon'].forEach(half => {
+    (day[half]||[]).forEach(block => {
+      (block.talks||[]).forEach(t => {
+        if (t.id) ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey, blockTitle: block.title };
+      });
+    });
+  });
+});
+// Add poster presentations
+POSTER_PRES.forEach(p => { ALL_PRES[p.id] = p; });
+
+// Sections for voting UI
+const SECTIONS = [
+  { key:'sec1', label:'Secção 1', short:'Sec 1', icon:'1', desc:'Proteomics in the Clinic — Biomarkers to Precision Medicine (Wed)' },
+  { key:'sec2', label:'Secção 2', short:'Sec 2', icon:'2', desc:'Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies (Wed)' },
+  { key:'sec3', label:'Secção 3', short:'Sec 3', icon:'3', desc:'Proteomics in the Clinic — Biomarkers to Precision Medicine (Thu)' },
+  { key:'sec4', label:'Secção 4', short:'Sec 4', icon:'4', desc:'Networks in Action: Interactomes, Signalling & Bioinformatics Innovation (Thu)' },
+  { key:'sec5', label:'Secção 5', short:'Sec 5', icon:'5', desc:'PTMs: Deciphering the Dynamics of Protein Regulation (Thu)' },
+  { key:'sec6', label:'Secção 6', short:'Sec 6', icon:'6', desc:'Proteomics Exploration in Non-Model Systems (Thu)' },
+  { key:'sec7', label:'Secção 7', short:'Sec 7', icon:'7', desc:'Quantitative and Computational Proteomics (Fri)' },
+  { key:'sec8', label:'Secção 8', short:'Sec 8', icon:'8', desc:'Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental Omics (Fri)' },
+  { key:'posters', label:'Posters', short:'Poster', icon:'P', desc:'Poster Session — Todos os dias' },
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+const S = {
+  adminPass: 'admin123',
+  currentUser: null, userRole: null,
+  activeDay: 'wed', activeHalf: 'morning',
+  activeSec: 'sec1', activeType: 'all',
+  adminActiveSec: 'sec1',
+  votes: {}, locked: {}, editRequests: [], evaluators: [], attendees: [],
+  // Registered evaluators with assigned sections: [{name, sections:[secKey,...]}]
+  registeredEvaluators: [],
+};
+
+const GUEST_WEIGHT = 0.3;
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+function gotoPage(page) {
+  const map = { programme:'sProgram', login:'sLogin', eval:'sEval', admin:'sAdmin', card:'sCard' };
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(map[page]).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    const pages = [['programme'],['login','eval','admin'],['card']];
+    t.classList.toggle('active', pages[i] && pages[i].includes(page));
+  });
+  // If user is already logged in and hits Votação, go directly to eval
+  if (page === 'login' && S.currentUser && S.userRole && S.userRole !== 'admin') {
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('sEval').classList.add('active');
+    renderEval();
+    return;
+  }
+  if (page==='programme') renderProgramme();
+  if (page==='card') initCardPage();
+}
+
+// ═══════════════════════════════════════════════════
+//  PROGRAMME PAGE
+// ═══════════════════════════════════════════════════
+const DAY_KEYS = ['wed','thu','fri'];
+
+function renderDayNav() {
+  const now = new Date();
+  const dayMap = { wed: new Date('2026-05-20'), thu: new Date('2026-05-21'), fri: new Date('2026-05-22') };
+  document.getElementById('dayNav').innerHTML = DAY_KEYS.map(k => {
+    const d = PROGRAMME[k];
+    const isToday = now.toDateString() === dayMap[k].toDateString();
+    return `<button class="day-btn ${S.activeDay===k?'active':''} ${isToday?'today':''}" onclick="setDay('${k}')">
+      <span class="d-date">${d.date}</span>
+      <span class="d-name">${d.full.split(' — ')[1]}</span>
+      <span class="d-status">${isToday?'● Hoje':''}</span>
+    </button>`;
+  }).join('');
+}
+
+function setDay(day) {
+  S.activeDay = day;
+  const now = new Date();
+  const dayMap = { wed: new Date('2026-05-20'), thu: new Date('2026-05-21'), fri: new Date('2026-05-22') };
+  if (now.toDateString() === dayMap[day].toDateString()) {
+    S.activeHalf = now.getHours() < 13 ? 'morning' : 'afternoon';
+  }
+  renderDayNav(); renderHalfToggle(); renderProgramme();
+}
+
+function setHalf(half) {
+  S.activeHalf = half; renderHalfToggle(); renderProgramme();
+}
+
+function renderHalfToggle() {
+  document.getElementById('halfMorn').classList.toggle('active', S.activeHalf==='morning');
+  document.getElementById('halfAft').classList.toggle('active', S.activeHalf==='afternoon');
+}
+
+function renderNowChip() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  // Find what's happening now
+  const day = PROGRAMME[S.activeDay];
+  const allBlocks = [...(day.morning||[]), ...(day.afternoon||[])];
+  const happening = allBlocks.find(b => isHappening(b.time));
+  const chip = document.getElementById('nowChip');
+  if (happening) {
+    chip.innerHTML = `<span class="now-dot"></span><div><span class="now-chip-label">A decorrer agora · ${timeStr}</span><span class="now-chip-time">${happening.title.length > 55 ? happening.title.slice(0,55)+'…' : happening.title}</span></div>`;
+    chip.title = 'Clique para ir para este bloco';
+  } else {
+    chip.innerHTML = `<span class="now-dot"></span><div><span class="now-chip-label">Hora actual</span><span class="now-chip-time">${timeStr}</span></div>`;
+    chip.title = '';
+  }
+}
+
+function isHappening(timeStr) {
+  if (!timeStr) return false;
+  const dayMap = { wed:'2026-05-20', thu:'2026-05-21', fri:'2026-05-22' };
+  const base = dayMap[S.activeDay];
+  const parts = timeStr.split('–');
+  if (parts.length < 2) return false;
+  try {
+    const [sh, sm] = parts[0].split(':').map(Number);
+    const [eh, em] = parts[1].split(':').map(Number);
+    const start = new Date(`${base}T${String(sh).padStart(2,'0')}:${String(sm||0).padStart(2,'0')}:00`);
+    const end   = new Date(`${base}T${String(eh).padStart(2,'0')}:${String(em||0).padStart(2,'0')}:00`);
+    const now = new Date();
+    return now >= start && now <= end;
+  } catch(e) { return false; }
+}
+
+const KIND_LABELS = { section:'Secção', invited:'Convidado', break:'Pausa', special:'Especial', flash:'Flash', oral:'Oral', social:'Social' };
+
+// Parse block title into section number + full name for Section blocks
+function parseSectionTitle(title) {
+  // e.g. "Section 3 — Proteomics in the Clinic: ..."
+  const m = title.match(/^(Section\s*\d+)\s*[—–-]\s*(.+)$/i);
+  if (m) return { num: m[1], name: m[2] };
+  // e.g. "Section 2 (6. Next-Gen...)"
+  const m2 = title.match(/^(Section\s*\d+)\s*\((.+)\)$/i);
+  if (m2) return { num: m2[1], name: m2[2] };
+  return null;
+}
+
+function renderProgramme() {
+  try { renderDayNav(); } catch(e) { console.warn('renderDayNav',e); }
+  try { renderHalfToggle(); } catch(e) { console.warn('renderHalfToggle',e); }
+  try { renderNowChip(); } catch(e) { console.warn('renderNowChip',e); }
+  const day = PROGRAMME[S.activeDay] || PROGRAMME['wed'];
+  const blocks = (day[S.activeHalf] || day['morning'] || []);
+
+  if (!blocks.length) {
+    document.getElementById('programmeBlocks').innerHTML =
+      `<div class="empty-half"><p>Sem eventos programados neste período.</p></div>`;
+    return;
+  }
+
+  document.getElementById('programmeBlocks').innerHTML = blocks.map((block, idx) => {
+    const happening = isHappening(block.time);
+    const talks = (block.talks || []).filter(t => t.id || t.kind);
+    const hasTalks = talks.length > 0;
+
+    // Build title area
+    let titleHtml = '';
+    const parsed = (block.kind === 'section' || block.kind === 'flash') ? parseSectionTitle(block.title) : null;
+    if (parsed) {
+      titleHtml = `<div class="prog-block-title-wrap">
+        <div class="prog-section-number">${parsed.num}</div>
+        <div class="prog-block-title">${parsed.name}</div>
+      </div>`;
+    } else if (block.kind === 'invited') {
+      // Split "Invited Speaker — Name — Title"
+      const parts = block.title.split(' — ');
+      if (parts.length >= 3) {
+        titleHtml = `<div class="prog-block-title-wrap">
+          <div class="prog-block-title">${parts[1]}</div>
+          <div class="prog-block-subtitle">${parts.slice(2).join(' — ')}</div>
+        </div>`;
+      } else if (parts.length === 2) {
+        titleHtml = `<div class="prog-block-title-wrap"><div class="prog-block-title">${parts[1]}</div></div>`;
+      } else {
+        titleHtml = `<div class="prog-block-title-wrap"><div class="prog-block-title">${block.title}</div></div>`;
+      }
+    } else {
+      titleHtml = `<div class="prog-block-title-wrap"><div class="prog-block-title">${block.title}</div></div>`;
+    }
+
+    const talkHtml = hasTalks ? `<div class="prog-block-body">${talks.map(t => {
+      if (t.kind) {
+        return `<div class="talk-item">
+          <span class="talk-time">${t.time||''}</span>
+          <span class="talk-type-pill" style="background:rgba(245,158,11,0.1);color:var(--gold)">Convidado</span>
+          <div style="flex:1"><div class="talk-title">${t.title}</div></div>
+        </div>`;
+      }
+      const pillClass = t.type==='flash'?'tp-flash':t.type==='poster'?'tp-poster':'tp-oral';
+      const pillLabel = t.type==='flash'?'Flash':t.type==='poster'?'Poster':'Oral';
+      return `<div class="talk-item">
+        <span class="talk-time">${t.time}</span>
+        <span class="talk-type-pill ${pillClass}">${pillLabel}</span>
+        <div style="flex:1">
+          <div class="talk-title">${t.title}</div>
+          <div class="talk-author">${t.author}</div>
+        </div>
+      </div>`;
+    }).join('')}</div>` : '';
+
+    return `<div class="prog-block${happening?' happening':''}" id="block-${idx}">
+      <div class="prog-block-header${hasTalks?'':' no-body'}">
+        <span class="prog-time">${block.time}</span>
+        <span class="prog-kind kind-${block.kind}">${KIND_LABELS[block.kind]||block.kind}</span>
+        ${titleHtml}
+        ${happening?'<span class="now-badge">A decorrer</span>':''}
+      </div>
+      ${talkHtml}
+    </div>`;
+  }).join('');
+}
+
+function scrollToHappening() {
+  const day = PROGRAMME[S.activeDay];
+  const allBlocks = [...(day.morning||[]), ...(day.afternoon||[])];
+  // Find if happening block is in current half; if not, switch half first
+  const morningIdx = (day.morning||[]).findIndex(b => isHappening(b.time));
+  const afternoonIdx = (day.afternoon||[]).findIndex(b => isHappening(b.time));
+  if (morningIdx !== -1) {
+    if (S.activeHalf !== 'morning') { S.activeHalf='morning'; renderProgramme(); }
+    setTimeout(() => {
+      const el = document.getElementById(`block-${morningIdx}`);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 80);
+  } else if (afternoonIdx !== -1) {
+    if (S.activeHalf !== 'afternoon') { S.activeHalf='afternoon'; renderProgramme(); }
+    setTimeout(() => {
+      const el = document.getElementById(`block-${afternoonIdx}`);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 80);
+  }
+}
+
+// Auto-set day based on real date
+function autoSelectDay() {
+  const now = new Date();
+  const dayMap = { wed:'2026-05-20', thu:'2026-05-21', fri:'2026-05-22' };
+  for (const [k, d] of Object.entries(dayMap)) {
+    if (now.toDateString() === new Date(d+'T00:00:00').toDateString()) {
+      S.activeDay = k;
+      S.activeHalf = now.getHours() < 13 ? 'morning' : 'afternoon';
+      return;
+    }
+  }
+  // Not an event day — default to Wednesday morning
+  S.activeDay = 'wed'; S.activeHalf = 'morning';
+}
+
+// ═══════════════════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════════════════
+let loginRole = 'evaluator';
+
+function setRoleTab(r) {
+  loginRole = r;
+  document.querySelectorAll('.role-tab').forEach((t,i) => t.classList.toggle('active',
+    (i===0&&r==='evaluator')||(i===1&&r==='attendee')));
+  const extra = document.getElementById('attendeeExtraFields');
+  if (extra) extra.style.display = r==='attendee' ? 'block' : 'none';
+  document.getElementById('lErr').classList.remove('show');
+}
+
+function doLogin() {
+  const name = document.getElementById('lName').value.trim();
+  if (!name) { showErr('Introduza o seu nome.'); return; }
+
+  if (loginRole === 'attendee') {
+    const inst = document.getElementById('lInst')?.value.trim() || '';
+    const selVal = document.getElementById('lCountrySelect')?.value || 'Portugal';
+    const country = selVal === 'Outro'
+      ? (document.getElementById('lCountryOtherInput')?.value.trim() || 'Outro')
+      : selVal;
+    S.currentUser = name; S.userRole = 'attendee';
+    if (!S.attendees.find(a=>a.name===name)) {
+      S.attendees.push({ name, inst, country });
+    }
+    setHdr(name, 'attendee');
+    // Pre-fill card fields
+    const cn=document.getElementById('cardName'); if(cn) cn.value=name;
+    const ci=document.getElementById('cardInst'); if(ci) ci.value=inst;
+    const cc=document.getElementById('cardCountry'); if(cc) cc.value=country;
+    document.getElementById('navCard').style.display='';
+    renderEval(); gotoPage('eval');
+  } else {
+    // Evaluator
+    S.currentUser = name; S.userRole = 'evaluator';
+    if (!S.evaluators.includes(name)) S.evaluators.push(name);
+    setHdr(name, 'evaluator');
+    document.getElementById('navCard').style.display='';
+    renderEval(); gotoPage('eval');
+  }
+}
+
+function openAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  if (modal) { modal.style.display='flex'; document.getElementById('adminModalPass').value=''; document.getElementById('adminModalErr').style.display='none'; }
+}
+function closeAdminLogin() {
+  document.getElementById('adminLoginModal').style.display='none';
+}
+function doAdminLogin() {
+  const pass = document.getElementById('adminModalPass').value;
+  if (pass !== S.adminPass) {
+    document.getElementById('adminModalErr').style.display='block'; return;
+  }
+  closeAdminLogin();
+  S.currentUser='Admin'; S.userRole='admin';
+  setHdr('Admin','admin');
+  document.getElementById('hAdminBtn').style.display='none';
+  renderAdmin(); gotoPage('admin');
+}
+
+function showErr(m) { const e=document.getElementById('lErr'); e.textContent=m; e.classList.add('show'); }
+
+function handleCountrySelect(val) {
+  const other = document.getElementById('lCountryOther');
+  if (other) other.style.display = val === 'Outro' ? 'block' : 'none';
+}
+
+function clearUserCache() {
+  // Remove all data associated with the current user to prevent residual cache
+  if (S.currentUser) {
+    delete S.votes[S.currentUser];
+    delete S.locked[S.currentUser];
+    S.evaluators = S.evaluators.filter(e => e !== S.currentUser);
+    S.attendees = S.attendees.filter(a => a.name !== S.currentUser);
+    S.editRequests = S.editRequests.filter(r => r.evalName !== S.currentUser);
+    S.registeredEvaluators = S.registeredEvaluators.filter(e => e.name !== S.currentUser);
+  }
+}
+
+function setHdr(name,role) {
+  const b=document.getElementById('hBadge');
+  const lblMap={admin:'Administrador',evaluator:'Avaliador',attendee:'Attendee'};
+  b.textContent=lblMap[role]||role; b.className='badge badge-'+role; b.style.display='inline-flex';
+  document.getElementById('hUser').textContent=name; document.getElementById('hUser').style.display='inline';
+  document.getElementById('hLogout').style.display='inline-flex';
+}
+
+function logout() {
+  clearUserCache();
+  S.currentUser=null; S.userRole=null;
+  ['hBadge','hUser','hLogout'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('navCard').style.display='none';
+  const adminBtn=document.getElementById('hAdminBtn'); if(adminBtn) adminBtn.style.display='';
+  document.getElementById('lName').value='';
+  const lPassEl=document.getElementById('lPass'); if(lPassEl) lPassEl.value='';
+  document.getElementById('lErr').classList.remove('show');
+  // Reset login form fully
+  const lInst = document.getElementById('lInst'); if(lInst) lInst.value='';
+  const lCountry = document.getElementById('lCountry'); if(lCountry) lCountry.value='';
+  document.getElementById('lCountrySelect').value='Portugal';
+  document.getElementById('lCountryOther').style.display='none';
+  document.getElementById('lCountryOtherInput').value='';
+  document.getElementById('attendeeExtraFields').style.display='none';
+  setRoleTab('evaluator'); gotoPage('login');
+}
+
+// ═══════════════════════════════════════════════════
+//  EVALUATOR / GUEST VOTING
+// ═══════════════════════════════════════════════════
+function renderEval() {
+  const isAttendee = S.userRole==='attendee';
+  document.getElementById('evalTitle').textContent = `Olá, ${S.currentUser}`;
+  if (isAttendee) {
+    document.getElementById('evalSub').textContent = 'Avalie as apresentações que assistiu de 1 a 10';
+  } else {
+    const reg = S.registeredEvaluators.find(e=>e.name===S.currentUser);
+    const nSec = reg?.sections?.length || SECTIONS.length;
+    document.getElementById('evalSub').textContent = `Avalie as apresentações das suas ${nSec} secção${nSec!==1?'s':''} atribuída${nSec!==1?'s':''}`;
+  }
+  updateProg(); renderSectionTabs(); renderTypeFilter(); renderPresList();
+}
+
+function updateProg() {
+  const myV = S.votes[S.currentUser]||{};
+  const visible = getVisibleSections();
+  const visibleKeys = new Set(visible.map(s=>s.key));
+  const myPres = Object.values(ALL_PRES).filter(p=>visibleKeys.has(p.sectionKey));
+  const total = myPres.length;
+  const done = myPres.filter(p=>myV[p.id]!==undefined).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progTxt').textContent = `${done} de ${total} avaliadas`;
+  document.getElementById('progPct').textContent = pct+'%';
+  document.getElementById('progBar').style.width = pct+'%';
+}
+
+function getVisibleSections() {
+  // Attendees see all sections. Evaluators only see their assigned sections.
+  if (S.userRole === 'attendee') return SECTIONS;
+  const reg = S.registeredEvaluators.find(e => e.name === S.currentUser);
+  if (!reg || !reg.sections || reg.sections.length === 0) return SECTIONS; // fallback: show all
+  return SECTIONS.filter(sec => reg.sections.includes(sec.key));
+}
+
+function renderSectionTabs() {
+  const myV = S.votes[S.currentUser]||{};
+  const visible = getVisibleSections();
+  // If current active section not in visible list, switch to first visible
+  if (!visible.find(s => s.key === S.activeSec)) {
+    S.activeSec = visible[0]?.key || 'sec1';
+  }
+  document.getElementById('sectionTabs').innerHTML = visible.map(sec => {
+    const pres = Object.values(ALL_PRES).filter(p=>p.sectionKey===sec.key);
+    const done = pres.filter(p=>myV[p.id]!==undefined).length;
+    return `<button class="section-tab-btn ${S.activeSec===sec.key?'active':''}" onclick="setSecTab('${sec.key}')">
+      <span class="st-num">${sec.icon}</span>
+      <span class="st-name">${sec.short}</span>
+      <span class="st-count">${done}/${pres.length}</span>
+    </button>`;
+  }).join('');
+}
+
+function setSecTab(k) { S.activeSec=k; S.activeType='all'; renderSectionTabs(); renderTypeFilter(); renderPresList(); }
+
+function renderTypeFilter() {
+  const pres = Object.values(ALL_PRES).filter(p=>p.sectionKey===S.activeSec);
+  const types = [...new Set(pres.map(p=>p.type))];
+  if (types.length<=1) { document.getElementById('typeFilter').innerHTML=''; return; }
+  const labels={oral:'Oral',flash:'Flash',poster:'Poster'};
+  document.getElementById('typeFilter').innerHTML =
+    ['all',...types].map(t=>`<button class="type-chip ${S.activeType===t?'active':''}" onclick="setTypeFilter('${t}')">${t==='all'?'Todos os tipos':labels[t]||t}</button>`).join('');
+}
+
+function setTypeFilter(t) { S.activeType=t; renderTypeFilter(); renderPresList(); }
+
+function renderPresList() {
+  const name=S.currentUser; const isAttendee=S.userRole==='attendee';
+  const myV=S.votes[name]||{}; const myL=S.locked[name]||{};
+  let pres = Object.values(ALL_PRES).filter(p=>p.sectionKey===S.activeSec);
+  if (S.activeType!=='all') pres=pres.filter(p=>p.type===S.activeType);
+
+  const list=document.getElementById('presList');
+  if (!pres.length) {
+    list.innerHTML=`<div class="empty-tab"><p>Sem apresentações nesta secção.</p></div>`;
+    return;
+  }
+
+  const typeLabels={oral:'Oral',flash:'Flash',poster:'Poster'};
+  const typeClass={oral:'pt-oral',flash:'pt-flash',poster:'pt-poster'};
+
+  // Count how many have a selection (not yet locked) or are locked
+  const unlockedVoted = pres.filter(p=>myV[p.id]!==undefined&&!myL[p.id]);
+  const allLocked = pres.every(p=>myL[p.id]);
+  const anyUnlocked = unlockedVoted.length > 0;
+
+  const cards = pres.map(p => {
+    const score=myV[p.id]; const voted=score!==undefined; const locked=!!myL[p.id];
+    const pendReq=S.editRequests.find(r=>r.evalName===name&&r.presId===p.id&&r.status==='pending');
+    const apprReq=S.editRequests.find(r=>r.evalName===name&&r.presId===p.id&&r.status==='approved');
+    const sec=SECTIONS.find(s=>s.key===p.sectionKey);
+
+    const btns=Array.from({length:10},(_,i)=>{
+      const n=i+1; let cls='sc-btn';
+      if (locked&&score===n) cls+=isAttendee?' guest-locked-sel':' locked-sel';
+      else if (!locked&&score===n) cls+=isAttendee?' guest-sel':' sel';
+      return `<button class="${cls}" ${locked?'disabled':''} onclick="castVote(${p.id},${n})">${n}</button>`;
+    }).join('');
+
+    let fb='';
+    if (locked) {
+      fb=`<div class="vfeedback"><span class="${isAttendee?'v-ok-attendee':'v-ok'}">Avaliado: ${score}/10 — bloqueado</span>`;
+      if (pendReq) fb+=`<span class="req-pending-lbl">Pedido pendente…</span>`;
+      else if (apprReq) fb+=`<span class="req-approved-lbl">Edição aprovada — altere e confirme abaixo</span>`;
+      else fb+=`<button class="req-edit-btn" onclick="requestEdit(${p.id})">Pedir edição</button>`;
+      fb+=`</div>`;
+    } else if (voted) {
+      fb=`<div class="vfeedback"><span class="v-sel">Seleccionado: ${score}/10</span></div>`;
+    } else {
+      fb=`<div class="vfeedback"><span class="v-pending">Seleccione uma pontuação</span></div>`;
+    }
+
+    return `<div class="pres-card ${voted?'voted':''} ${locked?'locked-card':''} ${isAttendee?'guest-card':''}" id="card-${p.id}">
+      <div>
+        <div class="pres-section-tag">${sec?sec.label:''}</div>
+        <div class="pres-title">${p.title}</div>
+        <div class="pres-author">${p.author}</div>
+        <span class="pres-type-badge ${typeClass[p.type]||'pt-oral'}">${typeLabels[p.type]||p.type}</span>
+      </div>
+      <div class="rating-side">
+        <div class="rating-lbl">Avaliação 1–10</div>
+        <div class="score-btns">${btns}</div>
+        ${fb}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Section confirm bar
+  const voted=unlockedVoted.length;
+  const unlockedTotal = pres.filter(p=>!myL[p.id]).length;
+  // Evaluators must vote ALL unlocked presentations before confirming
+  // Attendees can confirm any subset
+  const allUnlockedVoted = unlockedTotal > 0 && unlockedVoted.length === unlockedTotal;
+  const canConfirm = isAttendee ? (unlockedVoted.length > 0) : allUnlockedVoted;
+  const missingCount = unlockedTotal - unlockedVoted.length;
+
+  let confirmMsg = '';
+  let confirmSub = '';
+  if (allLocked) {
+    confirmMsg = 'Todas as avaliações desta secção estão bloqueadas';
+  } else if (isAttendee && unlockedVoted.length > 0) {
+    confirmMsg = `${voted} avaliação${voted!==1?'s':''} por confirmar`;
+    confirmSub = 'Confirme para bloquear os votos seleccionados.';
+  } else if (!isAttendee && allUnlockedVoted) {
+    confirmMsg = `Todas as ${voted} avaliações preenchidas — pronto para confirmar`;
+    confirmSub = 'Confirme para bloquear os seus votos nesta secção.';
+  } else if (!isAttendee && missingCount > 0) {
+    confirmMsg = `Faltam ${missingCount} avaliação${missingCount!==1?'s':''} nesta secção`;
+    confirmSub = 'Como avaliador, deve preencher todas as apresentações antes de confirmar.';
+  } else {
+    confirmMsg = 'Seleccione pontuações para confirmar';
+  }
+
+  const confirmBar = `<div class="section-confirm-bar">
+    <div class="section-confirm-info">
+      <strong>${confirmMsg}</strong>
+      ${confirmSub ? '<span>'+confirmSub+'</span>' : ''}
+    </div>
+    <button class="section-confirm-btn ${isAttendee?'guest-btn':''}" onclick="confirmSectionVotes()" ${canConfirm?'':'disabled'}>
+      Confirmar votos da secção
+    </button>
+  </div>`;
+
+  list.innerHTML = cards + confirmBar;
+}
+
+function castVote(presId, score) {
+  const name=S.currentUser;
+  if ((S.locked[name]||{})[presId]) return;
+  if (!S.votes[name]) S.votes[name]={};
+  S.votes[name][presId]=score;
+  renderSectionTabs(); renderPresList();
+}
+
+function confirmSectionVotes() {
+  const name=S.currentUser;
+  const myV=S.votes[name]||{}; const myL=S.locked[name]||{};
+  const pres=Object.values(ALL_PRES).filter(p=>p.sectionKey===S.activeSec);
+  let count=0;
+  pres.forEach(p=>{
+    if (myV[p.id]!==undefined && !myL[p.id]) {
+      if (!S.locked[name]) S.locked[name]={};
+      S.locked[name][p.id]=true;
+      // Clear approved edit requests
+      S.editRequests=S.editRequests.filter(r=>!(r.evalName===name&&r.presId===p.id&&r.status==='approved'));
+      count++;
+    }
+  });
+  if (count>0) {
+    updateProg(); renderSectionTabs(); renderPresList();
+    showToast(`${count} voto${count!==1?'s':''} confirmado${count!==1?'s':''} e bloqueado${count!==1?'s':''}!`,'green');
+  }
+}
+
+function confirmVote(presId) {
+  // Legacy single-vote confirm (called from edit-approved flow)
+  const name=S.currentUser;
+  if (!((S.votes[name]||{})[presId])) return;
+  if (!S.locked[name]) S.locked[name]={};
+  S.locked[name][presId]=true;
+  S.editRequests=S.editRequests.filter(r=>!(r.evalName===name&&r.presId===presId&&r.status==='approved'));
+  updateProg(); renderSectionTabs(); renderPresList();
+  showToast('Voto confirmado e bloqueado!','green');
+}
+
+function requestEdit(presId) {
+  const name=S.currentUser;
+  if (S.editRequests.find(r=>r.evalName===name&&r.presId===presId&&r.status==='pending')) return;
+  const p=ALL_PRES[presId];
+  S.editRequests.push({id:Date.now(),evalName:name,presId,presTitle:p?p.title:'',requestedAt:new Date().toLocaleTimeString('pt-PT'),status:'pending'});
+  renderPresList(); showToast('Pedido enviado ao administrador.','orange');
+}
+
+// ═══════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════
+function renderAdmin() {
+  renderStats(); renderRequests(); renderEvalStatus(); renderAdminSecTabs(); renderAdminResults();
+}
+
+function getWeightedScores(secKey) {
+  return Object.values(ALL_PRES).filter(p=>p.sectionKey===secKey).map(p => {
+    let wSum=0, wTot=0, rawCount=0;
+    Object.entries(S.votes).forEach(([evalName, vmap]) => {
+      const score = vmap[p.id];
+      if (score===undefined) return;
+      const w = S.attendees.find(a=>a.name===evalName) ? GUEST_WEIGHT : 1;
+      wSum += score * w; wTot += w; rawCount++;
+    });
+    const avg = wTot>0 ? (wSum/wTot).toFixed(2) : null;
+    return {...p, rawCount, avg, wSum, wTot};
+  }).sort((a,b)=>{ if(!a.avg&&!b.avg)return 0; if(!a.avg)return 1; if(!b.avg)return -1; return parseFloat(b.avg)-parseFloat(a.avg); });
+}
+
+function renderStats() {
+  const totalV=Object.values(S.votes).reduce((a,v)=>a+Object.keys(v).length,0);
+  const pend=S.editRequests.filter(r=>r.status==='pending').length;
+  const totalEvals = S.evaluators.length;
+  const totalAtts = S.attendees.length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-box"><div class="stat-lbl">Apresentações</div><div class="stat-val c-blue">${Object.keys(ALL_PRES).length}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Avaliadores</div><div class="stat-val c-gold">${totalEvals}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Attendees</div><div class="stat-val c-purple">${totalAtts}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Votos confirmados</div><div class="stat-val c-green">${totalV}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Secções</div><div class="stat-val c-cyan">${SECTIONS.length}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Pedidos</div><div class="stat-val c-orange">${pend}</div></div>`;
+}
+
+function renderRequests() {
+  const pend=S.editRequests.filter(r=>r.status==='pending');
+  document.getElementById('reqCount').textContent=pend.length;
+  const el=document.getElementById('reqList');
+  if (!pend.length) { el.innerHTML='<div class="no-req">Nenhum pedido pendente.</div>'; return; }
+  el.innerHTML=pend.map(req=>{
+    const score=(S.votes[req.evalName]||{})[req.presId];
+    const isG=S.attendees && S.attendees.find(a=>a.name===req.evalName);
+    return `<div class="req-item">
+      <div>
+        <div class="req-item-title">${req.presTitle||'Apresentação'}</div>
+        <div class="req-item-meta">
+          ${isG?'<span style="color:var(--purple);font-size:0.72rem">Attendee · </span>':''}
+          <strong>${req.evalName}</strong> · Voto: <strong>${score!==undefined?score+'/10':'—'}</strong> · ${req.requestedAt}
+        </div>
+      </div>
+      <div class="req-btns">
+        <button class="btn-approve" onclick="approveReq(${req.id})">Aprovar</button>
+        <button class="btn-reject" onclick="rejectReq(${req.id})">Rejeitar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function approveReq(id) {
+  const r=S.editRequests.find(x=>x.id===id); if(!r) return;
+  r.status='approved';
+  if (S.locked[r.evalName]) delete S.locked[r.evalName][r.presId];
+  renderAdmin(); showToast(`Edição aprovada para ${r.evalName}.`,'green');
+}
+function rejectReq(id) {
+  const r=S.editRequests.find(x=>x.id===id); if(!r) return;
+  r.status='rejected'; renderAdmin(); showToast(`Pedido de ${r.evalName} rejeitado.`,'red');
+}
+
+function renderEvalStatus() {
+  const el=document.getElementById('evalStatusBody');
+  if (!S.registeredEvaluators.length) {
+    el.innerHTML=`<div class="no-evals-msg">Nenhum avaliador registado. Clique em "Adicionar avaliador" para começar.</div>`;
+    return;
+  }
+  const rows = S.registeredEvaluators.map(ev => {
+    const myV = S.votes[ev.name]||{};
+    const myL = S.locked[ev.name]||{};
+    // For each assigned section, check completion
+    const secPills = ev.sections.map(sk => {
+      const sec=SECTIONS.find(s=>s.key===sk);
+      const pres=Object.values(ALL_PRES).filter(p=>p.sectionKey===sk);
+      const lockedCount=pres.filter(p=>myL[p.id]).length;
+      const votedCount=pres.filter(p=>myV[p.id]!==undefined).length;
+      let cls='sec-pill-empty', status='Por iniciar';
+      if (lockedCount===pres.length && pres.length>0) { cls='sec-pill-done'; status='Completo'; }
+      else if (votedCount>0 || lockedCount>0) { cls='sec-pill-partial'; status=`${lockedCount}/${pres.length} confirmados`; }
+      return `<span class="sec-pill ${cls}">${sec?sec.short:sk} · ${status}</span>`;
+    }).join('');
+
+    // Overall status
+    const allPres=ev.sections.flatMap(sk=>Object.values(ALL_PRES).filter(p=>p.sectionKey===sk)); // section completion
+    const totalLocked=allPres.filter(p=>myL[p.id]).length;
+    const totalVoted=allPres.filter(p=>myV[p.id]!==undefined).length;
+    let overallCls='overall-empty', overallTxt='Não iniciou';
+    if (totalLocked===allPres.length && allPres.length>0) { overallCls='overall-done'; overallTxt='Concluído'; }
+    else if (totalVoted>0||totalLocked>0) { overallCls='overall-partial'; overallTxt=`${totalLocked}/${allPres.length} bloqueados`; }
+
+    return `<tr>
+      <td><span class="eval-name-cell">${ev.name}</span></td>
+      <td>${secPills||'<span style="color:var(--muted);font-size:0.8rem">Nenhuma secção atribuída</span>'}</td>
+      <td><span class="overall-badge ${overallCls}">${overallTxt}</span></td>
+      <td><button class="req-edit-btn" onclick="removeEval('${ev.name}')">Remover</button></td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML=`<table class="eval-status-table">
+    <thead><tr>
+      <th>Nome</th><th>Secções atribuídas</th><th>Estado geral</th><th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function removeEval(name) {
+  S.registeredEvaluators=S.registeredEvaluators.filter(e=>e.name!==name);
+  renderAdmin();
+}
+
+function openAddEval() {
+  document.getElementById('newEvalName').value='';
+  document.getElementById('evalSecChecks').innerHTML=SECTIONS.map(s=>
+    `<input type="checkbox" class="sec-ck" id="eck-${s.key}" value="${s.key}">
+     <label class="sec-ck-lbl" for="eck-${s.key}">${s.short}</label>`
+  ).join('');
+  document.getElementById('addEvalModal').style.display='flex';
+}
+function closeAddEval() { document.getElementById('addEvalModal').style.display='none'; }
+function saveNewEval() {
+  const name=document.getElementById('newEvalName').value.trim();
+  if (!name) { showToast('Introduza um nome.','red'); return; }
+  const sections=[...document.querySelectorAll('.sec-ck:checked')].map(c=>c.value);
+  if (S.registeredEvaluators.find(e=>e.name===name)) { showToast('Nome já existe.','red'); return; }
+  S.registeredEvaluators.push({name, sections});
+  if (!S.evaluators.includes(name)) S.evaluators.push(name);
+  closeAddEval(); renderAdmin(); showToast(`${name} adicionado.`,'green');
+}
+
+function renderAdminSecTabs() {
+  document.getElementById('adminSecTabs').innerHTML=SECTIONS.map(s=>
+    `<button class="admin-sec-tab ${S.adminActiveSec===s.key?'active':''}" onclick="setAdminSecTab('${s.key}')">${s.short}</button>`
+  ).join('');
+}
+function setAdminSecTab(k) { S.adminActiveSec=k; renderAdminSecTabs(); renderAdminResults(); }
+
+function renderAdminResults() {
+  const sec = SECTIONS.find(s=>s.key===S.adminActiveSec);
+  const allScored = getWeightedScores(S.adminActiveSec);
+  const allEvalNames = [...S.evaluators];
+  const allAttendeeNames = S.attendees.map(a=>a.name);
+  const evalNames = [...allEvalNames, ...allAttendeeNames];
+
+  const types = ['oral','flash','poster'];
+  const typeNames = {oral:'Comunicações Orais', flash:'Flash Presentations', poster:'Posters'};
+  const barClasses = {oral:'bar-fill-oral', flash:'bar-fill-flash', poster:'bar-fill-poster'};
+  const typeBadgeCls = {oral:'pt-oral', flash:'pt-flash', poster:'pt-poster'};
+
+  // Build evaluator column headers
+  const evalColHeaders = evalNames.map(n => {
+    const isAtt = S.attendees.find(a=>a.name===n);
+    return `<th style="min-width:72px;text-align:center">
+      <div style="font-size:0.68rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${n}</div>
+      ${isAtt ? '<div style="font-size:0.6rem;color:var(--purple)">Att</div>' : '<div style="font-size:0.6rem;color:var(--accent2)">Eval</div>'}
+    </th>`;
+  }).join('');
+
+  let tableRows = '';
+  types.forEach(type => {
+    const typePres = allScored.filter(p=>p.type===type);
+    if (!typePres.length) return;
+
+    // Type sub-header row
+    tableRows += `<tr class="type-row-hdr">
+      <td colspan="${5 + evalNames.length}">
+        <span class="type-label-${type}">${typeNames[type]}</span>
+      </td>
+    </tr>`;
+
+    typePres.forEach((p,i) => {
+      const topCls = i===0 ? 'top1-'+type : i===1 ? 'top2-'+type : i===2 ? 'top3-'+type : '';
+      const rankCls = i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+      const pct = p.avg ? Math.round(parseFloat(p.avg)/10*100) : 0;
+      const bar = p.avg
+        ? `<div class="bar-w"><div class="bar-bg"><div class="${barClasses[type]}" style="width:${pct}%"></div></div><span class="bar-sc">${p.avg}</span></div>`
+        : `<span style="color:var(--muted)">—</span>`;
+
+      // Individual vote cells per evaluator
+      const voteCells = evalNames.map(n => {
+        const vmap = S.votes[n] || {};
+        const score = vmap[p.id];
+        const isAtt3 = S.attendees.find(a=>a.name===n);
+        const color = isAtt3 ? 'var(--purple)' : 'var(--accent2)';
+        return score !== undefined
+          ? `<td style="text-align:center;font-weight:600;font-size:0.88rem;color:${color}">${score}</td>`
+          : `<td style="text-align:center;color:var(--muted);font-size:0.8rem">—</td>`;
+      }).join('');
+
+      // Top-3 medal indicator
+      const medal = i===0 ? ' <span style="font-size:0.7rem;background:rgba(245,158,11,0.2);color:var(--gold);padding:1px 5px;border-radius:4px;margin-left:4px">1°</span>'
+        : i===1 ? ' <span style="font-size:0.7rem;background:rgba(148,163,184,0.15);color:#94a3b8;padding:1px 5px;border-radius:4px;margin-left:4px">2°</span>'
+        : i===2 ? ' <span style="font-size:0.7rem;background:rgba(205,127,50,0.15);color:#cd7f32;padding:1px 5px;border-radius:4px;margin-left:4px">3°</span>' : '';
+
+      tableRows += `<tr class="${topCls}">
+        <td><div class="rnum ${rankCls}">${i+1}</div></td>
+        <td>
+          <div style="font-weight:500;font-size:0.86rem;line-height:1.35">${p.title}${medal}</div>
+          <div style="font-size:0.74rem;color:var(--muted);margin-top:2px">${p.author}</div>
+        </td>
+        <td><span class="pres-type-badge ${typeBadgeCls[type]}" style="font-size:0.68rem">${type.charAt(0).toUpperCase()+type.slice(1)}</span></td>
+        ${voteCells}
+        <td>${bar}</td>
+        <td><span class="vcnt">${p.rawCount}v</span></td>
+      </tr>`;
+    });
+  });
+
+  const nEvals = evalNames.length;
+  const fullTable = '<div style="margin-bottom:8px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">'
+    + '<div class="res-group-lbl" style="margin:0">' + (sec ? sec.label+' — '+sec.desc : '') + '</div>'
+    + '<div class="weighted-note">Avaliador = 1× · Attendee = ' + GUEST_WEIGHT + '×</div>'
+    + '</div>'
+    + '<div class="res-box" style="overflow-x:auto">'
+    + '<table style="min-width:600px">'
+    + '<thead><tr>'
+    + '<th style="width:40px">#</th>'
+    + '<th>Apresentação</th>'
+    + '<th style="width:72px">Tipo</th>'
+    + (nEvals ? evalColHeaders.join('') : '<th style="color:var(--muted);font-size:0.7rem">Sem avaliadores</th>')
+    + '<th style="min-width:150px">Média ponderada</th>'
+    + '<th>Votos</th>'
+    + '</tr></thead>'
+    + '<tbody>'
+    + (tableRows || '<tr><td colspan="'+(5+nEvals)+'" class="empty-row" style="padding:28px">Sem avaliações ainda nesta secção.</td></tr>')
+    + '</tbody>'
+    + '</table></div>';
+
+  document.getElementById('adminResults').innerHTML = fullTable;
+}
+
+// ═══════════════════════════════════════════════════
+//  SETUP MODAL
+// ═══════════════════════════════════════════════════
+let _top=[],_pres=[];
+function openSetup() {
+  _top=[...SECTIONS.map(s=>s.label)];
+  _pres=[];
+  document.getElementById('curPass').textContent=S.adminPass;
+  document.getElementById('topicInputs').innerHTML='<p style="font-size:0.8rem;color:var(--muted)">As secções são definidas no código do programa. Contacte o admin técnico para alterações.</p>';
+  renderPresInputs();
+  document.getElementById('setupModal').style.display='flex';
+}
+function closeSetup() { document.getElementById('setupModal').style.display='none'; }
+function renderPresInputs() {
+  document.getElementById('presInputs').innerHTML='<p style="font-size:0.8rem;color:var(--muted)">As apresentações são importadas directamente do programa do evento.</p>';
+}
+function addTopicInput(){}
+function addPresInput(){}
+function saveSetup() { closeSetup(); showToast('Configuração guardada!','green'); }
+
+// ═══════════════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════════════
+function exportCSV() {
+  const rows=[['Secção','Título','Autor','Tipo','Média Ponderada','Votos','Peso Total']];
+  SECTIONS.forEach(sec => {
+    getWeightedScores(sec.key).forEach(p =>
+      rows.push([sec.label, p.title, p.author, p.type, p.avg||'', p.rawCount, p.wTot.toFixed(2)]));
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='proteovilamoura2026_resultados.csv'; a.click();
+}
+
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+const TC={green:'var(--green)',orange:'var(--orange)',red:'var(--red)',blue:'var(--accent)',purple:'var(--purple)'};
+function showToast(msg,color='green') {
+  document.getElementById('tmsg').textContent=msg;
+  document.getElementById('tdot').style.background=TC[color]||TC.green;
+  const t=document.getElementById('toast'); t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+
+// ═══════════════════════════════════════════════════
+//  ATTENDEE CARD
+// ═══════════════════════════════════════════════════
+function initCardPage() {
+  // Pre-fill name from login
+  const nameEl = document.getElementById('cardName');
+  if (nameEl && !nameEl.value && S.currentUser) {
+    nameEl.value = S.currentUser;
+  }
+  updateCard();
+}
+
+function getCardData() {
+  return {
+    name: document.getElementById('cardName')?.value || '',
+    role: document.getElementById('cardRole')?.value || '',
+    spec: document.getElementById('cardSpec')?.value || '',
+    inst: document.getElementById('cardInst')?.value || '',
+    country: document.getElementById('cardCountry')?.value || '',
+    email: document.getElementById('cardEmail')?.value || '',
+  };
+}
+
+function updateCard() {
+  const d = getCardData();
+  const set = (id, val, fallback='—') => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || fallback;
+  };
+  set('cn', d.name);
+  set('cr', d.role);
+  set('cs', d.spec);
+  set('ci', d.inst);
+  set('cc', d.country);
+  const ceEl = document.getElementById('ce');
+  if (ceEl) ceEl.textContent = d.email || '';
+  generateQR(d);
+}
+
+let _qrInstance = null;
+function generateQR(d) {
+  const container = document.getElementById('qrCanvas');
+  if (!container) return;
+  // Build vCard content
+  const lines = ['BEGIN:VCARD','VERSION:3.0'];
+  if (d.name) lines.push('FN:'+d.name);
+  if (d.role) lines.push('TITLE:'+d.role);
+  if (d.inst) lines.push('ORG:'+d.inst);
+  if (d.email) lines.push('EMAIL:'+d.email);
+  if (d.country) lines.push('ADR:;;;;;;'+d.country+';');
+  if (d.spec) lines.push('NOTE:ProteoVilamoura 2026 | '+d.spec);
+  lines.push('END:VCARD');
+  const qrText = lines.join('\n');
+
+  // Clear and regenerate
+  container.innerHTML = '';
+  try {
+    _qrInstance = new QRCode(container, {
+      text: qrText,
+      width: 74, height: 74,
+      colorDark: '#0d3349',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) {
+    // Fallback: plain URL with name
+    container.innerHTML = '';
+    try {
+      _qrInstance = new QRCode(container, {
+        text: 'ProteoVilamoura 2026 | ' + (d.name||'Participant'),
+        width: 74, height: 74,
+        colorDark: '#0d3349',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    } catch(e2) { console.warn('QR generation failed:', e2); }
+  }
+}
+
+function buildCardHTML(d) {
+  // Generate QR-like SVG pattern deterministically from card data
+  const qrData = [d.name, d.role, d.inst, d.email].filter(Boolean).join('|');
+  let h = 5381;
+  for (let i=0; i<qrData.length; i++) { h=((h<<5)+h)+qrData.charCodeAt(i); h>>>=0; }
+
+  const cells=21, sz=74, cs=sz/cells;
+  const usedSet = new Set(['0,0','1,0','2,0','3,0','4,0','5,0','6,0','0,1','6,1',
+    '0,2','2,2','3,2','4,2','6,2','0,3','2,3','4,3','6,3','0,4','2,4','3,4','4,4','6,4',
+    '0,5','6,5','0,6','1,6','2,6','3,6','4,6','5,6','6,6',
+    '14,0','15,0','16,0','17,0','18,0','19,0','20,0','14,1','20,1',
+    '14,2','16,2','17,2','18,2','20,2','14,3','16,3','18,3','20,3',
+    '14,4','16,4','17,4','18,4','20,4','14,5','20,5',
+    '14,6','15,6','16,6','17,6','18,6','19,6','20,6',
+    '0,14','1,14','2,14','3,14','4,14','5,14','6,14','0,15','6,15',
+    '0,16','2,16','3,16','4,16','6,16','0,17','2,17','4,17','6,17',
+    '0,18','2,18','3,18','4,18','6,18','0,19','6,19',
+    '0,20','1,20','2,20','3,20','4,20','5,20','6,20']);
+
+  let svgRects = '';
+  // White background
+  svgRects += '<rect width="74" height="74" fill="#fff"/>';
+  // Finder patterns
+  const addFinder = (ox, oy) => {
+    svgRects += '<rect x="'+(ox*cs)+'" y="'+(oy*cs)+'" width="'+(7*cs)+'" height="'+(7*cs)+'" fill="#000"/>';
+    svgRects += '<rect x="'+((ox+1)*cs)+'" y="'+((oy+1)*cs)+'" width="'+(5*cs)+'" height="'+(5*cs)+'" fill="#fff"/>';
+    svgRects += '<rect x="'+((ox+2)*cs)+'" y="'+((oy+2)*cs)+'" width="'+(3*cs)+'" height="'+(3*cs)+'" fill="#000"/>';
+  };
+  addFinder(0,0); addFinder(14,0); addFinder(0,14);
+  // Data modules
+  let rng = h;
+  for (let y=0; y<cells; y++) {
+    for (let x=0; x<cells; x++) {
+      if (usedSet.has(x+','+y)) continue;
+      rng = (rng * 1664525 + 1013904223) >>> 0;
+      if (rng & 1) svgRects += '<rect x="'+(x*cs)+'" y="'+(y*cs)+'" width="'+cs+'" height="'+cs+'" fill="#000"/>';
+    }
+  }
+  const qrSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="74" height="74">' + svgRects + '</svg>';
+  // qrB64 will be generated in popup window via qrcodejs
+  const qrB64 = null; // populated in popup
+
+  const esc = (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const pageHTML = [
+    '<!DOCTYPE html><html><head><meta charset="UTF-8">',
+    '<title>Cartao ProteoVilamoura 2026</title>',
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>',
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>',
+    '<style>',
+    '*{margin:0;padding:0;box-sizing:border-box;}',
+    'body{font-family:Arial,Helvetica,sans-serif;background:#061520;',
+    'display:flex;flex-direction:column;align-items:center;justify-content:center;',
+    'min-height:100vh;gap:18px;padding:20px;}',
+    '.card{width:460px;background:linear-gradient(145deg,#0a2030,#0e2d40,#061a28);',
+    'border-radius:16px;padding:28px;position:relative;overflow:hidden;border:1px solid #164055;}',
+    '.bar{position:absolute;top:0;left:0;right:0;height:4px;',
+    'background:linear-gradient(90deg,#0d3349,#106080,#208080,#27b5a0);}',
+    '.inner{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}',
+    '.info{flex:1;}',
+    '.eyebrow{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;',
+    'color:#27b5a0;margin-bottom:10px;}',
+    '.nm{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;line-height:1.2;}',
+    '.rl{font-size:13px;color:#7fd4e8;margin-bottom:3px;font-weight:600;}',
+    '.sp{font-size:12px;color:#5a8099;margin-bottom:12px;}',
+    '.ln{height:1px;background:rgba(22,64,85,.8);margin-bottom:10px;}',
+    '.it{font-size:12px;color:#d8eaf2;margin-bottom:2px;font-weight:600;}',
+    '.ct{font-size:11px;color:#5a8099;}',
+    '.em{font-size:11px;color:#7fd4e8;margin-top:5px;}',
+    '.stamp{position:absolute;bottom:12px;right:16px;font-size:9px;',
+    'color:rgba(90,128,153,.5);letter-spacing:.05em;}',
+    '.qrw{background:#fff;padding:8px;border-radius:10px;flex-shrink:0;}',
+    '.qrw img{display:block;width:74px;height:74px;}',
+    '.acts{display:flex;gap:10px;}',
+    'button{padding:10px 24px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;}',
+    '.bpdf{background:linear-gradient(135deg,#106080,#208080);color:#fff;}',
+    '.bjpg{background:rgba(22,64,85,.8);color:#d8eaf2;border:1px solid #164055;}',
+    '</style></head><body>',
+    '<div class="card" id="tc"><div class="bar"></div><div class="inner"><div class="info">',
+    '<div class="eyebrow">ProteoVilamoura 2026 &middot; Vilamoura, Portugal</div>',
+    '<div class="nm">'+esc(d.name||'—')+'</div>',
+    '<div class="rl">'+esc(d.role||'—')+'</div>',
+    d.spec ? '<div class="sp">'+esc(d.spec)+'</div>' : '',
+    '<div class="ln"></div>',
+    '<div class="it">'+esc(d.inst||'—')+'</div>',
+    d.country ? '<div class="ct">'+esc(d.country)+'</div>' : '',
+    d.email ? '<div class="em">'+esc(d.email)+'</div>' : '',
+    '</div>',
+    '<div class="qrw"><div id="popupQR"></div></div>',
+    '</div><div class="stamp">20&ndash;22 MAI 2026</div></div>',
+    '<div class="acts">',
+    '<button class="bpdf" onclick="doPDF()">Guardar PDF</button>',
+    '<button class="bjpg" onclick="doJPG()">Guardar JPG</button>',
+    '</div>',
+    '<script>',
+    '(function(){',
+    'var qrLines=["BEGIN:VCARD","VERSION:3.0",' +
+    (d.name?'"FN:'+d.name+'",':'') +
+    (d.role?'"TITLE:'+d.role+'",':'') +
+    (d.inst?'"ORG:'+d.inst+'",':'') +
+    (d.email?'"EMAIL:'+d.email+'",':'') +
+    (d.country?'"ADR:;;;;;;'+d.country+';",':'') +
+    '"NOTE:ProteoVilamoura 2026","END:VCARD"];',
+    'var qrEl=document.getElementById("popupQR");',
+    'if(qrEl&&typeof QRCode!=="undefined"){',
+    'new QRCode(qrEl,{text:qrLines.join("\\n"),width:74,height:74,',
+    'colorDark:"#0d3349",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});}',
+    '})();',
+    'async function doJPG(){',
+    'const cv=await html2canvas(document.getElementById("tc"),{backgroundColor:"#0a2030",scale:3});',
+    'const a=document.createElement("a");a.href=cv.toDataURL("image/jpeg",.95);',
+    'a.download="cartao_proteovilamoura.jpg";a.click();}',
+    'async function doPDF(){',
+    'const cv=await html2canvas(document.getElementById("tc"),{backgroundColor:"#0a2030",scale:3});',
+    'const img=cv.toDataURL("image/jpeg",.95);',
+    'const pw=window.open("","_blank");',
+    'pw.document.write("<html><head><style>@page{margin:0}body{margin:0}img{width:100%;display:block}<\/style><\/head><body><img src=\'"+img+"\'\/><\/body><\/html>");',
+    'pw.document.close();setTimeout(()=>pw.print(),700);}',
+    '<\/script></body></html>'
+  ].join('');
+
+  return pageHTML;
+}
+
+function exportCardJPG() {
+  const d = getCardData();
+  const w = window.open('', '_blank');
+  w.document.write(buildCardHTML(d));
+  w.document.close();
+}
+
+function exportCardPDF() {
+  const d = getCardData();
+  const w = window.open('', '_blank');
+  w.document.write(buildCardHTML(d));
+  w.document.close();
+}
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+document.getElementById('lName').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function init() {
+  autoSelectDay();
+  // Small defer so DOM is fully ready before rendering
+  requestAnimationFrame(() => {
+    renderProgramme();
+  });
+  setInterval(()=>{ if(S.userRole==='admin') renderAdmin(); }, 5000);
+  setInterval(()=>{ try { renderNowChip(); } catch(e){} }, 15000);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
