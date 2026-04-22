@@ -1141,8 +1141,10 @@ function clearAllData() {
 // ═══════════════════════════════════════════════════
 function gotoPage(page) {
   const map = { programme:'sProgram', login:'sLogin', eval:'sEval', admin:'sAdmin', card:'sCard' };
+  const targetId = map[page];
+  if (!targetId || !document.getElementById(targetId)) return;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(map[page]).classList.add('active');
+  document.getElementById(targetId).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach((t,i) => {
     const pages = [['programme'],['login','eval','admin'],['card']];
     t.classList.toggle('active', pages[i] && pages[i].includes(page));
@@ -1154,8 +1156,8 @@ function gotoPage(page) {
     renderEval();
     return;
   }
-  if (page==='programme') renderProgramme();
-  if (page==='card') initCardPage();
+  if (page==='programme') try { renderProgramme(); } catch(e) {}
+  if (page==='card') try { initCardPage(); } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════
@@ -1427,8 +1429,10 @@ function doAdminLogin() {
   closeAdminLogin();
   S.currentUser='Admin'; S.userRole='admin';
   setHdr('Admin','admin');
-  document.getElementById('hAdminBtn').style.display='none';
-  renderAdmin(); gotoPage('admin');
+  const adminBtn=document.getElementById('hAdminBtn'); if(adminBtn) adminBtn.style.display='none';
+  // Navigate first so screen is visible even if renderAdmin has issues
+  gotoPage('admin');
+  try { renderAdmin(); } catch(e) { console.error('renderAdmin error:', e); }
 }
 
 function showErr(m) { const e=document.getElementById('lErr'); e.textContent=m; e.classList.add('show'); }
@@ -1701,7 +1705,11 @@ function requestEdit(presId) {
 //  ADMIN
 // ═══════════════════════════════════════════════════
 function renderAdmin() {
-  renderStats(); renderRequests(); renderEvalStatus(); renderAdminSecTabs(); renderAdminResults();
+  try { renderStats(); } catch(e) { console.error('renderStats:', e); }
+  try { renderRequests(); } catch(e) { console.error('renderRequests:', e); }
+  try { renderEvalStatus(); } catch(e) { console.error('renderEvalStatus:', e); }
+  try { renderAdminSecTabs(); } catch(e) { console.error('renderAdminSecTabs:', e); }
+  try { renderAdminResults(); } catch(e) { console.error('renderAdminResults:', e); }
 }
 
 function getTotalVoteCount() {
