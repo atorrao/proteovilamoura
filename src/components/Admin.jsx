@@ -100,11 +100,18 @@ export default function Admin({ state, setState, showToast }) {
   const getWeighted = (secKey) =>
     Object.values(ALL_PRES).filter(p => p.sectionKey === secKey).map(p => {
       let wSum = 0, wTot = 0, rawCount = 0, lockedCount = 0
+      // Find evaluators assigned to this section
+      const sectionEvals = (state.registeredEvaluators || [])
+        .filter(e => e.sections?.includes(secKey))
+        .map(e => e.name)
       Object.entries(state.votes || {}).forEach(([evalName, vmap]) => {
         const score = vmap[p.id]; if (score === undefined) return
-        const w = (state.attendees || []).find(a => a.name === evalName) ? GUEST_WEIGHT : 1
         rawCount++
-        if ((state.locked?.[evalName] || {})[p.id]) { lockedCount++; wSum += score * w; wTot += w }
+        // Only count locked votes from assigned evaluators for the weighted average
+        const isAssignedEval = sectionEvals.includes(evalName)
+        if (isAssignedEval && (state.locked?.[evalName] || {})[p.id]) {
+          lockedCount++; wSum += score; wTot++
+        }
       })
       return { ...p, rawCount, lockedCount, avg: wTot > 0 ? (wSum / wTot).toFixed(2) : null }
     }).sort((a, b) => !a.avg && !b.avg ? 0 : !a.avg ? 1 : !b.avg ? -1 : parseFloat(b.avg) - parseFloat(a.avg))
@@ -281,7 +288,7 @@ export default function Admin({ state, setState, showToast }) {
                         <div style={{ fontSize:'0.74rem', color:'var(--muted)', marginTop:2 }}>{p.author}</div>
                       </td>
                       <td style={{ padding:'10px 14px' }}><span style={{ fontSize:'0.68rem', fontWeight:700, padding:'2px 6px', borderRadius:5, textTransform:'uppercase', background:type==='oral'?'rgba(30,143,171,0.15)':type==='flash'?'rgba(249,115,22,0.15)':'rgba(168,85,247,0.15)', color:type==='oral'?'var(--accent)':type==='flash'?'var(--orange)':'var(--purple)' }}>{type}</span></td>
-                      {evalNames.map(n=>{const sc=(state.votes?.[n]||{})[p.id],isA=(state.attendees||[]).find(a=>a.name===n);return<td key={n} style={{ padding:'10px 6px', textAlign:'center', fontWeight:sc!==undefined?700:400, color:sc!==undefined?(isA?'var(--purple)':'var(--accent2)'):'var(--muted)', fontSize:'0.84rem' }}>{sc??'—'}</td>})}
+                      {evalNames.map(n=>{const sc=(state.votes?.[n]||{})[p.id],isA=(state.attendees||[]).find(a=>a.name===n);return<td key={n} style={{ padding:'10px 6px', textAlign:'center', fontWeight:sc!==undefined?700:400, color:sc!==undefined?'#fff':'rgba(255,255,255,0.2)', fontSize:'0.84rem' }}>{sc??'—'}</td>})}
                       <td style={{ padding:'10px 14px' }}>{p.avg?<div style={{ display:'flex', alignItems:'center', gap:8 }}><div style={{ flex:1, height:6, background:'var(--surface2)', borderRadius:3, overflow:'hidden' }}><div style={{ height:'100%', width:`${pct}%`, background:'linear-gradient(90deg,var(--brand-mid),var(--accent2))', borderRadius:3 }}/></div><span style={{ fontWeight:700, minWidth:36, color:'var(--accent2)' }}>{p.avg}</span></div>:<span style={{ color:'var(--muted)' }}>—</span>}</td>
                       <td style={{ padding:'10px 14px', color:'var(--muted)', fontSize:'0.78rem' }}>{p.rawCount}v{p.lockedCount!==p.rawCount?` (${p.lockedCount})`:''}</td>
                     </tr>

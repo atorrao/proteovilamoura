@@ -102,7 +102,7 @@ function DigitalCard({ profile, qrDataUrl }) {
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
           <Avatar name={profile.name} size={72} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: 'Syne', fontSize: '1.3rem', fontWeight: 800, color: '#fff', lineHeight: 1.2, marginBottom: 4 }}>
+            <div style={{ fontFamily: '-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif', fontSize: '1.3rem', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 4 }}>
               {profile.name || '—'}
             </div>
             {profile.role && (
@@ -204,25 +204,41 @@ function DigitalCard({ profile, qrDataUrl }) {
   )
 }
 
+const CARD_STORAGE_KEY = 'pv2026_card_profile'
+
+function loadSavedProfile() {
+  try { const r = localStorage.getItem(CARD_STORAGE_KEY); return r ? JSON.parse(r) : null } catch { return null }
+}
+
 // ─── Main MyCard page ─────────────────────────────────────────────────────────
-export default function MyCard({ session, state }) {
+export default function MyCard({ session, state, setState }) {
   const [profile, setProfile] = useState(EMPTY_PROFILE)
   const [errors, setErrors] = useState({})
   const [qrDataUrl, setQrDataUrl] = useState('')
-  const [activeTab, setActiveTab] = useState('edit') // 'edit' | 'preview'
+  const [activeTab, setActiveTab] = useState('edit')
+  const [savedMsg, setSavedMsg] = useState('')
 
-  // Pre-fill from login
+  // Load from localStorage first, then pre-fill from login if fields empty
   useEffect(() => {
+    const saved = loadSavedProfile()
     const att = state.attendees?.find(a => a.name === session.user)
     setProfile(p => ({
-      name:    p.name    || session.user || '',
-      company: p.company || att?.inst    || '',
-      country: p.country || att?.country || '',
-      email:   p.email   || '',
-      role:    p.role    || '',
-      linkedin:p.linkedin|| '',
+      name:     saved?.name     || p.name     || session.user || '',
+      company:  saved?.company  || p.company  || att?.inst    || '',
+      country:  saved?.country  || p.country  || att?.country || '',
+      email:    saved?.email    || p.email    || '',
+      role:     saved?.role     || p.role     || '',
+      linkedin: saved?.linkedin || p.linkedin || '',
     }))
   }, [session.user, state.attendees])
+
+  const saveInfo = () => {
+    try {
+      localStorage.setItem(CARD_STORAGE_KEY, JSON.stringify(profile))
+      setSavedMsg('Information saved!')
+      setTimeout(() => setSavedMsg(''), 2500)
+    } catch {}
+  }
 
   // Generate QR whenever profile changes
   useEffect(() => {
@@ -310,7 +326,7 @@ export default function MyCard({ session, state }) {
 
           <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
             <button className="btn btn-primary" style={{ flex: 1, padding: 12, justifyContent: 'center', opacity: missingLabels.length ? 0.45 : 1, cursor: missingLabels.length ? 'not-allowed' : 'pointer' }}
-              onClick={() => { if (validate()) { setActiveTab('preview') } }}>
+              onClick={() => { if (validate()) setActiveTab('preview') }}>
               View my card
             </button>
             <button className="btn btn-ghost" style={{ padding: 12, flexShrink: 0 }} onClick={() => { if (validate()) downloadVCF(profile) }}>
@@ -318,8 +334,13 @@ export default function MyCard({ session, state }) {
             </button>
           </div>
 
-          <div style={{ marginTop: 8, fontSize: '0.72rem', color: 'var(--muted)' }}>
-            <span style={{ color: 'var(--red)' }}>*</span> Required to generate the card
+          <button onClick={saveInfo}
+            style={{ width: '100%', marginTop: 10, padding: '10px', border: '1px solid var(--border)', borderRadius: 9, background: savedMsg ? 'rgba(34,197,94,0.1)' : 'transparent', color: savedMsg ? 'var(--green)' : 'var(--muted)', fontSize: '0.84rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+            {savedMsg || 'Save information'}
+          </button>
+
+          <div style={{ marginTop: 6, fontSize: '0.72rem', color: 'var(--muted)' }}>
+            <span style={{ color: 'var(--red)' }}>*</span> Required · Saved info is restored automatically next time
           </div>
         </div>
 

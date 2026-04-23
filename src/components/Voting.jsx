@@ -185,7 +185,7 @@ export default function Voting({ session, state, setState, showToast }) {
                   <div style={{ fontSize: '0.78rem', color: locked ? 'var(--accent2)' : 'var(--green)', textAlign: 'right' }}>
                     {locked ? `Locked: ${score}/10` : `Selected: ${score}/10`}
                     {locked && !editReq && (
-                      <button onClick={() => requestEdit(p.id)} style={{ display: 'block', marginTop: 4, padding: '3px 8px', border: '1px solid var(--border)', borderRadius: 6, background: 'transparent', color: 'var(--muted)', fontSize: '0.72rem', cursor: 'pointer' }}>
+                      <button onClick={() => requestEdit(p.id)} style={{ display: 'block', marginTop: 6, padding: '6px 12px', border: 'none', borderRadius: 7, background: 'rgba(249,115,22,0.15)', color: 'var(--orange)', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer', width: '100%' }}>
                         Request edit
                       </button>
                     )}

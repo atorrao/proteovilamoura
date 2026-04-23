@@ -43,7 +43,7 @@ export default function SciBingo({ session, state, setState, showToast }) {
     const facts = (state.funFacts || []).map(f => ({
       text: f.text,
       isFact: true,
-      factOwnerName: f.name,
+      factOwnerName: f.name, // stored internally but never shown in UI
     }))
     const fixed = BINGO_FIXED.map(t => ({ text: t, isFact: false }))
     const all = [...facts, ...fixed]
@@ -224,8 +224,10 @@ export default function SciBingo({ session, state, setState, showToast }) {
                       </span>
 
                       {sq.name && !sq.free && (
-                        <span style={{ fontSize: '0.68rem', fontStyle: 'italic', padding: '2px 8px', borderRadius: 10, background: sq.status === 'correct' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)', color: sq.status === 'correct' ? 'var(--green)' : 'var(--red)', fontWeight: 500 }}>
-                          {sq.name}
+                        <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: 10,
+                          background: sq.status === 'correct' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.1)',
+                          color: sq.status === 'correct' ? 'var(--green)' : 'var(--red)', fontWeight: 700 }}>
+                          {sq.status === 'correct' ? 'Signed!' : 'Wrong — try again'}
                         </span>
                       )}
 
