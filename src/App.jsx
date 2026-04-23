@@ -11,29 +11,38 @@ import SciBingo from './components/SciBingo.jsx'
 import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
 
+// localStorage so session persists across tabs AND page refreshes
+const SESSION_KEY = 'pv2026_session'
+
+function loadSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY)
+    return raw ? JSON.parse(raw) : { user: null, role: null, page: 'programme' }
+  } catch { return { user: null, role: null, page: 'programme' } }
+}
+
+function saveSession(session, page) {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ ...session, page })) } catch {}
+}
+
 export default function App() {
-  const [page, setPage] = useState('programme')
-  const [session, setSession] = useState({ user: null, role: null })
+  const saved = loadSession()
+  const [page, setPage] = useState(saved.page || 'programme')
+  const [session, setSession] = useState({ user: saved.user || null, role: saved.role || null })
   const [state, setStateRaw] = useState(EMPTY_STATE)
   const [firebaseReady, setFirebaseReady] = useState(false)
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
   const saveTimer = useRef(null)
 
-  // Load from Firebase on mount
+  useEffect(() => { saveSession(session, page) }, [session, page])
+
   useEffect(() => {
-    loadFromFirebase().then(data => {
-      setStateRaw(data)
-      setFirebaseReady(true)
-    })
-    // Listen for real-time updates from other devices
-    const unsub = listenFirebase(data => {
-      setStateRaw(data)
-    })
+    loadFromFirebase().then(data => { setStateRaw(data); setFirebaseReady(true) })
+    const unsub = listenFirebase(data => setStateRaw(data))
     return () => unsub()
   }, [])
 
-  // Debounced save to Firebase
   const setState = useCallback((updater) => {
     setStateRaw(prev => {
       const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }
@@ -49,19 +58,14 @@ export default function App() {
   }, [])
 
   const navigate = useCallback((p) => {
-    // If already logged in and clicking Voting, go to voting screen
-    if (p === 'voting' && session.user && session.role !== 'admin') {
-      setPage('voting')
-      return
-    }
+    if (p === 'voting' && session.user && session.role !== 'admin') { setPage('voting'); return }
     setPage(p)
   }, [session])
 
   const logout = useCallback(() => {
     setSession({ user: null, role: null })
+    localStorage.removeItem(SESSION_KEY)
     setPage('login')
-    const adminBtn = document.getElementById('hAdminBtn')
-    if (adminBtn) adminBtn.style.display = ''
   }, [])
 
   const loginAsAdmin = useCallback(() => {
@@ -70,68 +74,40 @@ export default function App() {
     setPage('admin')
   }, [])
 
+  const currentPage = (() => {
+    if (page === 'voting' && !session.user) return 'login'
+    if (page === 'admin' && session.role !== 'admin') return 'programme'
+    if (page === 'card' && !session.user) return 'programme'
+    return page
+  })()
+
   return (
     <div className="app">
-      <Header
-        session={session}
-        onLogout={logout}
-        onAdminClick={() => setShowAdminLogin(true)}
-      />
-      <NavTabs
-        page={page}
-        session={session}
-        onNavigate={navigate}
-      />
-
+      <Header session={session} onLogout={logout} onAdminClick={() => setShowAdminLogin(true)} />
+      <NavTabs page={currentPage} session={session} onNavigate={navigate} />
       <div className="screen-area">
-        {page === 'programme' && <Programme />}
-        {page === 'login' && (
-          <Login
-            firebaseReady={firebaseReady}
-            state={state}
-            setState={setState}
-            onLogin={(user, role) => {
-              setSession({ user, role })
-              setPage('voting')
-            }}
-          />
+        {currentPage === 'programme' && <Programme />}
+        {currentPage === 'login' && (
+          <Login firebaseReady={firebaseReady} state={state} setState={setState}
+            onLogin={(user, role) => { setSession({ user, role }); setPage('voting') }} />
         )}
-        {page === 'voting' && session.user && (
-          <Voting
-            session={session}
-            state={state}
-            setState={setState}
-            showToast={showToast}
-          />
+        {currentPage === 'voting' && session.user && (
+          <Voting session={session} state={state} setState={setState} showToast={showToast} />
         )}
-        {page === 'admin' && session.role === 'admin' && (
-          <Admin
-            state={state}
-            setState={setState}
-            showToast={showToast}
-          />
+        {currentPage === 'admin' && session.role === 'admin' && (
+          <Admin state={state} setState={setState} showToast={showToast} />
         )}
-        {page === 'card' && session.user && (
-          <MyCard session={session} state={state} />
+        {currentPage === 'card' && session.user && (
+          <MyCard session={session} state={state} setState={setState} />
         )}
-        {page === 'bingo' && (
-          <SciBingo
-            session={session}
-            state={state}
-            setState={setState}
-            showToast={showToast}
-          />
+        {currentPage === 'bingo' && (
+          <SciBingo session={session} state={state} setState={setState} showToast={showToast} />
         )}
       </div>
-
       {showAdminLogin && (
-        <AdminLoginModal
-          onClose={() => setShowAdminLogin(false)}
-          onLogin={loginAsAdmin}
-          adminPass={state.adminPass || 'admin123'}
-        />
+        <AdminLoginModal onClose={() => setShowAdminLogin(false)} onLogin={loginAsAdmin}
+          adminPass={state.adminPass || 'admin123'} />
       )}
-
       <Toast {...toast} />
     </div>
   )
