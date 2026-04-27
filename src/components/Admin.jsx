@@ -84,7 +84,7 @@ function EvalModal({ initial, existingNames, onSave, onClose }) {
   )
 }
 
-export default function Admin({ state, setState, showToast }) {
+export default function Admin({ state, actions, showToast }) {
   const [activeSec, setActiveSec] = useState('sec1')
   const [evalModal, setEvalModal] = useState(null) // null | 'add' | evaluator object
 
@@ -116,22 +116,17 @@ export default function Admin({ state, setState, showToast }) {
       return { ...p, rawCount, lockedCount, avg: wTot > 0 ? (wSum / wTot).toFixed(2) : null }
     }).sort((a, b) => !a.avg && !b.avg ? 0 : !a.avg ? 1 : !b.avg ? -1 : parseFloat(b.avg) - parseFloat(a.avg))
 
-  const handleSaveEval = (data) => {
+  const handleSaveEval = async (data) => {
     const isEdit = !!(evalModal?.name)
-    setState(prev => {
-      const regs = prev.registeredEvaluators || []
-      if (isEdit) {
-        return { ...prev, registeredEvaluators: regs.map(e => e.name === data.name ? { ...e, pass: data.pass, sections: data.sections } : e) }
-      }
-      return { ...prev, registeredEvaluators: [...regs, data], evaluators: [...(prev.evaluators || []), data.name] }
-    })
+    if (isEdit) await actions.updateEvaluator(data)
+    else await actions.addEvaluator(data)
     setEvalModal(null)
     showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
   }
 
   const removeEval = (name) => {
     if (!confirm(`Remove "${name}"? Their votes will be kept.`)) return
-    setState(prev => ({
+    // setState via actions
       ...prev,
       registeredEvaluators: (prev.registeredEvaluators || []).filter(e => e.name !== name),
       evaluators: (prev.evaluators || []).filter(e => e !== name),
@@ -139,18 +134,13 @@ export default function Admin({ state, setState, showToast }) {
     showToast(`${name} removed.`, 'orange')
   }
 
-  const approve = (id) => {
-    setState(prev => {
-      const r = prev.editRequests?.find(x => x.id === id); if (!r) return prev
-      const nl = { ...prev.locked }
-      if (nl[r.evalName]) { const l = { ...nl[r.evalName] }; delete l[r.presId]; nl[r.evalName] = l }
-      return { ...prev, editRequests: prev.editRequests.map(x => x.id === id ? { ...x, status: 'approved' } : x), locked: nl }
-    })
+  const approve = async (id) => {
+    await actions.approveEdit(id)
     showToast('Edit approved.', 'green')
   }
 
-  const reject = (id) => {
-    setState(prev => ({ ...prev, editRequests: prev.editRequests.map(x => x.id === id ? { ...x, status: 'rejected' } : x) }))
+  const reject = async (id) => {
+    await actions.rejectEdit(id)
     showToast('Request rejected.', 'red')
   }
 
@@ -165,7 +155,7 @@ export default function Admin({ state, setState, showToast }) {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-ghost btn-sm" onClick={() => exportCSV(state)}>Export CSV</button>
-          <button className="btn btn-danger btn-sm" onClick={() => { if (confirm('Delete ALL data?')) { setState({ ...state, votes:{}, locked:{}, editRequests:[], evaluators:[], attendees:[], registeredEvaluators:[], funFacts:[], bingoCards:{} }); showToast('All data cleared.','red') } }}>Clear data</button>
+          <button className="btn btn-danger btn-sm" onClick={async () => { if (confirm('Delete ALL data?')) { await actions.clearAll(); showToast('All data cleared.','red') } }}>Clear data</button>
         </div>
       </div>
 

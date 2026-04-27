@@ -19,7 +19,7 @@ function strToSeed(str) {
 
 // Each square: { text, isFact, factOwnerId?, signed, name, free, status: null|'correct'|'wrong' }
 
-export default function SciBingo({ session, state, setState, showToast }) {
+export default function SciBingo({ session, state, actions, showToast }) {
   const [tab, setTab] = useState('play')
   const [activeCell, setActiveCell] = useState(null) // index of cell being answered
   const [answerDraft, setAnswerDraft] = useState('')
@@ -60,18 +60,8 @@ export default function SciBingo({ session, state, setState, showToast }) {
         squares.push({ ...sq, signed: false, name: '', status: null })
       }
     }
-    setState(prev => ({
-      ...prev,
-      bingoCards: { ...(prev.bingoCards || {}), [myKey]: { squares, key: myKey, generated: Date.now() } }
-    }))
-  }
-
-  const updateCard = (updater) => {
-    setState(prev => {
-      const card = { ...prev.bingoCards[myKey] }
-      card.squares = updater(card.squares)
-      return { ...prev, bingoCards: { ...prev.bingoCards, [myKey]: card } }
-    })
+    const card = { squares, key: myKey, generated: Date.now() }
+    actions.saveBingoCard(card)
   }
 
   // Submit answer for a cell
@@ -81,20 +71,14 @@ export default function SciBingo({ session, state, setState, showToast }) {
     if (!answer) return
 
     if (sq.isFact) {
-      // For fun facts: correct answer is the name of the person who submitted it
       const isCorrect = answer.toLowerCase() === (sq.factOwnerName || '').toLowerCase()
-      updateCard(squares => squares.map((s, i) => i === cellIndex
-        ? { ...s, name: answer, signed: isCorrect, status: isCorrect ? 'correct' : 'wrong' }
-        : s
-      ))
+      const updated = { ...myCard, squares: myCard.squares.map((s, i) => i === cellIndex ? { ...s, name: answer, signed: isCorrect, status: isCorrect ? 'correct' : 'wrong' } : s) }
+      actions.updateBingoCard(updated)
       if (isCorrect) showToast('Correct! Square signed.', 'green')
       else showToast('Not quite — try again!', 'red')
     } else {
-      // For fixed statements: any non-empty name is accepted as "signed"
-      updateCard(squares => squares.map((s, i) => i === cellIndex
-        ? { ...s, name: answer, signed: true, status: 'correct' }
-        : s
-      ))
+      const updated2 = { ...myCard, squares: myCard.squares.map((s, i) => i === cellIndex ? { ...s, name: answer, signed: true, status: 'correct' } : s) }
+      actions.updateBingoCard(updated2)
       showToast('Square signed!', 'green')
     }
     setActiveCell(null)
@@ -102,10 +86,9 @@ export default function SciBingo({ session, state, setState, showToast }) {
   }
 
   const clearAnswer = (cellIndex) => {
-    updateCard(squares => squares.map((s, i) => i === cellIndex
-      ? { ...s, name: '', signed: false, status: null }
-      : s
-    ))
+    if (!myCard) return
+    const updated = { ...myCard, squares: myCard.squares.map((s, i) => i === cellIndex ? { ...s, name: '', signed: false, status: null } : s) }
+    actions.updateBingoCard(updated)
     setActiveCell(null)
     setAnswerDraft('')
   }
@@ -123,13 +106,8 @@ export default function SciBingo({ session, state, setState, showToast }) {
     if (!ffName.trim()) { setFfErr('Please enter your name.'); return }
     if (!ffText.trim()) { setFfErr('Please write your fun fact.'); return }
     if (ffText.length > 80) { setFfErr('Maximum 80 characters.'); return }
-    setState(prev => {
-      const facts = [...(prev.funFacts || [])]
-      const idx = facts.findIndex(f => f.name.toLowerCase() === ffName.trim().toLowerCase())
-      const entry = { id: Date.now(), name: ffName.trim(), text: ffText.trim() }
-      if (idx >= 0) facts[idx] = entry; else facts.push(entry)
-      return { ...prev, funFacts: facts }
-    })
+    const entry = { id: Date.now(), name: ffName.trim(), text: ffText.trim() }
+    actions.upsertFunFact(entry)
     setFfSubmitted(true)
   }
 
