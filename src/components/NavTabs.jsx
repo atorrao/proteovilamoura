@@ -1,9 +1,9 @@
 export default function NavTabs({ page, session, onNavigate }) {
   const tabs = [
-    { id: 'programme', label: 'Programme' },
-    { id: 'login', label: 'Voting' },
-    { id: 'bingo', label: 'SciBingo' },
-    ...(session.user && session.role !== 'admin' ? [{ id: 'card', label: 'My Card' }] : []),
+    { id: 'programme', label: 'Programme', icon: '📋' },
+    { id: 'login',     label: 'Voting',    icon: '🗳' },
+    { id: 'bingo',     label: 'SciBingo',  icon: '🎯' },
+    ...(session.user && session.role !== 'admin' ? [{ id: 'card', label: 'My Card', icon: '👤' }] : []),
   ]
 
   const isActive = (id) => {
@@ -11,14 +11,21 @@ export default function NavTabs({ page, session, onNavigate }) {
     return page === id
   }
 
+  const handleNav = (id) => {
+    if (id === 'login') {
+      if (session.user && session.role !== 'admin') onNavigate('voting')
+      else onNavigate('login')
+    } else {
+      onNavigate(id)
+    }
+  }
+
   return (
     <nav className="nav-tabs">
       {tabs.map(t => (
-        <button
-          key={t.id}
-          className={`nav-tab ${isActive(t.id) ? 'active' : ''}`}
-          onClick={() => onNavigate(t.id === 'login' ? (session.user && session.role !== 'admin' ? 'voting' : 'login') : t.id)}
-        >
+        <button key={t.id} className={`nav-tab ${isActive(t.id) ? 'active' : ''}`}
+          onClick={() => handleNav(t.id)}>
+          <span className="nav-tab-icon">{t.icon}</span>
           {t.label}
         </button>
       ))}
