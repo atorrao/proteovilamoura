@@ -1,34 +1,39 @@
 export default function NavTabs({ page, session, onNavigate }) {
-  const tabs = [
-    { id: 'programme', label: 'Programme', icon: '📋' },
-    { id: 'login',     label: 'Voting',    icon: '🗳' },
-    { id: 'bingo',     label: 'SciBingo',  icon: '🎯' },
-    ...(session.user && session.role !== 'admin' ? [{ id: 'card', label: 'My Card', icon: '👤' }] : []),
-  ]
+ // Admin gets full nav; others get simplified nav
+ const isAdmin = session.role === 'admin'
 
-  const isActive = (id) => {
-    if (id === 'login') return ['login','voting','admin'].includes(page)
-    return page === id
-  }
+ const tabs = isAdmin ? [
+ { id: 'programme', label: 'Programme' },
+ { id: 'admin', label: 'Backoffice' },
+ ] : [
+ { id: 'programme', label: 'Programme' },
+ { id: 'login', label: 'Voting' },
+ ...(session.user ? [{ id: 'card', label: 'My Card' }] : []),
+ ]
 
-  const handleNav = (id) => {
-    if (id === 'login') {
-      if (session.user && session.role !== 'admin') onNavigate('voting')
-      else onNavigate('login')
-    } else {
-      onNavigate(id)
-    }
-  }
+ const isActive = (id) => {
+ if (id === 'login') return ['login','voting'].includes(page)
+ if (id === 'admin') return page === 'admin'
+ return page === id
+ }
 
-  return (
-    <nav className="nav-tabs">
-      {tabs.map(t => (
-        <button key={t.id} className={`nav-tab ${isActive(t.id) ? 'active' : ''}`}
-          onClick={() => handleNav(t.id)}>
-          <span className="nav-tab-icon">{t.icon}</span>
-          {t.label}
-        </button>
-      ))}
-    </nav>
-  )
+ const handleNav = (id) => {
+ if (id === 'login' && session.user && session.role !== 'admin') {
+ onNavigate('voting')
+ } else {
+ onNavigate(id)
+ }
+ }
+
+ return (
+ <nav className="nav-tabs">
+ {tabs.map(t => (
+ <button key={t.id}
+ className={`nav-tab ${isActive(t.id) ? 'active' : ''}`}
+ onClick={() => handleNav(t.id)}>
+ {t.label}
+ </button>
+ ))}
+ </nav>
+ )
 }
