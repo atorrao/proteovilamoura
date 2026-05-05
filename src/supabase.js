@@ -183,10 +183,16 @@ export async function getPendingAttendees() {
 }
 
 export async function insertPendingAttendee(att) {
-  const { error } = await supabase.from('pending_attendees').insert({
+  const { data, error } = await supabase.from('pending_attendees').insert({
     name: att.name, inst: att.inst || '', country: att.country || '', pass: att.pass
-  })
-  if (error) { console.error('insertPendingAttendee:', error); throw error }
+  }).select()
+  if (error) {
+    console.error('insertPendingAttendee error:', JSON.stringify(error))
+    // Provide a clear error message
+    const msg = error.message || error.details || error.hint || JSON.stringify(error)
+    throw new Error(msg)
+  }
+  return data
 }
 
 export async function approvePendingAttendee(id, att) {
