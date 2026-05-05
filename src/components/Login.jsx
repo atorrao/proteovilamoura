@@ -75,7 +75,7 @@ export default function Login({ ready, state, actions, onLogin }) {
   if (registered) {
     return (
       <div style={{ padding: '24px 16px', maxWidth: 420, margin: '0 auto' }}>
-        <div style={{ background: 'var(--surface)', border: '1px solid rgba(39,181,160,0.4)', borderRadius: 16, padding: '32px 24px', textAlign: 'center' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid rgba(39,181,160,0.4)', background: 'rgba(39,181,160,0.06)', borderRadius: 16, padding: '32px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: '2rem', marginBottom: 16 }}>✓</div>
           <div style={{ fontFamily: 'Syne', fontSize: '1.2rem', fontWeight: 700, marginBottom: 8, color: 'var(--accent2)' }}>Registration submitted!</div>
           <div style={{ color: 'var(--muted)', fontSize: '0.88rem', lineHeight: 1.6 }}>

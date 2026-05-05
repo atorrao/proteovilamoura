@@ -67,7 +67,7 @@ export default function Voting({ session, state, actions, showToast }) {
  className="section-tab"
  onClick={() => { setActiveSec(sec.key); setTypeFilter('all') }}
  style={{
- background: isActive ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'var(--card)',
+ background: isActive ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'var(--surface)',
  borderColor: isActive ? 'transparent' : 'var(--border)',
  color: isActive ? '#fff' : 'var(--muted)',
  }}>
@@ -85,7 +85,7 @@ export default function Voting({ session, state, actions, showToast }) {
  style={{
  padding: '5px 12px', border: '1px solid', borderRadius: 20, cursor: 'pointer',
  fontSize: '0.78rem', fontWeight: 600, transition: 'all 0.15s', minHeight: 34,
- background: typeFilter === t ? 'rgba(30,143,171,0.2)' : 'transparent',
+ background: typeFilter === t ? 'rgba(30,143,171,0.12)' : 'var(--surface)',
  borderColor: typeFilter === t ? 'var(--accent)' : 'var(--border)',
  color: typeFilter === t ? 'var(--accent2)' : 'var(--muted)',
  }}>

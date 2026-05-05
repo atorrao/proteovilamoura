@@ -70,7 +70,7 @@ export default function Programme() {
  return (
  <button key={k} onClick={() => setActiveDay(k)}
  style={{ flex: 1, padding: '8px 4px', border: '1px solid', borderRadius: 10, cursor: 'pointer', textAlign: 'center', transition: 'all 0.18s',
- background: isActive ? 'var(--surface2)' : 'var(--card)',
+ background: isActive ? 'var(--surface2)' : 'var(--surface)',
  borderColor: isActive ? 'var(--accent)' : 'var(--border)',
  color: isActive ? 'var(--text)' : 'var(--muted)' }}>
  <div style={{ fontSize: '0.68rem', opacity: 0.7 }}>{d.date}</div>
@@ -88,7 +88,7 @@ export default function Programme() {
  <button key={h} onClick={() => setActiveHalf(h)}
  style={{ flex: 1, padding: '9px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.84rem', transition: 'all 0.18s',
  background: activeHalf === h ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'transparent',
- color: activeHalf === h ? '#fff' : 'var(--muted)' }}>
+ color: activeHalf === h ? '#fff' : 'var(--text)' }}>
  {h === 'morning' ? 'Morning' : 'Afternoon'}
  </button>
  ))}
@@ -118,7 +118,7 @@ export default function Programme() {
  const m = block.title.match(/^Section\s+(\d+)\s+[—–-]\s+(.+)/)
  if (m) titleEl = (
  <div>
- <div style={{ fontSize: '0.68rem', color: 'var(--accent)', fontWeight: 700, marginBottom: 2 }}>Section {m[1]}</div>
+ <div style={{ fontSize: '0.68rem', color: 'var(--brand-mid)', fontWeight: 700, marginBottom: 2 }}>Section {m[1]}</div>
  <div style={{ fontWeight: 600, fontSize: '0.86rem', lineHeight: 1.3 }}>{m[2]}</div>
  </div>
  )
@@ -135,7 +135,7 @@ export default function Programme() {
  return (
  <div key={idx} className="prog-block"
  style={{
- background: happening ? 'rgba(34,197,94,0.06)' : 'var(--card)',
+ background: happening ? 'rgba(22,163,74,0.05)' : 'var(--surface)',
  borderColor: happening ? 'rgba(34,197,94,0.3)' : 'var(--border)',
  boxShadow: happening ? '0 0 16px rgba(34,197,94,0.1)' : 'none',
  }}>

@@ -198,7 +198,7 @@ export default function Admin({ state, actions, showToast }) {
 
       {/* ── EVALUATORS TAB ── */}
       {activeTab === 'evaluators' && (
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
             <div style={{ fontWeight: 700 }}>Registered evaluators</div>
             <button className="btn btn-sm btn-ghost" onClick={() => setEvalModal('add')}>+ Add evaluator</button>
@@ -262,7 +262,7 @@ export default function Admin({ state, actions, showToast }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Pending registrations */}
           {pendingAttendees.length > 0 && (
-            <div style={{ background: 'var(--card)', border: '1px solid rgba(249,115,22,0.3)', borderRadius: 12, padding: 16 }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid rgba(249,115,22,0.3)', borderRadius: 12, padding: 16 }}>
               <div style={{ fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
                 Pending registrations
                 <span style={{ background: 'var(--orange)', color: '#fff', borderRadius: 10, padding: '1px 8px', fontSize: '0.72rem' }}>{pendingAttendees.length}</span>
@@ -289,7 +289,7 @@ export default function Admin({ state, actions, showToast }) {
           )}
 
           {/* Approved attendees */}
-          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 16 }}>
             <div style={{ fontWeight: 700, marginBottom: 14 }}>Approved attendees ({attendees.length})</div>
             {!attendees.length ? (
               <div style={{ color: 'var(--muted)', fontSize: '0.86rem' }}>No approved attendees yet.</div>
@@ -333,7 +333,7 @@ export default function Admin({ state, actions, showToast }) {
             {SECTIONS.map(s => (
               <button key={s.key} onClick={() => setActiveSec(s.key)}
                 style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600,
-                  background: activeSec === s.key ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'var(--card)',
+                  background: activeSec === s.key ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'var(--surface)',
                   borderColor: activeSec === s.key ? 'transparent' : 'var(--border)',
                   color: activeSec === s.key ? '#fff' : 'var(--muted)' }}>
                 {s.short}
@@ -341,7 +341,7 @@ export default function Admin({ state, actions, showToast }) {
             ))}
           </div>
 
-          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, overflowX: 'auto' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem', minWidth: 600 }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
