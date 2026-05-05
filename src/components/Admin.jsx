@@ -298,7 +298,7 @@ export default function Admin({ state, actions, showToast }) {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                      {['Name', 'Institution', 'Country', 'Votes cast'].map(h => <th key={h} style={th}>{h}</th>)}
+                      {['Name', 'Password', 'Institution', 'Country', 'Votes cast'].map(h => <th key={h} style={th}>{h}</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -308,6 +308,11 @@ export default function Admin({ state, actions, showToast }) {
                       return (
                         <tr key={att.name} style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '10px 14px', fontWeight: 600 }}>{att.name}</td>
+                          <td style={{ padding: '10px 14px' }}>
+                            {att.pass
+                              ? <span style={{ fontFamily:'monospace', fontSize:'0.82rem', background:'var(--bg)', padding:'2px 8px', borderRadius:6, color:'var(--accent2)', border:'1px solid var(--border)' }}>{att.pass}</span>
+                              : <span style={{ color:'var(--muted)', fontSize:'0.78rem' }}>—</span>}
+                          </td>
                           <td style={{ padding: '10px 14px', color: 'var(--muted)' }}>{att.inst || '—'}</td>
                           <td style={{ padding: '10px 14px', color: 'var(--muted)' }}>{att.country || '—'}</td>
                           <td style={{ padding: '10px 14px' }}>
