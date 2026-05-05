@@ -204,7 +204,7 @@ export default function MyCard({ session, state }) {
   }
 
   const FIELDS = [
-    { key: 'name',    label: 'Full name',           req: true,  placeholder: 'e.g. Prof. Ana Silva' },
+    { key: 'name',    label: 'Name',           req: true,  placeholder: 'e.g. Prof. Ana Silva' },
     { key: 'role',    label: 'Position / Title',    req: false, placeholder: 'e.g. Associate Professor' },
     { key: 'company', label: 'Institution',         req: true,  placeholder: 'e.g. University of Lisbon' },
     { key: 'email',   label: 'Email',               req: true,  placeholder: 'e.g. ana@fc.ul.pt', type: 'email' },
