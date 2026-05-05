@@ -33,7 +33,10 @@ export async function getAttendees() {
 
 export async function upsertAttendee(att) {
   const { error } = await supabase.from('attendees').upsert({
-    name: att.name, inst: att.inst || '', country: att.country || '',
+    name: att.name,
+    inst: att.inst || '',
+    email: att.email || '',
+    country: att.country || '',
     ...(att.pass ? { pass: att.pass } : {})
   })
   if (error) { console.error('upsertAttendee:', error); throw error }
