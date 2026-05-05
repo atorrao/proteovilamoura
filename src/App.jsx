@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   loadAllFromSupabase, subscribeToChanges,
   upsertVote, upsertEvaluator, deleteEvaluator, upsertAttendee,
-  insertPendingAttendee, approvePendingAttendee, rejectPendingAttendee,
 } from './supabase.js'
 import Header from './components/Header.jsx'
 import NavTabs from './components/NavTabs.jsx'
@@ -14,14 +13,18 @@ import MyCard from './components/MyCard.jsx'
 import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
 
-const SESSION_KEY = 'pv2026_session'
 const ADMIN_PASS = 'admin123'
 
+// ── Session: sessionStorage so each tab is completely isolated ────────────────
+// This prevents Person A's login bleeding into Person B's tab
 function loadSession() {
-  try { const r = localStorage.getItem(SESSION_KEY); return r ? JSON.parse(r) : {} } catch { return {} }
+  try {
+    const r = sessionStorage.getItem('pv2026_session')
+    return r ? JSON.parse(r) : { user: null, role: null, page: 'programme' }
+  } catch { return { user: null, role: null, page: 'programme' } }
 }
 function saveSession(s, page) {
-  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ ...s, page })) } catch {}
+  try { sessionStorage.setItem('pv2026_session', JSON.stringify({ ...s, page })) } catch {}
 }
 
 const EMPTY_STATE = {
@@ -39,8 +42,10 @@ export default function App() {
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
+  // Persist session to sessionStorage (tab-isolated)
   useEffect(() => { saveSession(session, page) }, [session, page])
 
+  // Load from Supabase and subscribe to real-time changes
   useEffect(() => {
     loadAllFromSupabase()
       .then(data => { setState(data); setReady(true) })
@@ -57,7 +62,7 @@ export default function App() {
   }, [])
 
   const actions = {
-    // Votes
+    // Votes — each user's votes are keyed by their own name
     castVote: async (userName, presId, score) => {
       await upsertVote(userName, presId, score)
       setState(prev => ({
@@ -91,8 +96,8 @@ export default function App() {
       }))
     },
 
-    // Attendees — direct add (admin use)
-    addAttendee: async (att) => {
+    // Attendees — register directly (no approval needed)
+    registerAttendee: async (att) => {
       await upsertAttendee(att)
       setState(prev => ({
         ...prev,
@@ -100,38 +105,13 @@ export default function App() {
       }))
     },
 
-    // Attendees — register flow (requires admin approval)
-    requestAttendee: async (att) => {
-      await insertPendingAttendee(att)
-      setState(prev => ({
-        ...prev,
-        pendingAttendees: [...(prev.pendingAttendees || []), att],
-      }))
-    },
-    approveAttendee: async (id, att) => {
-      await approvePendingAttendee(id, att)
-      setState(prev => ({
-        ...prev,
-        attendees: [...prev.attendees.filter(a => a.name !== att.name), att],
-        pendingAttendees: (prev.pendingAttendees || []).filter(a => a.id !== id),
-      }))
-    },
-    rejectAttendee: async (id) => {
-      await rejectPendingAttendee(id)
-      setState(prev => ({
-        ...prev,
-        pendingAttendees: (prev.pendingAttendees || []).filter(a => a.id !== id),
-      }))
-    },
-
-    // Clear all
+    // Admin: clear all
     clearAll: async () => {
       const { supabase } = await import('./supabase.js')
       await Promise.all([
         supabase.from('votes').delete().neq('id', 0),
         supabase.from('evaluators').delete().neq('name', ''),
         supabase.from('attendees').delete().neq('name', ''),
-        supabase.from('pending_attendees').delete().neq('id', 0),
       ])
       setState(EMPTY_STATE)
     },
@@ -144,7 +124,7 @@ export default function App() {
 
   const logout = useCallback(() => {
     setSession({ user: null, role: null })
-    localStorage.removeItem(SESSION_KEY)
+    sessionStorage.removeItem('pv2026_session')
     setPage('login')
   }, [])
 
