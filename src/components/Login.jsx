@@ -49,7 +49,15 @@ export default function Login({ ready, state, actions, onLogin }) {
       await actions.requestAttendee({ name: name.trim(), inst, country: finalCountry, pass })
       setRegistered(true)
     } catch (e) {
-      setErr('Registration failed. Please try again.')
+      console.error('Register error:', e)
+      const msg = e?.message || e?.details || JSON.stringify(e) || ''
+      if (msg.includes('does not exist') || msg.includes('relation')) {
+        setErr('Database not ready. Ask the administrator to run the setup SQL in Supabase.')
+      } else if (msg.includes('duplicate') || msg.includes('unique')) {
+        setErr('This name is already registered.')
+      } else {
+        setErr('Registration failed: ' + (msg || 'unknown error'))
+      }
     } finally { setLoading(false) }
   }
 

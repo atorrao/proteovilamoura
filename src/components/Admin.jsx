@@ -393,10 +393,10 @@ export default function Admin({ state, actions, showToast }) {
                           </td>
                           {sectionEvals.map(n => {
                             const sc = p.evalScores[n]
-                            return <td key={n} style={{ padding: '10px 6px', textAlign: 'center', fontWeight: sc !== undefined ? 700 : 400, color: sc !== undefined ? '#fff' : 'rgba(255,255,255,0.2)', fontSize: '0.84rem' }}>{sc ?? '—'}</td>
+                            return <td key={n} style={{ padding: '10px 6px', textAlign: 'center', fontWeight: sc !== undefined ? 700 : 400, color: sc !== undefined ? 'var(--text)' : 'var(--muted)', fontSize: '0.84rem' }}>{sc ?? '—'}</td>
                           })}
                           {attendees.length > 0 && (
-                            <td style={{ padding: '10px 6px', textAlign: 'center', fontWeight: p.attAvg ? 700 : 400, color: p.attAvg ? 'var(--purple)' : 'rgba(255,255,255,0.2)', fontSize: '0.84rem' }}>
+                            <td style={{ padding: '10px 6px', textAlign: 'center', fontWeight: p.attAvg ? 700 : 400, color: p.attAvg ? 'var(--purple)' : 'var(--muted)', fontSize: '0.84rem' }}>
                               {p.attAvg ?? '—'}
                             </td>
                           )}
@@ -410,7 +410,7 @@ export default function Admin({ state, actions, showToast }) {
                               </div>
                             ) : <span style={{ color: 'var(--muted)' }}>—</span>}
                           </td>
-                          <td style={{ padding: '10px 14px', color: '#fff', fontSize: '0.78rem' }}>{p.rawCount}</td>
+                          <td style={{ padding: '10px 14px', color: 'var(--text)', fontSize: '0.78rem' }}>{p.rawCount}</td>
                         </tr>
                       )
                     })
