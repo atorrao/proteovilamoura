@@ -14,7 +14,11 @@ export async function getEvaluators() {
 
 export async function upsertEvaluator(ev) {
   const { error } = await supabase.from('evaluators').upsert({
-    name: ev.name, pass: ev.pass, sections: ev.sections || []
+    name: ev.name,
+    email: ev.email || '',
+    sections: ev.sections || [],
+    inst: ev.inst || '',
+    country: ev.country || '',
   })
   if (error) console.error('upsertEvaluator:', error)
 }
