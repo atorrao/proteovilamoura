@@ -37,7 +37,8 @@ export async function upsertAttendee(att) {
     inst: att.inst || '',
     email: att.email || '',
     country: att.country || '',
-    ...(att.pass ? { pass: att.pass } : {})
+    ...(att.pass !== undefined ? { pass: att.pass } : {}),
+    ...(att.accessed !== undefined ? { accessed: att.accessed } : {}),
   })
   if (error) { console.error('upsertAttendee:', error); throw error }
 }

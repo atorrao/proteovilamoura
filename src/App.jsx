@@ -15,13 +15,9 @@ import AdminLoginModal from './components/AdminLoginModal.jsx'
 
 const ADMIN_PASS = 'admin123'
 
-// ── Session: sessionStorage so each tab is completely isolated ────────────────
-// This prevents Person A's login bleeding into Person B's tab
+// sessionStorage = tab-isolated, prevents session bleed between users
 function loadSession() {
-  try {
-    const r = sessionStorage.getItem('pv2026_session')
-    return r ? JSON.parse(r) : { user: null, role: null, page: 'programme' }
-  } catch { return { user: null, role: null, page: 'programme' } }
+  try { const r = sessionStorage.getItem('pv2026_session'); return r ? JSON.parse(r) : {} } catch { return {} }
 }
 function saveSession(s, page) {
   try { sessionStorage.setItem('pv2026_session', JSON.stringify({ ...s, page })) } catch {}
@@ -29,8 +25,7 @@ function saveSession(s, page) {
 
 const EMPTY_STATE = {
   evaluators: [], registeredEvaluators: [],
-  attendees: [], pendingAttendees: [],
-  votes: {}, locked: {},
+  attendees: [], votes: {}, locked: {},
 }
 
 export default function App() {
@@ -42,10 +37,8 @@ export default function App() {
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
-  // Persist session to sessionStorage (tab-isolated)
   useEffect(() => { saveSession(session, page) }, [session, page])
 
-  // Load from Supabase and subscribe to real-time changes
   useEffect(() => {
     loadAllFromSupabase()
       .then(data => { setState(data); setReady(true) })
@@ -62,7 +55,7 @@ export default function App() {
   }, [])
 
   const actions = {
-    // Votes — each user's votes are keyed by their own name
+    // Votes
     castVote: async (userName, presId, score) => {
       await upsertVote(userName, presId, score)
       setState(prev => ({
@@ -96,7 +89,38 @@ export default function App() {
       }))
     },
 
-    // Attendees — register directly (no approval needed)
+    // Attendees — admin manages these
+    addAttendee: async (att) => {
+      await upsertAttendee(att)
+      setState(prev => ({
+        ...prev,
+        attendees: [...prev.attendees.filter(a => a.name !== att.name), att],
+      }))
+    },
+    updateAttendee: async (att) => {
+      await upsertAttendee(att)
+      setState(prev => ({
+        ...prev,
+        attendees: prev.attendees.map(a => a.name === att.name ? att : a),
+      }))
+    },
+    removeAttendee: async (name) => {
+      const { supabase } = await import('./supabase.js')
+      await supabase.from('attendees').delete().eq('name', name)
+      setState(prev => ({ ...prev, attendees: prev.attendees.filter(a => a.name !== name) }))
+    },
+
+    // Mark attendee as accessed when they log in
+    markAttendeeAccessed: async (name) => {
+      const { supabase } = await import('./supabase.js')
+      await supabase.from('attendees').update({ accessed: true }).eq('name', name)
+      setState(prev => ({
+        ...prev,
+        attendees: prev.attendees.map(a => a.name === name ? { ...a, accessed: true } : a),
+      }))
+    },
+
+    // Register attendee (legacy, kept for admin add flow)
     registerAttendee: async (att) => {
       await upsertAttendee(att)
       setState(prev => ({
@@ -105,7 +129,7 @@ export default function App() {
       }))
     },
 
-    // Admin: clear all
+    // Clear all
     clearAll: async () => {
       const { supabase } = await import('./supabase.js')
       await Promise.all([
@@ -137,12 +161,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Header
-        session={session}
-        onLogout={logout}
-        onAdminClick={() => setShowAdminLogin(true)}
-        onAdminHome={() => setPage('admin')}
-      />
+      <Header session={session} onLogout={logout} onAdminClick={() => setShowAdminLogin(true)} onAdminHome={() => setPage('admin')} />
       <NavTabs page={currentPage} session={session} onNavigate={navigate} />
       <div className="screen-area">
         {currentPage === 'programme' && <Programme />}
