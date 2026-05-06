@@ -56,7 +56,7 @@ export const PROGRAMME = {
       { time: '11:00–11:30', kind: 'invited', title: 'Invited Speaker — Etienne Coyaud — Proximity labeling tools to investigate pathogenic protein networks', talks: [] },
       { time: '11:30–12:45', kind: 'section', title: 'Section 4 — Networks in Action: Interactomes, Signalling & Bioinformatics Innovation', sectionKey: 'sec4', talks: [
         { time: '11:30–11:45', title: 'Deciphering protein-protein interactions in live neurons using XL-MS', author: 'Hugo GIZARDIN-FREDON', type: 'oral', id: 206 },
-        { time: '11:45–12:00', title: 'Proteomic profiling of the interactome of phosphorylated Tau aggregates identifies modulators of Alzheimer's disease progression', author: 'Sofía Jiménez de Ocaña', type: 'oral', id: 207 },
+        { time: '11:45–12:00', title: "Proteomic profiling of the interactome of phosphorylated Tau aggregates identifies modulators of Alzheimer's disease progression", author: 'Sofía Jiménez de Ocaña', type: 'oral', id: 207 },
         { time: '12:00–12:15', title: 'Sponsor Oral Communication — Bruker #1', author: '', type: 'oral', id: 208 },
         { time: '12:15–12:30', title: 'GLYCOAVATARS: BEAD-COATED MEMBRANE MODELS FOR STUDYING THE CANCER-IMMUNE CELLS INTERACTOME', author: 'Andreia Rafaela Linhares Miranda', type: 'oral', id: 209 },
         { time: '12:30–12:45', title: 'Orai1 facilitates angiogenesis after myocardial infarction through Notch1 signaling pathway', author: 'Isabel María Galeano Otero', type: 'oral', id: 210 },
@@ -69,7 +69,7 @@ export const PROGRAMME = {
       { time: '14:30–15:00', kind: 'invited', title: 'Invited Speaker — Ana Martinez del Val — Decoding Protein Function: How Proteomics Reveals Post-Translational Control in Cell Signalling and Disease', talks: [] },
       { time: '15:00–16:00', kind: 'section', title: 'Section 5 — PTMs: Deciphering the Dynamics of Protein Regulation', sectionKey: 'sec5', talks: [
         { time: '15:00–15:15', title: 'EXPERIMENTAL DESIGN AND MULTIVARIATE ANALYSIS APPROACHES FOR GLYCOPROTEOMICS', author: 'Estela Giménez López', type: 'oral', id: 301 },
-        { time: '15:15–15:30', title: 'Study of the links between the dysregulations of metabolism and epigenetics marks in Huntington's disease', author: 'Hisham ALTOUFAILY', type: 'oral', id: 302 },
+        { time: '15:15–15:30', title: "Study of the links between the dysregulations of metabolism and epigenetics marks in Huntington's disease", author: 'Hisham ALTOUFAILY', type: 'oral', id: 302 },
         { time: '15:30–15:45', title: 'Phosphoproteomics as a tool to dissect the molecular mechanisms underlying a novel combinatorial therapeutic strategy in pseudomyxoma peritonei', author: 'ANTONIO ROMERO-RUIZ', type: 'oral', id: 303 },
         { time: '15:45–16:00', title: 'Quantitative proteomic characterization of metastasis-associated succinylome in colorectal cancer', author: 'Raquel Rejas González', type: 'oral', id: 304 },
       ]},
