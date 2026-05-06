@@ -41,30 +41,40 @@ function SectionToggle({ selected, onChange }) {
 function EvalModal({ initial, existingNames, onSave, onClose }) {
   const isEdit = !!initial
   const [name, setName] = useState(initial?.name || '')
-  const [pass, setPass] = useState(initial?.pass || '')
+  const [email, setEmail] = useState(initial?.email || '')
+  const [inst, setInst] = useState(initial?.inst || '')
+  const [country, setCountry] = useState(initial?.country || '')
   const [sections, setSections] = useState(initial?.sections || [])
   const [err, setErr] = useState('')
   const save = () => {
     if (!name.trim()) { setErr('Please enter a name.'); return }
-    if (!pass.trim()) { setErr('Please enter a password.'); return }
+    if (!email.trim()) { setErr('Please enter an email.'); return }
     if (!isEdit && existingNames.includes(name.trim())) { setErr('Name already exists.'); return }
-    onSave({ name: name.trim(), pass: pass.trim(), sections })
+    onSave({ name: name.trim(), email: email.trim(), inst, country, sections })
   }
   return (
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <h2>{isEdit ? 'Edit evaluator' : 'Add evaluator'}</h2>
-        <div className="modal-sub">{isEdit ? 'Update password and assigned sections.' : 'Set name, password and assigned sections.'}</div>
+        <div className="modal-sub">{isEdit ? 'Update evaluator details and assigned sections.' : 'Add evaluator. They will log in using their email.'}</div>
         <div style={{ display: 'grid', gap: 14 }}>
           <div className="field">
-            <label>Name</label>
+            <label>Name <span style={{ color: 'var(--red)' }}>*</span></label>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Prof. Ana Silva"
               disabled={isEdit} style={isEdit ? { opacity: 0.55, cursor: 'not-allowed' } : {}} />
-            {isEdit && <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: 3 }}>Name cannot be changed as it is linked to existing votes.</div>}
+            {isEdit && <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: 3 }}>Name is linked to existing votes and cannot be changed.</div>}
           </div>
           <div className="field">
-            <label>Access password</label>
-            <input type="text" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
+            <label>Email <span style={{ color: 'var(--red)' }}>*</span></label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g. evaluator@institution.com" />
+          </div>
+          <div className="field">
+            <label>Institution</label>
+            <input value={inst} onChange={e => setInst(e.target.value)} placeholder="e.g. University of Lisbon" />
+          </div>
+          <div className="field">
+            <label>Country</label>
+            <input value={country} onChange={e => setCountry(e.target.value)} placeholder="e.g. Portugal" />
           </div>
           <div>
             <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Assigned sections</div>
@@ -273,7 +283,7 @@ export default function Admin({ state, actions, showToast }) {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                    {['Name', 'Password', 'Sections', 'Progress', ''].map(h => <th key={h} style={th}>{h}</th>)}
+                    {['Name', 'Email', 'Institution', 'Sections', 'Progress', ''].map(h => <th key={h} style={th}>{h}</th>)}
                   </tr>
                 </thead>
                 <tbody>
