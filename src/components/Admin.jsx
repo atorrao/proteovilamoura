@@ -84,40 +84,33 @@ function EvalModal({ initial, existingNames, onSave, onClose }) {
 function AttendeeModal({ initial, existingNames, onSave, onClose }) {
   const isEdit = !!initial
   const [name, setName] = useState(initial?.name || '')
-  const [pass, setPass] = useState(initial?.pass || '')
-  const [inst, setInst] = useState(initial?.inst || '')
   const [email, setEmail] = useState(initial?.email || '')
-  const [country, setCountry] = useState(initial?.country || 'Portugal')
+  const [inst, setInst] = useState(initial?.inst || '')
+  const [country, setCountry] = useState(initial?.country || '')
   const [err, setErr] = useState('')
-  const [showPass, setShowPass] = useState(false)
 
   const save = () => {
     if (!name.trim()) { setErr('Please enter a name.'); return }
+    if (!email.trim()) { setErr('Please enter an email.'); return }
     if (!isEdit && existingNames.includes(name.trim())) { setErr('Name already exists.'); return }
-    onSave({ name: name.trim(), pass, inst, email, country })
+    onSave({ name: name.trim(), email: email.trim(), inst, country })
   }
 
   return (
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <h2>{isEdit ? 'Edit attendee' : 'Add attendee'}</h2>
-        <div className="modal-sub">{isEdit ? 'Update attendee details.' : 'Add an attendee manually.'}</div>
+        <div className="modal-sub">{isEdit ? 'Update attendee details.' : 'Add an attendee. They will log in using their email.'}</div>
         <div style={{ display: 'grid', gap: 12 }}>
           <div className="field">
-            <label>Name</label>
+            <label>Name <span style={{ color: "var(--red)" }}>*</span></label>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ana Silva"
               disabled={isEdit} style={isEdit ? { opacity: 0.55, cursor: 'not-allowed' } : {}} />
           </div>
           <div className="field">
-            <label>Password</label>
-            <div style={{ position: 'relative' }}>
-              <input type={showPass ? 'text' : 'password'} value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" style={{ paddingRight: 46 }} />
-              <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{showPass ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></> : <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></>}</svg>
-              </button>
-            </div>
+            <label>Email <span style={{ color: "var(--red)" }}>*</span></label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g. ana@fc.ul.pt" />
           </div>
-          <div className="field"><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="e.g. ana@fc.ul.pt" /></div>
           <div className="field"><label>Institution</label><input value={inst} onChange={e => setInst(e.target.value)} placeholder="e.g. University of Lisbon" /></div>
           <div className="field"><label>Country</label><input value={country} onChange={e => setCountry(e.target.value)} placeholder="e.g. Portugal" /></div>
         </div>
@@ -169,7 +162,7 @@ export default function Admin({ state, actions, showToast }) {
       // If only one group has votes, use only that group
       let finalAvg = null
       if (evalAvg !== null && attAvg !== null) {
-        finalAvg = (evalAvg * 0.9 + attAvg * 0.1).toFixed(2)
+        finalAvg = (evalAvg * 0.85 + attAvg * 0.15).toFixed(2)
       } else if (evalAvg !== null) {
         finalAvg = evalAvg.toFixed(2)
       } else if (attAvg !== null) {
@@ -202,15 +195,15 @@ export default function Admin({ state, actions, showToast }) {
 
   const handleSaveAtt = async (data) => {
     const isEdit = !!(attModal?.name)
-    await actions.registerAttendee(data)
+    if (isEdit) await actions.updateAttendee(data)
+    else await actions.addAttendee(data)
     setAttModal(null)
     showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
   }
 
   const removeAtt = async (name) => {
     if (!confirm(`Remove "${name}"? Their votes will be kept.`)) return
-    const { supabase } = await import('../supabase.js')
-    await supabase.from('attendees').delete().eq('name', name)
+    await actions.removeAttendee(name)
     showToast(`${name} removed.`, 'orange')
   }
 
@@ -239,6 +232,7 @@ export default function Admin({ state, actions, showToast }) {
           ['Attendees', attendees.length, 'c-purple'],
 
           ['Votes', totalVotes, 'c-green'],
+          ['Accessed', attendees.filter(a => a.accessed).length, 'c-cyan'],
           ['Sections', SECTIONS.length, 'c-cyan'],
         ].map(([lbl, val, cls]) => (
           <div key={lbl} className="stat-box">
@@ -342,7 +336,7 @@ export default function Admin({ state, actions, showToast }) {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                      {['Name', 'Password', 'Email', 'Institution', 'Country', 'Votes', ''].map(h => <th key={h} style={th}>{h}</th>)}
+                      {['Name', 'Email', 'Institution', 'Country', 'Votes', 'Accessed', ''].map(h => <th key={h} style={th}>{h}</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -352,16 +346,19 @@ export default function Admin({ state, actions, showToast }) {
                       return (
                         <tr key={att.name} style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '10px 14px', fontWeight: 600 }}>{att.name}</td>
-                          <td style={{ padding: '10px 14px' }}>
-                            {att.pass ? <span style={{ fontFamily:'monospace', fontSize:'0.82rem', background:'var(--bg)', padding:'2px 8px', borderRadius:6, color:'var(--accent2)', border:'1px solid var(--border)' }}>{att.pass}</span>
-                              : <span style={{ color:'var(--muted)', fontSize:'0.78rem' }}>—</span>}
-                          </td>
-                          <td style={{ padding: '10px 14px', color: 'var(--muted)', fontSize: '0.82rem' }}>{att.email || '—'}</td>
+                          <td style={{ padding: '10px 14px', fontSize: '0.82rem', color: 'var(--muted)' }}>{att.email || '—'}</td>
                           <td style={{ padding: '10px 14px', color: 'var(--muted)' }}>{att.inst || '—'}</td>
                           <td style={{ padding: '10px 14px', color: 'var(--muted)' }}>{att.country || '—'}</td>
                           <td style={{ padding: '10px 14px' }}>
                             <span style={{ padding: '3px 9px', borderRadius: 8, fontSize: '0.76rem', fontWeight: 600, background: voteCount > 0 ? 'rgba(34,197,94,0.15)' : 'rgba(90,128,153,0.15)', color: voteCount > 0 ? 'var(--green)' : 'var(--muted)' }}>
                               {voteCount}
+                            </span>
+                          </td>
+                          <td style={{ padding: '10px 14px' }}>
+                            <span style={{ padding: '3px 9px', borderRadius: 8, fontSize: '0.76rem', fontWeight: 600,
+                              background: att.accessed ? 'rgba(30,143,171,0.12)' : 'rgba(90,128,153,0.1)',
+                              color: att.accessed ? 'var(--accent)' : 'var(--muted)' }}>
+                              {att.accessed ? 'Yes' : 'Not yet'}
                             </span>
                           </td>
                           <td style={{ padding: '10px 14px' }}>
