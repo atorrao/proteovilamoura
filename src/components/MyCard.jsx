@@ -20,26 +20,6 @@ function buildVCard(p) {
   ].filter(Boolean).join('\r\n')
 }
 
-function downloadVCF(p) {
-  const blob = new Blob([buildVCard(p)], { type: 'text/vcard;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `${(p.name || 'contact').replace(/\s+/g, '_')}_ProteoVilamoura.vcf`
-  document.body.appendChild(a); a.click()
-  document.body.removeChild(a); URL.revokeObjectURL(url)
-}
-
-function useCopy(text) {
-  const [copied, setCopied] = useState(false)
-  const copy = () => {
-    navigator.clipboard?.writeText(text).then(() => {
-      setCopied(true); setTimeout(() => setCopied(false), 2000)
-    }).catch(() => {})
-  }
-  return [copied, copy]
-}
-
 function Avatar({ name, size = 64 }) {
   const initials = (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
   return (
@@ -71,13 +51,11 @@ function InfoRow({ label, value, action }) {
 
 // ── Digital Card ──────────────────────────────────────────────────────────────
 function DigitalCard({ profile, qrDataUrl }) {
-  const [emailCopied, copyEmail] = useCopy(profile.email)
-
   return (
     <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.15)', maxWidth: 400, width: '100%', margin: '0 auto' }}>
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '24px 20px 60px', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '24px 20px 100px', position: 'relative' }}>
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', background: 'rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: 20, display: 'inline-block', marginBottom: 16 }}>
           ProteoVilamoura 2026 · Vilamoura
         </div>
@@ -95,33 +73,20 @@ function DigitalCard({ profile, qrDataUrl }) {
 
         {/* QR code */}
         {qrDataUrl && (
-          <div style={{ position: 'absolute', bottom: -44, right: 18, background: '#fff', borderRadius: 14, padding: 9, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-            <img src={qrDataUrl} width={86} height={86} alt="QR vCard" style={{ display: 'block' }} />
-            <div style={{ fontSize: 8, color: '#aaa', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Scan to add</div>
+          <div style={{ position: 'absolute', bottom: -80, right: 16, background: '#fff', borderRadius: 16, padding: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+            <img src={qrDataUrl} width={160} height={160} alt="QR vCard" style={{ display: 'block' }} />
+            <div style={{ fontSize: 9, color: '#999', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Scan to add</div>
           </div>
         )}
       </div>
 
       {/* Info body */}
-      <div style={{ background: '#fff', padding: '56px 20px 20px' }}>
-        <InfoRow label="Email" value={profile.email}
-          action={
-            <button onClick={copyEmail} style={{ padding: '4px 10px', border: '1px solid #eee', borderRadius: 8, background: emailCopied ? '#f0fff4' : '#fff', color: emailCopied ? '#16a34a' : '#999', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
-              {emailCopied ? 'Copied!' : 'Copy'}
-            </button>
-          }
-        />
+      <div style={{ background: '#fff', padding: '92px 20px 20px' }}>
+        <InfoRow label="Email" value={profile.email} />
         <InfoRow label="Institution" value={profile.company} />
         <InfoRow label="Country" value={profile.country} />
 
-        {/* Save to contacts */}
-        <button onClick={() => downloadVCF(profile)}
-          style={{ width: '100%', marginTop: 16, padding: '12px', border: '1.5px solid #e5e7eb', borderRadius: 12, background: '#fff', color: '#333', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-          Save to Contacts
-        </button>
+
       </div>
     </div>
   )
@@ -154,7 +119,7 @@ export default function MyCard({ session, state }) {
   useEffect(() => {
     if (!profile.name) return
     QRCode.toDataURL(buildVCard(profile), {
-      errorCorrectionLevel: 'M', type: 'image/png', margin: 2, width: 256,
+      errorCorrectionLevel: 'M', type: 'image/png', margin: 2, width: 400,
       color: { dark: '#000000', light: '#ffffff' },
     }).then(setQrDataUrl).catch(() => setQrDataUrl(''))
   }, [profile])

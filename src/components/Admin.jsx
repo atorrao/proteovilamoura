@@ -190,11 +190,15 @@ export default function Admin({ state, actions, showToast }) {
   }
 
   const handleSaveEval = async (data) => {
-    const isEdit = !!(evalModal?.name)
-    if (isEdit) await actions.updateEvaluator(data)
-    else await actions.addEvaluator(data)
-    setEvalModal(null)
-    showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
+    const isEdit = evalModal && evalModal !== 'add'
+    try {
+      if (isEdit) await actions.updateEvaluator(data)
+      else await actions.addEvaluator(data)
+      setEvalModal(null)
+      showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
+    } catch(e) {
+      showToast('Error: ' + (e?.message || 'unknown'), 'red')
+    }
   }
 
   const removeEval = async (name) => {
@@ -204,11 +208,15 @@ export default function Admin({ state, actions, showToast }) {
   }
 
   const handleSaveAtt = async (data) => {
-    const isEdit = !!(attModal?.name)
-    if (isEdit) await actions.updateAttendee(data)
-    else await actions.addAttendee(data)
-    setAttModal(null)
-    showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
+    const isEdit = attModal && attModal !== 'add'
+    try {
+      if (isEdit) await actions.updateAttendee(data)
+      else await actions.addAttendee(data)
+      setAttModal(null)
+      showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
+    } catch(e) {
+      showToast('Error: ' + (e?.message || 'unknown'), 'red')
+    }
   }
 
   const removeAtt = async (name) => {
@@ -446,7 +454,7 @@ export default function Admin({ state, actions, showToast }) {
                           <td style={{ padding: '10px 14px' }}>
                             <div style={{ fontWeight: 500, lineHeight: 1.35 }}>
                               {p.title}
-                              {i < 3 && <span style={{ marginLeft: 6, fontSize: '0.68rem', padding: '1px 5px', borderRadius: 4, background: i === 0 ? 'rgba(232,160,32,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32' }}>{medals[i]}</span>}
+                              {isTop3 && <span style={{ marginLeft: 6, fontSize: '0.68rem', padding: '1px 5px', borderRadius: 4, background: i === 0 ? 'rgba(232,160,32,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32' }}>{medals[i]}</span>}
                             </div>
                             <div style={{ fontSize: '0.74rem', color: 'var(--muted)', marginTop: 2 }}>{p.author}</div>
                           </td>

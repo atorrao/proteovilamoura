@@ -7,7 +7,7 @@ export default function NavTabs({ page, session, onNavigate }) {
  { id: 'admin', label: 'Backoffice' },
  ] : [
  { id: 'programme', label: 'Programme' },
- { id: 'login', label: 'Voting' },
+ { id: 'login', label: 'Login' },
  ...(session.user ? [{ id: 'card', label: 'My Card' }] : []),
  ]
 
