@@ -20,21 +20,6 @@ function buildVCard(p) {
   ].filter(Boolean).join('\r\n')
 }
 
-function Avatar({ name, size = 64 }) {
-  const initials = (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
-  return (
-    <div style={{
-      width: size, height: size, borderRadius: '50%', flexShrink: 0,
-      background: 'linear-gradient(135deg,#106080,#208080)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.35, fontWeight: 800, color: '#fff',
-      border: '3px solid rgba(255,255,255,0.25)',
-    }}>
-      {initials}
-    </div>
-  )
-}
-
 // ── Info row — clean, no colour icons ────────────────────────────────────────
 function InfoRow({ label, value, action }) {
   if (!value) return null
@@ -55,20 +40,17 @@ function DigitalCard({ profile, qrDataUrl }) {
     <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.15)', maxWidth: 400, width: '100%', margin: '0 auto' }}>
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '24px 20px 100px', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '22px 20px 90px', position: 'relative' }}>
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', background: 'rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: 20, display: 'inline-block', marginBottom: 16 }}>
           ProteoVilamoura 2026 · Vilamoura
         </div>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-          <Avatar name={profile.name} size={64} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: profile.company ? 3 : 0 }}>
-              {profile.name || '—'}
-            </div>
-            {profile.company && (
-              <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.65)' }}>{profile.company}</div>
-            )}
+        <div style={{ marginTop: 4 }}>
+          <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: profile.company ? 5 : 0 }}>
+            {profile.name || '—'}
           </div>
+          {profile.company && (
+            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>{profile.company}</div>
+          )}
         </div>
 
         {/* QR code */}

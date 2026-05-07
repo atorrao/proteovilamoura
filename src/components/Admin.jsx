@@ -60,9 +60,7 @@ function EvalModal({ initial, existingNames, onSave, onClose }) {
         <div style={{ display: 'grid', gap: 14 }}>
           <div className="field">
             <label>Name <span style={{ color: 'var(--red)' }}>*</span></label>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Prof. Ana Silva"
-              disabled={isEdit} style={isEdit ? { opacity: 0.55, cursor: 'not-allowed' } : {}} />
-            {isEdit && <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: 3 }}>Name is linked to existing votes and cannot be changed.</div>}
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Prof. Ana Silva" />
           </div>
           <div className="field">
             <label>Email <span style={{ color: 'var(--red)' }}>*</span></label>
@@ -114,8 +112,7 @@ function AttendeeModal({ initial, existingNames, onSave, onClose }) {
         <div style={{ display: 'grid', gap: 12 }}>
           <div className="field">
             <label>Name <span style={{ color: "var(--red)" }}>*</span></label>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ana Silva"
-              disabled={isEdit} style={isEdit ? { opacity: 0.55, cursor: 'not-allowed' } : {}} />
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ana Silva" />
           </div>
           <div className="field">
             <label>Email <span style={{ color: "var(--red)" }}>*</span></label>
@@ -136,25 +133,27 @@ function AttendeeModal({ initial, existingNames, onSave, onClose }) {
 
 export default function Admin({ state, actions, showToast }) {
   const [activeTab, setActiveTab] = useState('evaluators') // 'evaluators' | 'attendees' | 'results'
-  const [activeSec, setActiveSec] = useState('sec1')
   const [evalModal, setEvalModal] = useState(null)
   const [attModal, setAttModal] = useState(null)
 
   const evalNames = (state.evaluators || [])
   const attendees = state.attendees || []
-  const pendingAttendees = state.pendingAttendees || []
 
   const totalVotes = Object.values(state.votes || {}).reduce((acc, vmap) => acc + Object.keys(vmap).length, 0)
 
-  // Results: evaluators assigned to section → weighted average
-  // + one column for attendee average
-  const getResults = (secKey) => {
-    const sectionEvals = (state.registeredEvaluators || [])
-      .filter(e => e.sections?.includes(secKey))
-      .map(e => e.name)
+  // Results across ALL sections, grouped by type
+  // Each evaluator votes for presentations in their assigned sections
+  // Final = 85% eval avg + 15% attendee avg
+  const getAllResults = () => {
     const attNames = attendees.map(a => a.name)
+    const allEvals = state.registeredEvaluators || []
 
-    return Object.values(ALL_PRES).filter(p => p.sectionKey === secKey).map(p => {
+    return Object.values(ALL_PRES).map(p => {
+      // Find evaluators assigned to this presentation's section
+      const sectionEvals = allEvals
+        .filter(e => e.sections?.includes(p.sectionKey))
+        .map(e => e.name)
+
       let evalSum = 0, evalCount = 0
       let attSum = 0, attCount = 0, rawCount = 0
 
@@ -168,8 +167,6 @@ export default function Admin({ state, actions, showToast }) {
       const evalAvg = evalCount > 0 ? evalSum / evalCount : null
       const attAvg = attCount > 0 ? attSum / attCount : null
 
-      // Final average = 90% evaluator avg + 10% attendee avg
-      // If only one group has votes, use only that group
       let finalAvg = null
       if (evalAvg !== null && attAvg !== null) {
         finalAvg = (evalAvg * 0.85 + attAvg * 0.15).toFixed(2)
@@ -179,21 +176,22 @@ export default function Admin({ state, actions, showToast }) {
         finalAvg = attAvg.toFixed(2)
       }
 
-      const evalScores = {}
-      sectionEvals.forEach(n => {
-        const s = (state.votes?.[n] || {})[p.id]
-        if (s !== undefined) evalScores[n] = s
-      })
-
-      return { ...p, rawCount, evalCount, attCount, evalAvg: evalAvg?.toFixed(2), attAvg: attAvg?.toFixed(2), finalAvg, evalScores }
+      return { ...p, rawCount, evalCount, attCount, evalAvg: evalAvg?.toFixed(2), attAvg: attAvg?.toFixed(2), finalAvg }
     }).sort((a, b) => !a.finalAvg && !b.finalAvg ? 0 : !a.finalAvg ? 1 : !b.finalAvg ? -1 : parseFloat(b.finalAvg) - parseFloat(a.finalAvg))
   }
 
   const handleSaveEval = async (data) => {
     const isEdit = evalModal && evalModal !== 'add'
     try {
-      if (isEdit) await actions.updateEvaluator(data)
-      else await actions.addEvaluator(data)
+      if (isEdit && evalModal.name !== data.name) {
+        // Name changed: remove old, add new
+        await actions.removeEvaluator(evalModal.name)
+        await actions.addEvaluator(data)
+      } else if (isEdit) {
+        await actions.updateEvaluator(data)
+      } else {
+        await actions.addEvaluator(data)
+      }
       setEvalModal(null)
       showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
     } catch(e) {
@@ -210,8 +208,14 @@ export default function Admin({ state, actions, showToast }) {
   const handleSaveAtt = async (data) => {
     const isEdit = attModal && attModal !== 'add'
     try {
-      if (isEdit) await actions.updateAttendee(data)
-      else await actions.addAttendee(data)
+      if (isEdit && attModal.name !== data.name) {
+        await actions.removeAttendee(attModal.name)
+        await actions.addAttendee(data)
+      } else if (isEdit) {
+        await actions.updateAttendee(data)
+      } else {
+        await actions.addAttendee(data)
+      }
       setAttModal(null)
       showToast(isEdit ? `${data.name} updated.` : `${data.name} added.`, 'green')
     } catch(e) {
@@ -224,9 +228,6 @@ export default function Admin({ state, actions, showToast }) {
     await actions.removeAttendee(name)
     showToast(`${name} removed.`, 'orange')
   }
-
-  const scored = getResults(activeSec)
-  const sectionEvals = (state.registeredEvaluators || []).filter(e => e.sections?.includes(activeSec)).map(e => e.name)
 
   return (
     <div className="container" style={{ maxWidth: 1200 }}>
@@ -397,105 +398,83 @@ export default function Admin({ state, actions, showToast }) {
       )}
 
       {/* ── RESULTS TAB ── */}
-      {activeTab === 'results' && (
-        <div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
-            {SECTIONS.map(s => (
-              <button key={s.key} onClick={() => setActiveSec(s.key)}
-                style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600,
-                  background: activeSec === s.key ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'var(--surface)',
-                  borderColor: activeSec === s.key ? 'transparent' : 'var(--border)',
-                  color: activeSec === s.key ? '#fff' : 'var(--muted)' }}>
-                {s.short}
-              </button>
-            ))}
-          </div>
+      {activeTab === 'results' && (() => {
+        const allResults = getAllResults()
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {['oral', 'flash', 'poster'].map(type => {
+              const rows = allResults.filter(p => p.type === type)
+              if (!rows.length) return null
+              return (
+                <div key={type}>
+                  {/* Type header */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                    <span style={{ fontSize: '1rem', fontWeight: 700, fontFamily: 'Syne' }}>{typeLabels[type]}</span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em',
+                      background: type === 'oral' ? 'rgba(30,143,171,0.12)' : type === 'flash' ? 'rgba(249,115,22,0.12)' : 'rgba(168,85,247,0.12)',
+                      color: type === 'oral' ? 'var(--accent)' : type === 'flash' ? 'var(--orange)' : 'var(--purple)' }}>
+                      {rows.length} presentations
+                    </span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--muted)' }}>· top 3 are winners</span>
+                  </div>
 
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem', minWidth: 600 }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  <th style={th}>#</th>
-                  <th style={th}>Presentation</th>
-                  <th style={th}>Type</th>
-                  {sectionEvals.map(n => (
-                    <th key={n} style={{ ...th, minWidth: 72, textAlign: 'center' }}>
-                      <div style={{ fontSize: '0.66rem', maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n}</div>
-                      <div style={{ fontSize: '0.58rem', color: 'var(--accent2)' }}>Evaluator</div>
-                    </th>
-                  ))}
-                  {attendees.length > 0 && (
-                    <th style={{ ...th, minWidth: 80, textAlign: 'center' }}>
-                      <div style={{ fontSize: '0.66rem' }}>Attendees</div>
-                      <div style={{ fontSize: '0.58rem', color: 'var(--purple)' }}>avg.</div>
-                    </th>
-                  )}
-                  <th style={{ ...th, minWidth: 140 }}>Final avg.</th>
-                  <th style={th}>Votes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {['oral', 'flash', 'poster'].map(type => {
-                  // Each type sorted independently — top 3 per type are winners
-                  const rows = scored.filter(p => p.type === type)
-                  if (!rows.length) return null
-                  return [
-                    <tr key={`h-${type}`}>
-                      <td colSpan={5 + sectionEvals.length + (attendees.length > 0 ? 1 : 0)} style={{ padding: '10px 14px', fontWeight: 700, fontSize: '0.78rem', color: 'var(--accent2)', background: 'rgba(30,143,171,0.05)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        {typeLabels[type]} — top 3 winners
-                      </td>
-                    </tr>,
-                    ...rows.map((p, i) => {
+                  <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+                    {rows.map((p, i) => {
                       const pct = p.finalAvg ? Math.round(parseFloat(p.finalAvg) / 10 * 100) : 0
                       const top3 = i < 3
+                      const medalBg = i === 0 ? 'rgba(232,160,32,0.12)' : i === 1 ? 'rgba(148,163,184,0.08)' : 'rgba(205,127,50,0.08)'
+                      const medalColor = i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32'
                       return (
-                        <tr key={p.id} style={{ background: top3 ? medalColors[i] : 'transparent', borderBottom: '1px solid var(--border)' }}>
-                          <td style={{ padding: '10px 14px' }}>
-                            <div style={{ width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.76rem', fontWeight: 700, background: i === 0 ? 'rgba(232,160,32,0.3)' : i === 1 ? 'rgba(148,163,184,0.2)' : i === 2 ? 'rgba(205,127,50,0.2)' : 'var(--surface2)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : i === 2 ? '#cd7f32' : 'var(--muted)' }}>{i + 1}</div>
-                          </td>
-                          <td style={{ padding: '10px 14px' }}>
-                            <div style={{ fontWeight: 500, lineHeight: 1.35 }}>
+                        <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--border)' : 'none', background: top3 ? medalBg : 'transparent' }}>
+                          {/* Rank */}
+                          <div style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 700,
+                            background: top3 ? (i === 0 ? 'rgba(232,160,32,0.25)' : i === 1 ? 'rgba(148,163,184,0.2)' : 'rgba(205,127,50,0.2)') : 'var(--surface2)',
+                            color: top3 ? medalColor : 'var(--muted)' }}>
+                            {i + 1}
+                          </div>
+
+                          {/* Title + author */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontWeight: 500, fontSize: '0.86rem', lineHeight: 1.35 }}>
                               {p.title}
-                              {top3 && <span style={{ marginLeft: 6, fontSize: '0.68rem', padding: '1px 5px', borderRadius: 4, background: i === 0 ? 'rgba(232,160,32,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32' }}>{medals[i]}</span>}
+                              {top3 && <span style={{ marginLeft: 6, fontSize: '0.66rem', padding: '1px 6px', borderRadius: 4, fontWeight: 700,
+                                background: i === 0 ? 'rgba(232,160,32,0.18)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)',
+                                color: medalColor }}>{medals[i]}</span>}
                             </div>
                             <div style={{ fontSize: '0.74rem', color: 'var(--muted)', marginTop: 2 }}>{p.author}</div>
-                          </td>
-                          <td style={{ padding: '10px 14px' }}>
-                            <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 6px', borderRadius: 5, textTransform: 'uppercase', background: type === 'oral' ? 'rgba(30,143,171,0.15)' : type === 'flash' ? 'rgba(249,115,22,0.15)' : 'rgba(168,85,247,0.15)', color: type === 'oral' ? 'var(--accent)' : type === 'flash' ? 'var(--orange)' : 'var(--purple)' }}>{type}</span>
-                          </td>
-                          {sectionEvals.map(n => {
-                            const sc = p.evalScores[n]
-                            return <td key={n} style={{ padding: '10px 6px', textAlign: 'center', fontWeight: sc !== undefined ? 700 : 400, color: sc !== undefined ? 'var(--text)' : 'var(--muted)', fontSize: '0.84rem' }}>{sc ?? '—'}</td>
-                          })}
-                          {attendees.length > 0 && (
-                            <td style={{ padding: '10px 6px', textAlign: 'center', fontWeight: p.attAvg ? 700 : 400, color: p.attAvg ? 'var(--purple)' : 'var(--muted)', fontSize: '0.84rem' }}>
-                              {p.attAvg ?? '—'}
-                            </td>
-                          )}
-                          <td style={{ padding: '10px 14px' }}>
+                          </div>
+
+                          {/* Scores */}
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0 }}>
                             {p.finalAvg ? (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <div style={{ flex: 1, height: 6, background: 'var(--surface2)', borderRadius: 3, overflow: 'hidden' }}>
-                                  <div style={{ height: '100%', width: `${pct}%`, background: 'linear-gradient(90deg,var(--brand-mid),var(--accent2))', borderRadius: 3 }} />
+                              <>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                  <div style={{ width: 80, height: 5, background: 'var(--surface2)', borderRadius: 3, overflow: 'hidden' }}>
+                                    <div style={{ height: '100%', width: `${pct}%`, background: 'linear-gradient(90deg,var(--brand-mid),var(--accent2))', borderRadius: 3 }} />
+                                  </div>
+                                  <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--accent2)', minWidth: 32, textAlign: 'right' }}>{p.finalAvg}</span>
                                 </div>
-                                <span style={{ fontWeight: 700, minWidth: 36, color: 'var(--accent2)' }}>{p.finalAvg}</span>
-                              </div>
-                            ) : <span style={{ color: 'var(--muted)' }}>—</span>}
-                          </td>
-                          <td style={{ padding: '10px 14px', color: 'var(--text)', fontSize: '0.78rem' }}>{p.rawCount}</td>
-                        </tr>
+                                <div style={{ fontSize: '0.68rem', color: 'var(--muted)', textAlign: 'right' }}>
+                                  {p.evalCount > 0 && `Eval: ${p.evalAvg}`}
+                                  {p.evalCount > 0 && p.attCount > 0 && ' · '}
+                                  {p.attCount > 0 && `Att: ${p.attAvg}`}
+                                  {' · '}{p.rawCount} vote{p.rawCount !== 1 ? 's' : ''}
+                                </div>
+                              </>
+                            ) : (
+                              <span style={{ color: 'var(--muted)', fontSize: '0.82rem' }}>No votes</span>
+                            )}
+                          </div>
+                        </div>
                       )
-                    })
-                  ]
-                })}
-                {!scored.length && (
-                  <tr><td colSpan={5 + sectionEvals.length + (attendees.length > 0 ? 1 : 0)} style={{ padding: 28, textAlign: 'center', color: 'var(--muted)' }}>No evaluations yet for this section.</td></tr>
-                )}
-              </tbody>
-            </table>
+                    })}
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {evalModal && (
         <EvalModal

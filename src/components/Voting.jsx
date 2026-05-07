@@ -41,7 +41,9 @@ export default function Voting({ session, state, actions, showToast }) {
  <div style={{ marginBottom: 16 }}>
  <div className="page-title">Hello, {session.user}</div>
  <div className="page-sub">
- {isAttendee ? 'Rate presentations — 1 is lowest, 10 is highest' : `Rate your ${visibleSections.length} assigned section${visibleSections.length !== 1 ? 's' : ''} — 1 is lowest, 10 is highest`}
+ {isAttendee
+          ? 'Rate the communications from 1 to 10 — in which 1 is the lowest and 10 is the highest score'
+          : `Rate the communications in your ${visibleSections.length} assigned section${visibleSections.length !== 1 ? 's' : ''} from 1 to 10 — in which 1 is the lowest and 10 is the highest score`}
  </div>
  </div>
 
