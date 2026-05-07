@@ -436,25 +436,27 @@ export default function Admin({ state, actions, showToast }) {
               </thead>
               <tbody>
                 {['oral', 'flash', 'poster'].map(type => {
+                  // Each type sorted independently — top 3 per type are winners
                   const rows = scored.filter(p => p.type === type)
                   if (!rows.length) return null
                   return [
                     <tr key={`h-${type}`}>
                       <td colSpan={5 + sectionEvals.length + (attendees.length > 0 ? 1 : 0)} style={{ padding: '10px 14px', fontWeight: 700, fontSize: '0.78rem', color: 'var(--accent2)', background: 'rgba(30,143,171,0.05)', borderBottom: '1px solid var(--border)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        {typeLabels[type]}
+                        {typeLabels[type]} — top 3 winners
                       </td>
                     </tr>,
                     ...rows.map((p, i) => {
                       const pct = p.finalAvg ? Math.round(parseFloat(p.finalAvg) / 10 * 100) : 0
+                      const top3 = i < 3
                       return (
-                        <tr key={p.id} style={{ background: i < 3 ? medalColors[i] : 'transparent', borderBottom: '1px solid var(--border)' }}>
+                        <tr key={p.id} style={{ background: top3 ? medalColors[i] : 'transparent', borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '10px 14px' }}>
                             <div style={{ width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.76rem', fontWeight: 700, background: i === 0 ? 'rgba(232,160,32,0.3)' : i === 1 ? 'rgba(148,163,184,0.2)' : i === 2 ? 'rgba(205,127,50,0.2)' : 'var(--surface2)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : i === 2 ? '#cd7f32' : 'var(--muted)' }}>{i + 1}</div>
                           </td>
                           <td style={{ padding: '10px 14px' }}>
                             <div style={{ fontWeight: 500, lineHeight: 1.35 }}>
                               {p.title}
-                              {isTop3 && <span style={{ marginLeft: 6, fontSize: '0.68rem', padding: '1px 5px', borderRadius: 4, background: i === 0 ? 'rgba(232,160,32,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32' }}>{medals[i]}</span>}
+                              {top3 && <span style={{ marginLeft: 6, fontSize: '0.68rem', padding: '1px 5px', borderRadius: 4, background: i === 0 ? 'rgba(232,160,32,0.2)' : i === 1 ? 'rgba(148,163,184,0.15)' : 'rgba(205,127,50,0.15)', color: i === 0 ? 'var(--gold)' : i === 1 ? '#94a3b8' : '#cd7f32' }}>{medals[i]}</span>}
                             </div>
                             <div style={{ fontSize: '0.74rem', color: 'var(--muted)', marginTop: 2 }}>{p.author}</div>
                           </td>
@@ -501,6 +503,14 @@ export default function Admin({ state, actions, showToast }) {
           existingNames={(state.registeredEvaluators || []).map(e => e.name)}
           onSave={handleSaveEval}
           onClose={() => setEvalModal(null)}
+        />
+      )}
+      {attModal && (
+        <AttendeeModal
+          initial={attModal === 'add' ? null : attModal}
+          existingNames={(state.attendees || []).map(a => a.name)}
+          onSave={handleSaveAtt}
+          onClose={() => setAttModal(null)}
         />
       )}
     </div>
