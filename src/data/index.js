@@ -124,11 +124,18 @@ export const PROGRAMME = {
 }
 
 export const ALL_PRES = {}
+const SPONSOR_KEYWORDS = ['sponsor', 'Sponsor']
 Object.values(PROGRAMME).forEach(day => {
   ;['morning','afternoon'].forEach(half => {
     ;(day[half] || []).forEach(block => {
       ;(block.talks || []).forEach(t => {
-        if (t.id) ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey }
+        if (!t.id) return
+        // Exclude sponsor communications
+        const isSponsored = SPONSOR_KEYWORDS.some(k =>
+          (t.title || '').toLowerCase().includes('sponsor') ||
+          (t.author || '').toLowerCase().includes('sponsor')
+        )
+        if (!isSponsored) ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey }
       })
     })
   })
