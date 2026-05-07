@@ -152,12 +152,25 @@ export default function App() {
     setPage('login')
   }, [])
 
+  // currentPage: derive the right page to show
+  // Note: after admin login, both page and session update in the same React batch
+  // so we check both page AND the pending state
   const currentPage = (() => {
+    if (page === 'admin') return 'admin'  // always show admin if page=admin, guard is in the render
     if (page === 'voting' && !session.user) return 'login'
-    if (page === 'admin' && session.role !== 'admin') return 'programme'
     if (page === 'card' && !session.user) return 'programme'
     return page
   })()
+
+  // Admin login handler - set both session and page atomically
+  const handleAdminLogin = useCallback(() => {
+    const adminSession = { user: 'Admin', role: 'admin' }
+    setSession(adminSession)
+    setShowAdminLogin(false)
+    setPage('admin')
+    // Persist immediately
+    try { sessionStorage.setItem('pv2026_session', JSON.stringify({ ...adminSession, page: 'admin' })) } catch {}
+  }, [])
 
   return (
     <div className="app">
@@ -172,9 +185,10 @@ export default function App() {
         {currentPage === 'voting' && session.user && (
           <Voting session={session} state={state} actions={actions} showToast={showToast} />
         )}
-        {currentPage === 'admin' && session.role === 'admin' && (
+        {currentPage === 'admin' && (session.role === 'admin') && (
           <Admin state={state} actions={actions} showToast={showToast} />
         )}
+        {currentPage === 'admin' && session.role !== 'admin' && null}
         {currentPage === 'card' && session.user && (
           <MyCard session={session} state={state} />
         )}
@@ -182,7 +196,7 @@ export default function App() {
       {showAdminLogin && (
         <AdminLoginModal
           onClose={() => setShowAdminLogin(false)}
-          onLogin={() => { setSession({ user: 'Admin', role: 'admin' }); setShowAdminLogin(false); setPage('admin') }}
+          onLogin={handleAdminLogin}
           adminPass={ADMIN_PASS}
         />
       )}
