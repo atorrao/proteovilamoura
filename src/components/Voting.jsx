@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import { SECTIONS, ALL_PRES } from '../data/index.js'
 
 export default function Voting({ session, state, actions, showToast }) {
@@ -7,9 +7,13 @@ export default function Voting({ session, state, actions, showToast }) {
  return reg?.sections?.[0] || 'sec1'
  })
  const [typeFilter, setTypeFilter] = useState('all')
+ // Local vote state for immediate UI feedback — synced to Supabase with debounce
+ const [localVotes, setLocalVotes] = useState({})
+ const debounceTimers = useRef({})
 
  const isAttendee = session.role === 'attendee'
- const myVotes = state.votes[session.user] || {}
+ // Merge server votes with pending local votes (local takes priority)
+ const myVotes = { ...(state.votes[session.user] || {}), ...localVotes }
 
  const visibleSections = useMemo(() => {
  if (isAttendee) return SECTIONS
@@ -29,9 +33,21 @@ export default function Voting({ session, state, actions, showToast }) {
  acc + Object.values(ALL_PRES).filter(p => p.sectionKey === s.key).length, 0)
  const pct = total ? Math.round(voted / total * 100) : 0
 
- const castVote = async (presId, score) => {
- await actions.castVote(session.user, presId, score)
- }
+ const castVote = useCallback((presId, score) => {
+   // 1. Update UI immediately — no waiting
+   setLocalVotes(prev => ({ ...prev, [presId]: score }))
+   // 2. Debounce the Supabase write — cancel previous timer for this presentation
+   if (debounceTimers.current[presId]) clearTimeout(debounceTimers.current[presId])
+   debounceTimers.current[presId] = setTimeout(async () => {
+     try {
+       await actions.castVote(session.user, presId, score)
+       // Clear from local once confirmed by server
+       setLocalVotes(prev => { const n = { ...prev }; delete n[presId]; return n })
+     } catch (e) {
+       console.error('Vote save failed:', e)
+     }
+   }, 300)
+ }, [actions, session.user])
 
  const typeColors = { oral: '#1e8fab', flash: '#f97316', poster: '#a855f7' }
 
