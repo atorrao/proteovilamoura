@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   loadAllFromSupabase, subscribeToChanges,
   upsertVote, upsertEvaluator, deleteEvaluator, upsertAttendee,
@@ -14,13 +14,10 @@ import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
 
 const ADMIN_PASS = 'admin123'
+const SESSION_KEY = 'pv2026_session'
 
-// sessionStorage = tab-isolated, prevents session bleed between users
 function loadSession() {
-  try { const r = sessionStorage.getItem('pv2026_session'); return r ? JSON.parse(r) : {} } catch { return {} }
-}
-function saveSession(s, page) {
-  try { sessionStorage.setItem('pv2026_session', JSON.stringify({ ...s, page })) } catch {}
+  try { const r = sessionStorage.getItem(SESSION_KEY); return r ? JSON.parse(r) : {} } catch { return {} }
 }
 
 const EMPTY_STATE = {
@@ -30,14 +27,23 @@ const EMPTY_STATE = {
 
 export default function App() {
   const saved = loadSession()
-  const [page, setPage] = useState(saved.page || 'programme')
-  const [session, setSession] = useState({ user: saved.user || null, role: saved.role || null })
+
+  // Single unified auth state — avoids race conditions between page + session
+  const [auth, setAuth] = useState({
+    user: saved.user || null,
+    role: saved.role || null,
+    page: saved.page || 'programme',
+  })
+
   const [state, setState] = useState(EMPTY_STATE)
   const [ready, setReady] = useState(false)
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
-  useEffect(() => { saveSession(session, page) }, [session, page])
+  // Persist auth on every change
+  useEffect(() => {
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(auth)) } catch {}
+  }, [auth])
 
   useEffect(() => {
     loadAllFromSupabase()
@@ -55,7 +61,6 @@ export default function App() {
   }, [])
 
   const actions = {
-    // Votes
     castVote: async (userName, presId, score) => {
       await upsertVote(userName, presId, score)
       setState(prev => ({
@@ -63,8 +68,6 @@ export default function App() {
         votes: { ...prev.votes, [userName]: { ...(prev.votes[userName] || {}), [presId]: score } }
       }))
     },
-
-    // Evaluators
     addEvaluator: async (ev) => {
       await upsertEvaluator(ev)
       setState(prev => ({
@@ -88,29 +91,19 @@ export default function App() {
         evaluators: prev.evaluators.filter(e => e !== name),
       }))
     },
-
-    // Attendees — admin manages these
     addAttendee: async (att) => {
       await upsertAttendee(att)
-      setState(prev => ({
-        ...prev,
-        attendees: [...prev.attendees.filter(a => a.name !== att.name), att],
-      }))
+      setState(prev => ({ ...prev, attendees: [...prev.attendees.filter(a => a.name !== att.name), att] }))
     },
     updateAttendee: async (att) => {
       await upsertAttendee(att)
-      setState(prev => ({
-        ...prev,
-        attendees: prev.attendees.map(a => a.name === att.name ? att : a),
-      }))
+      setState(prev => ({ ...prev, attendees: prev.attendees.map(a => a.name === att.name ? att : a) }))
     },
     removeAttendee: async (name) => {
       const { supabase } = await import('./supabase.js')
       await supabase.from('attendees').delete().eq('name', name)
       setState(prev => ({ ...prev, attendees: prev.attendees.filter(a => a.name !== name) }))
     },
-
-    // Mark attendee as accessed when they log in
     markAttendeeAccessed: async (name) => {
       const { supabase } = await import('./supabase.js')
       await supabase.from('attendees').update({ accessed: true }).eq('name', name)
@@ -119,17 +112,10 @@ export default function App() {
         attendees: prev.attendees.map(a => a.name === name ? { ...a, accessed: true } : a),
       }))
     },
-
-    // Register attendee (legacy, kept for admin add flow)
     registerAttendee: async (att) => {
       await upsertAttendee(att)
-      setState(prev => ({
-        ...prev,
-        attendees: [...prev.attendees.filter(a => a.name !== att.name), att],
-      }))
+      setState(prev => ({ ...prev, attendees: [...prev.attendees.filter(a => a.name !== att.name), att] }))
     },
-
-    // Clear all
     clearAll: async () => {
       const { supabase } = await import('./supabase.js')
       await Promise.all([
@@ -141,62 +127,71 @@ export default function App() {
     },
   }
 
+  // All navigation and auth changes go through setAuth — single atomic update
   const navigate = useCallback((p) => {
-    if (p === 'voting' && session.user && session.role !== 'admin') { setPage('voting'); return }
-    setPage(p)
-  }, [session])
-
-  const logout = useCallback(() => {
-    setSession({ user: null, role: null })
-    sessionStorage.removeItem('pv2026_session')
-    setPage('login')
+    setAuth(prev => {
+      if (p === 'voting' && prev.user && prev.role !== 'admin') return { ...prev, page: 'voting' }
+      return { ...prev, page: p }
+    })
   }, [])
 
-  // currentPage: derive the right page to show
-  // Note: after admin login, both page and session update in the same React batch
-  // so we check both page AND the pending state
+  const logout = useCallback(() => {
+    sessionStorage.removeItem(SESSION_KEY)
+    setAuth({ user: null, role: null, page: 'login' })
+  }, [])
+
+  const loginUser = useCallback((user, role) => {
+    setAuth({ user, role, page: 'voting' })
+  }, [])
+
+  // Admin login — single atomic update, no race condition possible
+  const loginAdmin = useCallback(() => {
+    setAuth({ user: 'Admin', role: 'admin', page: 'admin' })
+    setShowAdminLogin(false)
+  }, [])
+
+  // Derive what to show
+  const { user, role, page } = auth
   const currentPage = (() => {
-    if (page === 'admin') return 'admin'  // always show admin if page=admin, guard is in the render
-    if (page === 'voting' && !session.user) return 'login'
-    if (page === 'card' && !session.user) return 'programme'
+    if (page === 'admin' && role === 'admin') return 'admin'
+    if (page === 'admin') return 'programme'  // not admin, redirect
+    if (page === 'voting' && user) return 'voting'
+    if (page === 'voting') return 'login'     // not logged in
+    if (page === 'card' && user) return 'card'
+    if (page === 'card') return 'programme'
     return page
   })()
 
-  // Admin login handler - set both session and page atomically
-  const handleAdminLogin = useCallback(() => {
-    const adminSession = { user: 'Admin', role: 'admin' }
-    setSession(adminSession)
-    setShowAdminLogin(false)
-    setPage('admin')
-    // Persist immediately
-    try { sessionStorage.setItem('pv2026_session', JSON.stringify({ ...adminSession, page: 'admin' })) } catch {}
-  }, [])
+  const session = { user, role }
 
   return (
     <div className="app">
-      <Header session={session} onLogout={logout} onAdminClick={() => setShowAdminLogin(true)} onAdminHome={() => setPage('admin')} />
+      <Header
+        session={session}
+        onLogout={logout}
+        onAdminClick={() => setShowAdminLogin(true)}
+        onAdminHome={() => setAuth(prev => ({ ...prev, page: 'admin' }))}
+      />
       <NavTabs page={currentPage} session={session} onNavigate={navigate} />
       <div className="screen-area">
         {currentPage === 'programme' && <Programme />}
         {currentPage === 'login' && (
-          <Login ready={ready} state={state} actions={actions}
-            onLogin={(user, role) => { setSession({ user, role }); setPage('voting') }} />
+          <Login ready={ready} state={state} actions={actions} onLogin={loginUser} />
         )}
-        {currentPage === 'voting' && session.user && (
+        {currentPage === 'voting' && (
           <Voting session={session} state={state} actions={actions} showToast={showToast} />
         )}
-        {currentPage === 'admin' && (session.role === 'admin') && (
+        {currentPage === 'admin' && (
           <Admin state={state} actions={actions} showToast={showToast} />
         )}
-        {currentPage === 'admin' && session.role !== 'admin' && null}
-        {currentPage === 'card' && session.user && (
+        {currentPage === 'card' && (
           <MyCard session={session} state={state} />
         )}
       </div>
       {showAdminLogin && (
         <AdminLoginModal
           onClose={() => setShowAdminLogin(false)}
-          onLogin={handleAdminLogin}
+          onLogin={loginAdmin}
           adminPass={ADMIN_PASS}
         />
       )}
