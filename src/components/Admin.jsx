@@ -132,6 +132,19 @@ function AttendeeModal({ initial, existingNames, onSave, onClose }) {
 }
 
 export default function Admin({ state, actions, showToast }) {
+  // Safety: ensure all state arrays exist even if Supabase returns unexpected data
+  const safeState = {
+    ...state,
+    evaluators: state.evaluators || [],
+    registeredEvaluators: state.registeredEvaluators || [],
+    attendees: state.attendees || [],
+    votes: state.votes || {},
+    locked: state.locked || {},
+  }
+  return <AdminInner state={safeState} actions={actions} showToast={showToast} />
+}
+
+function AdminInner({ state, actions, showToast }) {
   const [activeTab, setActiveTab] = useState('evaluators') // 'evaluators' | 'attendees' | 'results'
   const [evalModal, setEvalModal] = useState(null)
   const [attModal, setAttModal] = useState(null)
@@ -399,12 +412,22 @@ export default function Admin({ state, actions, showToast }) {
 
       {/* ── RESULTS TAB ── */}
       {activeTab === 'results' && (() => {
-        const allResults = getAllResults()
+        let allResults = []
+        try { allResults = getAllResults() } catch(e) { console.error('getAllResults error:', e) }
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {['oral', 'flash', 'poster'].map(type => {
               const rows = allResults.filter(p => p.type === type)
-              if (!rows.length) return null
+              if (!rows.length) return (
+                <div key={type}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <span style={{ fontSize: '1rem', fontWeight: 700, fontFamily: 'Syne' }}>{typeLabels[type]}</span>
+                  </div>
+                  <div style={{ color: 'var(--muted)', fontSize: '0.86rem', padding: '16px', background: 'var(--surface)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                    No votes yet for {typeLabels[type].toLowerCase()}.
+                  </div>
+                </div>
+              )
               return (
                 <div key={type}>
                   {/* Type header */}
