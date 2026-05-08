@@ -405,19 +405,8 @@ export default function Admin({ state = {}, actions = {}, showToast = () => {} }
         try { results = getResults() } catch (e) { console.error('Results error:', e) }
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {/* Jump to anchors */}
-            <div style={{ display: 'flex', gap: 8, padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--muted)', fontWeight: 600 }}>Jump to:</span>
-              {[['oral','Oral'],['flash','Flash'],['poster','Poster']].map(([id, label]) => (
-                <button key={id} onClick={() => document.getElementById(`results-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)', padding: '4px 12px', borderRadius: 6, background: 'rgba(30,143,171,0.08)', border: '1px solid rgba(30,143,171,0.2)', cursor: 'pointer' }}>
-                  {label}
-                </button>
-              ))}
-            </div>
             {/* Anchor navigation */}
             <div style={{ display: 'flex', gap: 8, padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--muted)', fontWeight: 600, marginRight: 4 }}>Jump to:</span>
               {[['oral','Oral Communications'],['flash','Flash Presentations'],['poster','Posters']].map(([id, label]) => (
                 <a key={id} href={`#results-${id}`}
                   style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent)', textDecoration: 'none', padding: '3px 10px', borderRadius: 6, background: 'rgba(30,143,171,0.08)', border: '1px solid rgba(30,143,171,0.2)' }}
