@@ -157,17 +157,15 @@ export async function deleteAllBingoCards() {
 
 // ─── LOAD ALL STATE ───────────────────────────────────────────────────────────
 export async function loadAllFromSupabase() {
-  const [evaluators, attendees, pendingAttendees, voteData] = await Promise.all([
+  const [evaluators, attendees, voteData] = await Promise.all([
     getEvaluators(),
     getAttendees(),
-    getPendingAttendees(),
     getVotes(),
   ])
   return {
     evaluators: evaluators.map(e => e.name),
     registeredEvaluators: evaluators,
     attendees,
-    pendingAttendees,
     votes: voteData.votes || {},
     locked: voteData.locked || {},
   }
@@ -179,43 +177,6 @@ export function subscribeToChanges(onUpdate) {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, onUpdate)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'evaluators' }, onUpdate)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'attendees' }, onUpdate)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'pending_attendees' }, onUpdate)
     .subscribe()
   return () => supabase.removeChannel(channel)
-}
-
-// ─── PENDING ATTENDEES ────────────────────────────────────────────────────────
-export async function getPendingAttendees() {
-  const { data, error } = await supabase.from('pending_attendees').select('*').order('requested_at')
-  if (error) { console.error('getPendingAttendees:', error); return [] }
-  return data
-}
-
-export async function insertPendingAttendee(att) {
-  const { data, error } = await supabase.from('pending_attendees').insert({
-    name: att.name, inst: att.inst || '', country: att.country || '', pass: att.pass
-  }).select()
-  if (error) {
-    console.error('insertPendingAttendee error:', JSON.stringify(error))
-    // Provide a clear error message
-    const msg = error.message || error.details || error.hint || JSON.stringify(error)
-    throw new Error(msg)
-  }
-  return data
-}
-
-export async function approvePendingAttendee(id, att) {
-  // Add to attendees table
-  const { error: e1 } = await supabase.from('attendees').upsert({
-    name: att.name, inst: att.inst, country: att.country, pass: att.pass
-  })
-  if (e1) { console.error('approvePendingAttendee upsert:', e1); throw e1 }
-  // Remove from pending
-  const { error: e2 } = await supabase.from('pending_attendees').delete().eq('id', id)
-  if (e2) console.error('approvePendingAttendee delete:', e2)
-}
-
-export async function rejectPendingAttendee(id) {
-  const { error } = await supabase.from('pending_attendees').delete().eq('id', id)
-  if (error) console.error('rejectPendingAttendee:', error)
 }
