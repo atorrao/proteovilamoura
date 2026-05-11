@@ -459,6 +459,14 @@ export default function Admin({ state = {}, actions = {}, showToast = () => {} }
                               )}
                             </div>
                             <div style={{ fontSize: '0.74rem', color: 'var(--muted)', marginTop: 2 }}>{p.author}</div>
+                            {type === 'oral' && p.sectionKey && (() => {
+                              const sec = SECTIONS.find(s => s.key === p.sectionKey)
+                              return sec ? (
+                                <div style={{ fontSize: '0.68rem', marginTop: 3, display: 'inline-block', padding: '1px 7px', borderRadius: 4, background: 'rgba(30,143,171,0.08)', border: '1px solid rgba(30,143,171,0.18)', color: 'var(--accent2)', fontWeight: 600 }}>
+                                  {sec.label}
+                                </div>
+                              ) : null
+                            })()}
                           </div>
                           {/* Score */}
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0, minWidth: 100 }}>

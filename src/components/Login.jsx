@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { supabase } from '../supabase.js'
 
 export default function Login({ ready, state, actions, onLogin }) {
   const [tab, setTab] = useState('evaluator')
@@ -13,15 +14,29 @@ export default function Login({ ready, state, actions, onLogin }) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setErr('Please enter a valid email.'); return }
     setLoading(true)
     try {
+      const cleanEmail = email.trim().toLowerCase()
+
       if (tab === 'evaluator') {
-        const reg = state.registeredEvaluators?.find(e => e.email?.toLowerCase() === email.trim().toLowerCase())
-        if (!reg) { setErr('Email not found. Contact the administrator.'); return }
-        onLogin(reg.name, 'evaluator')
+        // Always fetch fresh from Supabase — never trust in-memory state
+        const { data, error } = await supabase
+          .from('evaluators')
+          .select('*')
+          .ilike('email', cleanEmail)
+          .maybeSingle()
+        if (error) throw error
+        if (!data) { setErr('Email not found. Contact the administrator.'); return }
+        onLogin(data.name, 'evaluator')
       } else {
-        const att = state.attendees?.find(a => a.email?.toLowerCase() === email.trim().toLowerCase())
-        if (!att) { setErr('Email not found. Please contact the administrator.'); return }
-        await actions.markAttendeeAccessed(att.name)
-        onLogin(att.name, 'attendee')
+        // Always fetch fresh from Supabase
+        const { data, error } = await supabase
+          .from('attendees')
+          .select('*')
+          .ilike('email', cleanEmail)
+          .maybeSingle()
+        if (error) throw error
+        if (!data) { setErr('Email not found. Please contact the administrator.'); return }
+        await actions.markAttendeeAccessed(data.name)
+        onLogin(data.name, 'attendee')
       }
     } catch (e) {
       setErr('Error: ' + (e?.message || 'unknown'))
