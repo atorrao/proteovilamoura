@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
-  loadAllFromSupabase, subscribeToChanges,
+  loadAllFromSupabase, loadUserFromSupabase, subscribeToChanges,
   upsertVote, upsertEvaluator, deleteEvaluator, upsertAttendee,
 } from './supabase.js'
 import Header from './components/Header.jsx'
@@ -14,7 +14,20 @@ import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
 
 const ADMIN_PASS = 'admin123'
-const SESSION_KEY = 'pv2026_session'
+
+// ── Tab-scoped session key ─────────────────────────────────────────────────
+// Each browser tab gets its own key so two users on the same device/browser
+// never share session state, even in the same incognito window.
+function getTabSessionKey() {
+  let tabId = sessionStorage.getItem('pv2026_tab_id')
+  if (!tabId) {
+    tabId = Math.random().toString(36).slice(2)
+    sessionStorage.setItem('pv2026_tab_id', tabId)
+  }
+  return `pv2026_session_${tabId}`
+}
+
+const SESSION_KEY = getTabSessionKey()
 
 function loadSession() {
   try { const r = sessionStorage.getItem(SESSION_KEY); return r ? JSON.parse(r) : {} } catch { return {} }
@@ -28,7 +41,6 @@ const EMPTY_STATE = {
 export default function App() {
   const saved = loadSession()
 
-  // Single unified auth state — avoids race conditions between page + session
   const [auth, setAuth] = useState({
     user: saved.user || null,
     role: saved.role || null,
@@ -40,17 +52,29 @@ export default function App() {
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
-  // Persist auth on every change
+  // Persist auth on every change — scoped to this tab only
   useEffect(() => {
     try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(auth)) } catch {}
   }, [auth])
 
+  // On mount: if a session exists load only that user's data, otherwise load all (for admin/login page)
   useEffect(() => {
-    loadAllFromSupabase()
+    const { user, role } = loadSession()
+    const loader = (user && role !== 'admin')
+      ? loadUserFromSupabase(user)
+      : loadAllFromSupabase()
+
+    loader
       .then(data => { setState(data); setReady(true) })
       .catch(e => { console.error('Load error:', e); setReady(true) })
+
+    // Realtime: re-fetch only this user's data to avoid cross-user leakage
     const unsub = subscribeToChanges(() => {
-      loadAllFromSupabase().then(data => setState(data)).catch(() => {})
+      const { user: u, role: r } = loadSession()
+      const reload = (u && r !== 'admin')
+        ? loadUserFromSupabase(u)
+        : loadAllFromSupabase()
+      reload.then(data => setState(data)).catch(() => {})
     })
     return unsub
   }, [])
@@ -127,7 +151,6 @@ export default function App() {
     },
   }
 
-  // All navigation and auth changes go through setAuth — single atomic update
   const navigate = useCallback((p) => {
     setAuth(prev => {
       if (p === 'voting' && prev.user && prev.role !== 'admin') return { ...prev, page: 'voting' }
@@ -136,27 +159,35 @@ export default function App() {
   }, [])
 
   const logout = useCallback(() => {
+    // Remove only this tab's session — other tabs are unaffected
     sessionStorage.removeItem(SESSION_KEY)
+    setState(EMPTY_STATE)
     setAuth({ user: null, role: null, page: 'login' })
+    // Reload public data for the login screen
+    loadAllFromSupabase().then(data => setState(data)).catch(() => {})
   }, [])
 
   const loginUser = useCallback((user, role) => {
+    // On login, fetch only this user's votes and update state
     setAuth({ user, role, page: 'voting' })
+    loadUserFromSupabase(user)
+      .then(data => setState(data))
+      .catch(e => console.error('loginUser load error:', e))
   }, [])
 
-  // Admin login — single atomic update, no race condition possible
   const loginAdmin = useCallback(() => {
     setAuth({ user: 'Admin', role: 'admin', page: 'admin' })
     setShowAdminLogin(false)
+    // Admin needs all data
+    loadAllFromSupabase().then(data => setState(data)).catch(() => {})
   }, [])
 
-  // Derive what to show
   const { user, role, page } = auth
   const currentPage = (() => {
     if (page === 'admin' && role === 'admin') return 'admin'
-    if (page === 'admin') return 'programme'  // not admin, redirect
+    if (page === 'admin') return 'programme'
     if (page === 'voting' && user) return 'voting'
-    if (page === 'voting') return 'login'     // not logged in
+    if (page === 'voting') return 'login'
     if (page === 'card' && user) return 'card'
     if (page === 'card') return 'programme'
     return page

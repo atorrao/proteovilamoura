@@ -51,7 +51,6 @@ export async function upsertAttendee(att) {
 export async function getVotes() {
   const { data, error } = await supabase.from('votes').select('*')
   if (error) { console.error('getVotes:', error); return [] }
-  // Transform to { user_name: { pres_id: score } } and locked map
   const votes = {}, locked = {}
   for (const row of data) {
     if (!votes[row.user_name]) votes[row.user_name] = {}
@@ -62,6 +61,17 @@ export async function getVotes() {
     }
   }
   return { votes, locked }
+}
+
+// Fetch votes for a single user only — used after login to avoid cross-user leakage
+export async function getVotesForUser(userName) {
+  const { data, error } = await supabase.from('votes').select('*').eq('user_name', userName)
+  if (error) { console.error('getVotesForUser:', error); return {} }
+  const userVotes = {}
+  for (const row of data) {
+    userVotes[row.pres_id] = row.score
+  }
+  return userVotes
 }
 
 export async function upsertVote(userName, presId, score) {
@@ -155,7 +165,7 @@ export async function deleteAllBingoCards() {
   if (error) console.error('deleteAllBingoCards:', error)
 }
 
-// ─── LOAD ALL STATE ───────────────────────────────────────────────────────────
+// ─── LOAD ALL STATE (admin only) ──────────────────────────────────────────────
 export async function loadAllFromSupabase() {
   const [evaluators, attendees, voteData] = await Promise.all([
     getEvaluators(),
@@ -168,6 +178,24 @@ export async function loadAllFromSupabase() {
     attendees,
     votes: voteData.votes || {},
     locked: voteData.locked || {},
+  }
+}
+
+// ─── LOAD STATE FOR LOGGED-IN USER (non-admin) ────────────────────────────────
+// Only fetches that user's own votes — never exposes other users' data
+export async function loadUserFromSupabase(userName) {
+  const [evaluators, attendees, userVotes] = await Promise.all([
+    getEvaluators(),
+    getAttendees(),
+    getVotesForUser(userName),
+  ])
+  return {
+    evaluators: evaluators.map(e => e.name),
+    registeredEvaluators: evaluators,
+    attendees,
+    // Only this user's votes in the map — other keys simply don't exist
+    votes: { [userName]: userVotes },
+    locked: {},
   }
 }
 
