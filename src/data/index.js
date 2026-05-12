@@ -32,7 +32,7 @@ export const PROGRAMME = {
         { time: '17:27–17:31', title: 'BiasTracker: a bioinformatics tool for quantifying physicochemical and functional biases in mass spectrometry-based proteomics', author: 'Gaelle Loutfi', type: 'flash', id: 113 },
         { time: '17:31–17:35', title: 'MALDI-MSI as a Platform for Spatial Multi-Omics in Glioblastoma Research', author: 'Cristina María López Vázquez', type: 'flash', id: 114 },
         { time: '17:35–17:39', title: 'When One is Enough: A Minimalistic "On-Pot" Proteomic Workflow for Global Profiling of Single Caenorhabditis elegans', author: 'Ibon Iloro Manzano', type: 'flash', id: 115 },
-        { time: '17:39–17:43', title: 'Beyond Acquisition: Turning Astral-Scale Data into Discovery', author: 'Marta Isasa', type: 'flash', id: 116 },
+        { time: '17:39–17:43', title: 'Beyond Acquisition: Turning Astral-Scale Data into Discovery: A Modular GUI for DIA Proteomics Analysis in a Core Facility', author: 'Marta Isasa', type: 'flash', id: 116 },
         { time: '17:43–17:47', title: 'From Microbes to Ecosystems: Proteomic Insights into Agro-Environmental Interactions', author: 'Francisco Javier Fernandez Acero', type: 'flash', id: 117 },
         { time: '17:47–17:51', title: 'DIV Matters: Understanding Proteomic Shifts in Neuronal Maturation for Better Ischemic Modeling', author: 'Eva Ferro', type: 'flash', id: 118 },
       ]},
