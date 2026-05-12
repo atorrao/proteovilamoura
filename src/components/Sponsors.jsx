@@ -99,7 +99,7 @@ export default function Sponsors() {
   return (
     <div style={{ paddingBottom: 40 }}>
 
-      {/* Organized by — white background */}
+      {/* Organized by — white background, 3 clickable logos */}
       <div style={{
         background: '#fff',
         borderBottom: '1px solid var(--border)',
@@ -108,15 +108,24 @@ export default function Sponsors() {
       }}>
         <div style={{
           fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.12em',
-          textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 14,
+          textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 16,
         }}>
           Organized by
         </div>
-        <img
-          src="/organizers-banner.jpg"
-          alt="PROCURA · French Proteomics Society · SEProt"
-          style={{ maxWidth: '100%', width: 400, objectFit: 'contain', display: 'block', margin: '0 auto' }}
-        />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+          {[
+            { src: '/sponsors/org-procura.png', name: 'PROCURA', url: 'https://www.procuraomics.pt/' },
+            { src: '/sponsors/org-fps.png', name: 'French Proteomics Society', url: 'https://www.french-proteomics-society.fr/en/' },
+            { src: '/sponsors/org-seprot.png', name: 'SEProt', url: 'https://www.seprot.es/en/' },
+          ].map(org => (
+            <a key={org.name} href={org.url} target="_blank" rel="noopener noreferrer" title={org.name}
+              style={{ display: 'flex', alignItems: 'center', transition: 'opacity 0.2s' }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.75'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
+              <img src={org.src} alt={org.name} style={{ height: 60, maxWidth: 160, objectFit: 'contain' }} />
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Thank you header */}
