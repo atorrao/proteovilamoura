@@ -12,6 +12,7 @@ import Admin from './components/Admin.jsx'
 import MyCard from './components/MyCard.jsx'
 import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
+import Sponsors from './components/Sponsors.jsx'
 
 const ADMIN_PASS = 'admin123'
 
@@ -190,6 +191,7 @@ export default function App() {
     if (page === 'voting') return 'login'
     if (page === 'card' && user) return 'card'
     if (page === 'card') return 'programme'
+    if (page === 'sponsors') return 'sponsors'
     return page
   })()
 
@@ -206,6 +208,7 @@ export default function App() {
       <NavTabs page={currentPage} session={session} onNavigate={navigate} />
       <div className="screen-area">
         {currentPage === 'programme' && <Programme />}
+        {currentPage === 'sponsors' && <Sponsors />}
         {currentPage === 'login' && (
           <Login ready={ready} state={state} actions={actions} onLogin={loginUser} />
         )}
