@@ -1,12 +1,11 @@
-// Sponsor logo paths — all files go in public/sponsors/
 const SPONSORS = {
   diamond: {
     featured: [
       { name: 'Thermo Scientific / Unicam', url: 'https://www.unicam.pt/', logo: '/sponsors/unicam.png' },
     ],
     secondary: [
+      { name: 'Biognosys Group', url: 'https://biognosys.com/', logo: '/sponsors/biognosys.png' },
       { name: 'Bruker', url: 'https://www.bruker.com/pt.html', logo: '/sponsors/bruker.png' },
-      { name: 'Preomics', url: 'https://www.preomics.com/', logo: '/sponsors/preomics.png' },
     ],
   },
   platinum: [
@@ -21,6 +20,7 @@ const SPONSORS = {
     { name: 'Ionopticks', url: 'https://ionopticks.com/', logo: '/sponsors/ionopticks.png' },
     { name: 'Promega', url: 'https://portugal.promega.com/', logo: '/sponsors/promega.jpg' },
     { name: 'Quilaban', url: 'https://www.quilaban.pt/parceiros/illumina/', logo: '/sponsors/quilaban.png' },
+    { name: 'Resyn Biosciences', url: 'https://resynbio.com/', logo: '/sponsors/resyn.png' },
     { name: 'Solitica', url: 'https://solitica.pt/', logo: '/sponsors/solitica.png' },
   ],
   custom: [
@@ -34,15 +34,7 @@ const SPONSORS = {
   ],
 }
 
-const TIER_CONFIG = {
-  platinum: { label: 'Platinum Sponsor', accent: '#8b7355' },
-  gold:     { label: 'Gold Sponsors',    accent: '#c8921a' },
-  silver:   { label: 'Silver Sponsors',  accent: '#7a8fa6' },
-  custom:   { label: 'Custom Sponsor',   accent: '#1e8fab' },
-  partners: { label: 'Partners',         accent: '#555'    },
-}
-
-function LogoCard({ sponsor, height, fullWidth = false }) {
+function LogoCard({ sponsor, height }) {
   return (
     <a
       href={sponsor.url}
@@ -51,12 +43,11 @@ function LogoCard({ sponsor, height, fullWidth = false }) {
       title={sponsor.name}
       style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '14px 20px', borderRadius: 10,
+        padding: '16px 20px', borderRadius: 10,
         background: '#fff', border: '1px solid var(--border)',
         transition: 'all 0.2s', cursor: 'pointer',
-        minHeight: height + 28,
+        minHeight: height + 32,
         textDecoration: 'none',
-        ...(fullWidth ? { gridColumn: '1 / -1' } : {}),
       }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)'
@@ -145,52 +136,52 @@ export default function Sponsors() {
 
       <div style={{ padding: '8px 16px', maxWidth: 680, margin: '0 auto' }}>
 
-        {/* ── DIAMOND — featured (Unicam full width) + secondary (Bruker + Preomics smaller) ── */}
+        {/* DIAMOND */}
         <TierSection label="Diamond Sponsors" accent="#1e8fab">
           {/* Row 1: Unicam full width */}
           <div style={{ marginBottom: 10 }}>
-            <LogoCard sponsor={SPONSORS.diamond.featured[0]} height={70} fullWidth />
+            <LogoCard sponsor={SPONSORS.diamond.featured[0]} height={80} />
           </div>
-          {/* Row 2: Bruker + Preomics smaller */}
+          {/* Row 2: Biognosys + Bruker */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {SPONSORS.diamond.secondary.map(s => (
-              <LogoCard key={s.name} sponsor={s} height={44} />
+              <LogoCard key={s.name} sponsor={s} height={52} />
             ))}
           </div>
         </TierSection>
 
-        {/* ── PLATINUM ── */}
+        {/* PLATINUM */}
         <TierSection label="Platinum Sponsor" accent="#8b7355">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
-            {SPONSORS.platinum.map(s => <LogoCard key={s.name} sponsor={s} height={55} />)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+            {SPONSORS.platinum.map(s => <LogoCard key={s.name} sponsor={s} height={62} />)}
           </div>
         </TierSection>
 
-        {/* ── GOLD ── */}
+        {/* GOLD */}
         <TierSection label="Gold Sponsors" accent="#c8921a">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
-            {SPONSORS.gold.map(s => <LogoCard key={s.name} sponsor={s} height={50} />)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 10 }}>
+            {SPONSORS.gold.map(s => <LogoCard key={s.name} sponsor={s} height={58} />)}
           </div>
         </TierSection>
 
-        {/* ── SILVER ── */}
+        {/* SILVER */}
         <TierSection label="Silver Sponsors" accent="#7a8fa6">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 10 }}>
-            {SPONSORS.silver.map(s => <LogoCard key={s.name} sponsor={s} height={44} />)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
+            {SPONSORS.silver.map(s => <LogoCard key={s.name} sponsor={s} height={52} />)}
           </div>
         </TierSection>
 
-        {/* ── CUSTOM ── */}
+        {/* CUSTOM */}
         <TierSection label="Custom Sponsor" accent="#1e8fab">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
-            {SPONSORS.custom.map(s => <LogoCard key={s.name} sponsor={s} height={50} />)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+            {SPONSORS.custom.map(s => <LogoCard key={s.name} sponsor={s} height={58} />)}
           </div>
         </TierSection>
 
-        {/* ── PARTNERS ── */}
+        {/* PARTNERS */}
         <TierSection label="Partners" accent="#555">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 10 }}>
-            {SPONSORS.partners.map(s => <LogoCard key={s.name} sponsor={s} height={44} />)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
+            {SPONSORS.partners.map(s => <LogoCard key={s.name} sponsor={s} height={52} />)}
           </div>
         </TierSection>
 
