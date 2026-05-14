@@ -21,6 +21,7 @@ const SPONSORS = {
     { name: 'Promega', url: 'https://portugal.promega.com/', logo: '/sponsors/promega.jpg' },
     { name: 'Quilaban', url: 'https://www.quilaban.pt/parceiros/illumina/', logo: '/sponsors/quilaban.png' },
     { name: 'Resyn Biosciences', url: 'https://resynbio.com/', logo: '/sponsors/resyn.png' },
+    { name: 'Reve', url: 'https://montarabiolabs.com/', logo: '/sponsors/reve.png' },
     { name: 'Solitica', url: 'https://solitica.pt/', logo: '/sponsors/solitica.png' },
   ],
   custom: [
@@ -28,10 +29,18 @@ const SPONSORS = {
   ],
   partners: [
     { name: 'CCMAR', url: 'https://ccmar.ualg.pt/', logo: '/sponsors/ccmar.png' },
-    { name: 'Universidade do Algarve', url: 'https://www.ualg.pt/', logo: '/sponsors/ualg.png' },
     { name: 'CIBB', url: 'https://cibb.uc.pt/pt', logo: '/sponsors/cibb.png' },
     { name: 'Loulé', url: 'https://www.cm-loule.pt/pt/Default.aspx', logo: '/sponsors/loule.png' },
+    { name: 'Universidade do Algarve', url: 'https://www.ualg.pt/', logo: '/sponsors/ualg.png' },
   ],
+}
+
+const TIER_CONFIG = {
+  platinum: { label: 'Platinum Sponsor', accent: '#8b7355' },
+  gold:     { label: 'Gold Sponsors',    accent: '#c8921a' },
+  silver:   { label: 'Silver Sponsors',  accent: '#7a8fa6' },
+  custom:   { label: 'Custom Sponsor',   accent: '#1e8fab' },
+  partners: { label: 'Partners',         accent: '#6b7280' },
 }
 
 function LogoCard({ sponsor, height }) {
@@ -99,7 +108,7 @@ export default function Sponsors() {
   return (
     <div style={{ paddingBottom: 40 }}>
 
-      {/* Organized by — white background, 3 clickable logos */}
+      {/* Organized by — white background */}
       <div style={{
         background: '#fff',
         borderBottom: '1px solid var(--border)',
@@ -147,11 +156,9 @@ export default function Sponsors() {
 
         {/* DIAMOND */}
         <TierSection label="Diamond Sponsors" accent="#1e8fab">
-          {/* Row 1: Unicam full width */}
           <div style={{ marginBottom: 10 }}>
             <LogoCard sponsor={SPONSORS.diamond.featured[0]} height={80} />
           </div>
-          {/* Row 2: Biognosys + Bruker */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {SPONSORS.diamond.secondary.map(s => (
               <LogoCard key={s.name} sponsor={s} height={52} />
@@ -188,7 +195,7 @@ export default function Sponsors() {
         </TierSection>
 
         {/* PARTNERS */}
-        <TierSection label="Partners" accent="#555">
+        <TierSection label="Partners" accent="#6b7280">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
             {SPONSORS.partners.map(s => <LogoCard key={s.name} sponsor={s} height={52} />)}
           </div>
