@@ -184,8 +184,8 @@ export default function Programme() {
                               paddingLeft: 8,
                             } : {}),
                           }}>
-                          {t.time && <span style={{ fontSize: '0.7rem', color: 'var(--muted)', minWidth: 68, flexShrink: 0, fontVariantNumeric: 'tabular-nums', paddingTop: 2 }}>{t.time}</span>}
-                          <div style={{ flex: 1 }}>
+                          {t.time && <span style={{ fontSize: '0.7rem', color: 'var(--muted)', minWidth: 68, flexShrink: 0, fontVariantNumeric: 'tabular-nums', alignSelf: 'flex-start', marginTop: 0, lineHeight: '18px' }}>{t.time}</span>}
+                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                             {/* Type badge */}
                             {t.type && (
                               <span style={{
