@@ -18,10 +18,10 @@ const SPONSORS = {
   silver: [
     { name: 'Evosep', url: 'https://www.evosep.com/', logo: '/sponsors/evosep.png' },
     { name: 'Ionopticks', url: 'https://ionopticks.com/', logo: '/sponsors/ionopticks.png' },
+    { name: 'Montara Biolabs', url: 'https://montarabiolabs.com/', logo: '/sponsors/reve.png' },
     { name: 'Promega', url: 'https://portugal.promega.com/', logo: '/sponsors/promega.jpg' },
     { name: 'Quilaban', url: 'https://www.quilaban.pt/parceiros/illumina/', logo: '/sponsors/quilaban.png' },
     { name: 'Resyn Biosciences', url: 'https://resynbio.com/', logo: '/sponsors/resyn.png' },
-    { name: 'Reve', url: 'https://montarabiolabs.com/', logo: '/sponsors/reve.png' },
     { name: 'Solitica', url: 'https://solitica.pt/', logo: '/sponsors/solitica.png' },
   ],
   custom: [
