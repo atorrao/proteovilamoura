@@ -10,20 +10,20 @@ export const PROGRAMME = {
       { time: '13:15–13:45', kind: 'invited', title: 'Invited Speaker — Nelson Soares — Proteomics profiling of Red Blood Cells (RBCs) combined with Deep Machine Learning analysis – reveals potential Diagnostic Biomarkers for Acute Venous Thromboembolism', talks: [] },
     ],
     afternoon: [
-      { time: '13:45–15:00', kind: 'section', title: 'Section 1 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #1', sectionKey: 'sec1', talks: [
+      { time: '13:45–15:00', kind: 'section', title: 'Section 1 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #1', chairs: 'José Alexandre Ferreira, Hugo Osório', sectionKey: 'sec1', talks: [
         { time: '13:45–14:00', title: 'Deep plasma EV proteomics by Data-Independent Acquisition reveals circulating signatures of cardiac tissue injury in a preclinical Atrial Fibrillation model', author: 'Estefanía Núñez', type: 'oral', id: 101 },
         { time: '14:00–14:15', title: 'Expanding the knowledge on diagnostic autoantibodies in colorectal cancer through proteomics and immunosensing platforms', author: 'Javier Velázquez Gutiérrez', type: 'oral', id: 102 },
-        { time: '14:15–14:30', title: 'Advanced applications for Orbitrap Astral Series MS (Sponsor — Thermo/Unicam)', author: 'Bernard Delanghe', type: 'oral', id: 103 },
+        { time: '14:15–14:30', title: 'Advanced applications for Orbitrap Astral Series MS', author: 'Bernard Delanghe', type: 'sponsor', id: 103 },
         { time: '14:30–14:45', title: 'Mapping the circulating extracellular vesicle proteome in Marfan syndrome patients using minimal plasma volume', author: 'Diego Mena Santos', type: 'oral', id: 104 },
         { time: '14:45–15:00', title: 'Methylthioadenosine: harnessing a natural metabolite to counteract cholestasis progression', author: 'Irene Blázquez García', type: 'oral', id: 105 },
       ]},
       { time: '15:00–15:45', kind: 'break', title: 'Coffee Break + Poster Session 1', talks: [] },
       { time: '15:45–16:15', kind: 'invited', title: 'Invited Speaker — Cherine Bechara — Structural Proteomics Reveals Chemokine Receptor Interactions and Dynamics', talks: [] },
-      { time: '16:15–17:15', kind: 'section', title: 'Section 2 — Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies', sectionKey: 'sec2', talks: [
+      { time: '16:15–17:15', kind: 'section', title: 'Section 2 — Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies', chairs: 'Deborah Penque, Félix Elortza', sectionKey: 'sec2', talks: [
         { time: '16:15–16:30', title: 'Integrative single-cell proteomics identifies pro-regenerative fingerprints in a sub-population of adult cardiomyocytes', author: 'Consuelo Marin-Vicente', type: 'oral', id: 106 },
-        { time: '16:30–16:45', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 107 },
+        { time: '16:30–16:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 107 },
         { time: '16:45–17:00', title: 'Benchmarking single-cell FACS-assisted strategies: effects on cellular component bias and post-translational modification detection', author: 'Samuel Lozano Juárez', type: 'oral', id: 108 },
-        { time: '17:00–17:15', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 109 },
+        { time: '17:00–17:15', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 109 },
       ]},
       { time: '17:15–18:10', kind: 'flash', title: 'Flash Presentations — Section 2', sectionKey: 'sec2', talks: [
         { time: '17:15–17:19', title: "In depth-analysis of Alzheimer's disease brain tissue reveals novel Aβ interactors", author: 'Ana Montero Calle', type: 'flash', id: 110 },
@@ -45,19 +45,19 @@ export const PROGRAMME = {
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
       { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Enrique Santamaria — Olfactory proteomics: Emerging mechanisms and translational opportunities in neurological disorders', talks: [] },
-      { time: '9:00–10:15', kind: 'section', title: 'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #2', sectionKey: 'sec3', talks: [
+      { time: '9:00–10:15', kind: 'section', title: 'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #2', chairs: 'Paulo Marcelo, Deborah Penque', sectionKey: 'sec3', talks: [
         { time: '9:00–9:15', title: 'Glycoproteomics uncovers a paucimannosylated proteome associated with tumour aggressiveness and poor clinical outcome in gastric cancer', author: 'Dylan Ferreira', type: 'oral', id: 201 },
         { time: '9:15–9:30', title: 'Artificial intelligence-based clinical models predict plasma proteomic endotypes enabling precision medicine in knee osteoarthritis', author: 'Patricia Quaranta Díaz', type: 'oral', id: 202 },
-        { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 203 },
+        { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 203 },
         { time: '9:45–10:00', title: 'Proteomic biomarkers predictive of response to antiangiogenic treatment: toward personalized medicine in neovascular age-related macular degeneration', author: 'Antonio Cañizo Outeiriño', type: 'oral', id: 204 },
         { time: '10:00–10:15', title: 'Unravelling the proteome of human embryo implantation: new biomarkers and metabolic signatures', author: 'Girard Océane', type: 'oral', id: 205 },
       ]},
       { time: '10:15–11:00', kind: 'break', title: 'Coffee Break + Poster Session 1', talks: [] },
       { time: '11:00–11:30', kind: 'invited', title: 'Invited Speaker — Etienne Coyaud — Proximity labeling tools to investigate pathogenic protein networks', talks: [] },
-      { time: '11:30–12:45', kind: 'section', title: 'Section 4 — Networks in Action: Interactomes, Signalling & Bioinformatics Innovation', sectionKey: 'sec4', talks: [
+      { time: '11:30–12:45', kind: 'section', title: 'Section 4 — Networks in Action: Interactomes, Signalling & Bioinformatics Innovation', chairs: 'Eduardo Chicano-Galvez, Montserrat Carrascal', sectionKey: 'sec4', talks: [
         { time: '11:30–11:45', title: 'Deciphering protein-protein interactions in live neurons using XL-MS', author: 'Hugo Gizardin-Fredon', type: 'oral', id: 206 },
         { time: '11:45–12:00', title: "Proteomic profiling of the interactome of phosphorylated Tau aggregates identifies modulators of Alzheimer's disease progression", author: 'Sofía Jiménez de Ocaña', type: 'oral', id: 207 },
-        { time: '12:00–12:15', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 208 },
+        { time: '12:00–12:15', title: 'Bruker: Harvesting the potential of 4D-omics approaches with the timsTOF product range.', author: 'Pierre-Olivier Schmidt', type: 'sponsor', id: 208 },
         { time: '12:15–12:30', title: 'GLYCOAVATARS: Bead-coated membrane models for studying the cancer-immune cells interactome', author: 'Andreia Rafaela Linhares Miranda', type: 'oral', id: 209 },
         { time: '12:30–12:45', title: 'Orai1 facilitates angiogenesis after myocardial infarction through Notch1 signaling pathway', author: 'Isabel María Galeano Otero', type: 'oral', id: 210 },
       ]},
@@ -67,7 +67,7 @@ export const PROGRAMME = {
       { time: '13:30–14:00', kind: 'special', title: 'Sponsor Workshop (TBD) — Rafaelo Room', talks: [] },
       { time: '14:00–14:30', kind: 'special', title: 'Sponsor Workshop (TBD) — Rafaelo Room', talks: [] },
       { time: '14:30–15:00', kind: 'invited', title: 'Invited Speaker — Ana Martinez del Val — Decoding Protein Function: How Proteomics Reveals Post-Translational Control in Cell Signalling and Disease', talks: [] },
-      { time: '15:00–16:00', kind: 'section', title: 'Section 5 — PTMs: Deciphering the Dynamics of Protein Regulation', sectionKey: 'sec5', talks: [
+      { time: '15:00–16:00', kind: 'section', title: 'Section 5 — PTMs: Deciphering the Dynamics of Protein Regulation', chairs: 'Hugo Osório, Avais Daulat', sectionKey: 'sec5', talks: [
         { time: '15:00–15:15', title: 'Experimental Design and Multivariate Analysis Approaches for Glycoproteomics', author: 'Estela Giménez López', type: 'oral', id: 301 },
         { time: '15:15–15:30', title: "Study of the links between the dysregulations of metabolism and epigenetics marks in Huntington's disease", author: 'Hisham Altoufaily', type: 'oral', id: 302 },
         { time: '15:30–15:45', title: 'Phosphoproteomics as a tool to dissect the molecular mechanisms underlying a novel combinatorial therapeutic strategy in pseudomyxoma peritonei', author: 'Antonio Romero-Ruiz', type: 'oral', id: 303 },
@@ -75,10 +75,10 @@ export const PROGRAMME = {
       ]},
       { time: '16:00–16:45', kind: 'break', title: 'Coffee Break + Poster Session 2 + Group Photo', talks: [] },
       { time: '16:45–17:15', kind: 'invited', title: 'Invited Speaker — Mélisande Blein-Nicolas — Proteomics as a cornerstone in deciphering the genotype-phenotype relationship in maize', talks: [] },
-      { time: '17:15–18:30', kind: 'section', title: 'Section 6 — Proteomics Exploration in Non-Model Systems', sectionKey: 'sec6', talks: [
+      { time: '17:15–18:30', kind: 'section', title: 'Section 6 — Proteomics Exploration in Non-Model Systems', chairs: 'Montserrat Carrascal, Ana Varela Coelho', sectionKey: 'sec6', talks: [
         { time: '17:15–17:30', title: 'Geographical origin differentiation of tiger nut (Cyperus Esculentus) through liquid chromatography-high resolution mass spectrometry analysis', author: 'Enrique Sentandreu', type: 'oral', id: 305 },
         { time: '17:30–17:45', title: 'Transforming Invasion into Innovation: Proteomics of Rugulopteryx okamurae for Monitoring, Degradation and Biomass Valorization', author: 'Almudena Escobar Niño', type: 'oral', id: 306 },
-        { time: '17:45–18:00', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 307 },
+        { time: '17:45–18:00', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 307 },
         { time: '18:00–18:15', title: 'Proteomic characterization of baculovirus expression vector system (BEVS)-derived extracellular vesicles engineered for Gla-Rich Protein (GRP) γ-carboxylation reveals selective GRP incorporation and distinct vesicle populations', author: 'Carla Alexandra São Bento Viegas', type: 'oral', id: 308 },
         { time: '18:15–18:30', title: 'Authentication of A2 bovine milk by routine LC-MS proteomic analysis', author: 'Lorea R. Beldarrain', type: 'oral', id: 309 },
       ]},
@@ -100,16 +100,16 @@ export const PROGRAMME = {
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
       { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Celso Reis — Glycomics and glycoproteomics in cancer: from oncogenic mechanisms to clinical applications', talks: [] },
-      { time: '9:00–10:15', kind: 'section', title: 'Section 7 — Quantitative and Computational Proteomics', sectionKey: 'sec7', talks: [
+      { time: '9:00–10:15', kind: 'section', title: 'Section 7 — Quantitative and Computational Proteomics', chairs: 'Delphine Pflieger, Paulo Marcelo', sectionKey: 'sec7', talks: [
         { time: '9:00–9:15', title: 'Global protein turnover dynamics in pluripotency', author: 'Orhi Barroso Gomila', type: 'oral', id: 401 },
         { time: '9:15–9:30', title: 'Defining the Topology of Proteins in sEV Isolates by Protein Correlation Profiling', author: 'Joanes Etxeberria Ugartemendia', type: 'oral', id: 402 },
-        { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'oral', id: 403 },
+        { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 403 },
         { time: '9:45–10:00', title: 'Are Your Replicates Independent? — Defining Experimental Units in Primary Neuron Proteomics', author: 'Miguel Maria Varandas Anão Rosado', type: 'oral', id: 404 },
         { time: '10:00–10:15', title: 'Continuous telemetry-driven quality control for proactive LC–MS performance in proteomics core facilities', author: 'Daniel Lopez-Ferrer', type: 'oral', id: 405 },
       ]},
       { time: '10:15–11:00', kind: 'break', title: 'Coffee Break + Poster Session 2', talks: [] },
       { time: '11:00–11:30', kind: 'invited', title: 'Invited Speaker — Guadalupe Gómez Baena — Proteomics at the Service of Biodiversity Conservation', talks: [] },
-      { time: '11:30–12:30', kind: 'section', title: 'Section 8 — Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental and Ecosystem Omics', sectionKey: 'sec8', talks: [
+      { time: '11:30–12:30', kind: 'section', title: 'Section 8 — Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental and Ecosystem Omics', chairs: 'Félix Elortza, Paulo Marcelo', sectionKey: 'sec8', talks: [
         { time: '11:30–11:45', title: 'High-Throughput PISA–TMT Proteomics Enables Target Identification of Novel Antimicrobial Small Molecules', author: 'Gonçalo Raposo Matos', type: 'oral', id: 406 },
         { time: '11:45–12:00', title: 'Molecular responses of Staphylococcus epidermidis to pH and endogenous antimicrobial fatty acids are strain-specific', author: 'Ana Maria Varela Coelho', type: 'oral', id: 407 },
         { time: '12:00–12:15', title: 'Sewage protein information mining: A new frontier in community health and industrial surveillance', author: 'Montserrat Carrascal Perez', type: 'oral', id: 408 },
@@ -124,17 +124,13 @@ export const PROGRAMME = {
 }
 
 export const ALL_PRES = {}
-const SPONSOR_KEYWORDS = ['sponsor', 'Sponsor']
 Object.values(PROGRAMME).forEach(day => {
   ;['morning','afternoon'].forEach(half => {
     ;(day[half] || []).forEach(block => {
       ;(block.talks || []).forEach(t => {
         if (!t.id) return
-        const isSponsored = SPONSOR_KEYWORDS.some(k =>
-          (t.title || '').toLowerCase().includes('sponsor') ||
-          (t.author || '').toLowerCase().includes('sponsor')
-        )
-        if (!isSponsored) ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey }
+        // Include all talks except sponsor talks in the voting area
+        if (t.type !== 'sponsor') ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey }
       })
     })
   })
