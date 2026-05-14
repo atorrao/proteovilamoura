@@ -174,14 +174,17 @@ export default function Programme() {
                       const isSponsor = t.type === 'sponsor'
                       return (
                         <div key={ti} className="prog-talk"
-                          style={isSponsor ? {
-                            background: 'rgba(250,175,0,0.07)',
-                            borderLeft: '3px solid rgba(250,175,0,0.5)',
-                            borderRadius: 6,
-                            marginLeft: -4,
-                            paddingLeft: 8,
-                          } : {}}>
-                          {t.time && <span style={{ fontSize: '0.7rem', color: 'var(--muted)', minWidth: 68, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>{t.time}</span>}
+                          style={{
+                            alignItems: 'flex-start',
+                            ...(isSponsor ? {
+                              background: 'rgba(250,175,0,0.07)',
+                              borderLeft: '3px solid rgba(250,175,0,0.5)',
+                              borderRadius: 6,
+                              marginLeft: -4,
+                              paddingLeft: 8,
+                            } : {}),
+                          }}>
+                          {t.time && <span style={{ fontSize: '0.7rem', color: 'var(--muted)', minWidth: 68, flexShrink: 0, fontVariantNumeric: 'tabular-nums', paddingTop: 2 }}>{t.time}</span>}
                           <div style={{ flex: 1 }}>
                             {/* Type badge */}
                             {t.type && (
