@@ -155,9 +155,9 @@ export default function Sponsors() {
           <div style={{ marginBottom: 10 }}>
             <LogoCard sponsor={SPONSORS.diamond.featured[0]} height={80} />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div>
             {SPONSORS.diamond.secondary.map(s => (
-              <LogoCard key={s.name} sponsor={s} height={52} />
+              <LogoCard key={s.name} sponsor={s} height={80} />
             ))}
           </div>
         </TierSection>
