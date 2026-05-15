@@ -1,21 +1,23 @@
 :root {
-  --bg: #061520;
-  --surface: #0a2030;
-  --surface2: #0e2d40;
-  --card: #0d2535;
-  --border: rgba(22,64,85,0.6);
-  --text: #d8eaf2;
-  --muted: #5a8099;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.09);
+  --text: #0f2a3a;
+  --muted: #64748b;
   --accent: #1e8fab;
   --accent2: #27b5a0;
-  --gold: #e8a020;
-  --green: #22c55e;
-  --red: #ef4444;
-  --orange: #f97316;
-  --purple: #a855f7;
+  --gold: #c8860a;
+  --green: #16a34a;
+  --red: #dc2626;
+  --orange: #ea6c10;
+  --purple: #9333ea;
   --brand-dark: #0d3349;
   --brand-mid: #106080;
   --brand-teal: #208080;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
 
   /* Mobile touch targets */
   --touch-min: 44px;
@@ -44,9 +46,10 @@ header {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px; height: 52px;
-  background: rgba(6,21,32,0.97);
+  background: rgba(255,255,255,0.97);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07);
 }
 .logo-img { height: 30px; object-fit: contain; }
 .header-right { display: flex; align-items: center; gap: 8px; }
@@ -113,7 +116,7 @@ header {
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 0.82rem; font-weight: 600; color: var(--muted); letter-spacing: 0.03em; }
 .field input, .field select, .field textarea {
-  padding: 12px 14px; background: var(--bg);
+  padding: 12px 14px; background: var(--surface2);
   border: 1px solid var(--border); border-radius: 10px;
   color: var(--text); font-family: 'DM Sans', sans-serif;
   font-size: 1rem; /* 16px prevents iOS zoom */
@@ -129,18 +132,19 @@ header {
 .toast {
   position: fixed; bottom: calc(72px + env(safe-area-inset-bottom));
   left: 16px; right: 16px; transform: translateY(20px);
-  background: var(--surface2); border: 1px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
   padding: 12px 18px; border-radius: 12px; font-size: 0.88rem;
   display: flex; align-items: center; gap: 10px;
   opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 9999;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
 }
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── Modal ───────────────────────────────────────────────────── */
 .overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   display: flex; align-items: flex-end; /* slide up from bottom on mobile */
   justify-content: center; z-index: 500;
   padding: 0;
@@ -188,7 +192,7 @@ header {
 }
 .score-btn {
   height: 38px; border-radius: 8px; border: 1px solid var(--border);
-  background: var(--surface2); color: var(--muted);
+  background: var(--surface2); color: var(--text);
   font-size: 0.85rem; font-weight: 700; cursor: pointer;
   transition: all 0.15s; display: flex; align-items: center; justify-content: center;
   -webkit-touch-callout: none; user-select: none;
@@ -237,19 +241,19 @@ header {
   padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start;
 }
 .prog-block-time {
-  font-size: 0.78rem; font-weight: 700; color: #fff;
+  font-size: 0.78rem; font-weight: 700; color: var(--text);
   min-width: 78px; font-variant-numeric: tabular-nums; flex-shrink: 0;
 }
 .prog-talk {
   padding: 10px 14px; display: flex; gap: 8px; align-items: flex-start;
-  border-top: 1px solid rgba(22,64,85,0.4);
+  border-top: 1px solid var(--border);
 }
 
 /* ── MyCard — full mobile layout ─────────────────────────────── */
 .card-page { padding: 16px; max-width: 480px; margin: 0 auto; }
 .digital-card {
   border-radius: 20px; overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */
