@@ -230,16 +230,8 @@ export default function App() {
         />
       )}
       <Toast {...toast} />
-      {/* Footer */}
-      <div className="app-footer" style={{
-        textAlign: 'center',
-        padding: '10px 0',
-        paddingBottom: 'calc(74px + env(safe-area-inset-bottom))',
-        fontSize: '0.72rem',
-        color: 'var(--muted)',
-        borderTop: '1px solid var(--border)',
-        background: 'var(--surface)',
-      }}>
+      {/* Footer — fixed, sits just above the bottom nav */}
+      <div className="app-footer">
         Powered by <a href="https://addapters.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>Addapters</a>
       </div>
     </div>

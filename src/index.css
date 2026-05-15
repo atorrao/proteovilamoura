@@ -83,8 +83,8 @@ header {
 .nav-tab.active { color: var(--accent2); border-top-color: var(--accent2); }
 .nav-tab-icon { font-size: 1.1rem; line-height: 1; }
 
-/* Main content — push above bottom nav */
-.screen-area { flex: 1; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+/* Main content — push above bottom nav + footer */
+.screen-area { flex: 1; padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 
 /* ── Buttons ─────────────────────────────────────────────────── */
 .btn {
@@ -253,7 +253,18 @@ header {
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */
-.app-footer { padding-bottom: calc(74px + env(safe-area-inset-bottom)); }
+.app-footer {
+  position: fixed;
+  bottom: calc(52px + env(safe-area-inset-bottom)); /* sits above nav-tabs height */
+  left: 0; right: 0;
+  z-index: 85; /* below nav (90) but above content */
+  text-align: center;
+  padding: 5px 0;
+  font-size: 0.68rem;
+  color: var(--muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
 
 /* ── Desktop overrides ───────────────────────────────────────── */
 @media (min-width: 640px) {
@@ -274,7 +285,11 @@ header {
   .nav-tab.active { border-bottom-color: var(--accent2); border-top-color: transparent; }
   .nav-tab-icon { display: none; }
   .screen-area { padding-bottom: 0; }
-  .app-footer { padding-bottom: 14px !important; }
+  .app-footer {
+    position: static;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+  }
   .toast {
     bottom: 24px; left: 50%; right: auto;
     transform: translateX(-50%) translateY(20px);
