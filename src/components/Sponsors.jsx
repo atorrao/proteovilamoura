@@ -4,8 +4,7 @@ const SPONSORS = {
       { name: 'Thermo Scientific / Unicam', url: 'https://www.unicam.pt/', logo: '/sponsors/unicam.png' },
     ],
     secondary: [
-      { name: 'Biognosys Group', url: 'https://biognosys.com/', logo: '/sponsors/biognosys.png' },
-      { name: 'Bruker', url: 'https://www.bruker.com/pt.html', logo: '/sponsors/bruker.png' },
+      { name: 'Bruker & Biognosys Group', url: 'https://www.bruker.com/pt.html', logo: '/sponsors/bruker-biognosys.png' },
     ],
   },
   platinum: [
