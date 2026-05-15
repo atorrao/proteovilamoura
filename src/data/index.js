@@ -19,7 +19,7 @@ export const PROGRAMME = {
       ]},
       { time: '15:00–15:45', kind: 'break', title: 'Coffee Break + Poster Session 1', talks: [] },
       { time: '15:45–16:15', kind: 'invited', title: 'Invited Speaker — Cherine Bechara — Structural Proteomics Reveals Chemokine Receptor Interactions and Dynamics', talks: [] },
-      { time: '16:15–17:15', kind: 'section', title: 'Section 2 — Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies', chairs: 'Deborah Penque, Félix Elortza', sectionKey: 'sec2', talks: [
+      { time: '16:15–17:15', kind: 'section', title: 'Section 2 — Next-Gen Proteomics: Single-Cell, Proteogenomics & Disruptive Technologies', chairs: 'Ana Varela Coelho, Felix Elortza', sectionKey: 'sec2', talks: [
         { time: '16:15–16:30', title: 'Integrative single-cell proteomics identifies pro-regenerative fingerprints in a sub-population of adult cardiomyocytes', author: 'Consuelo Marin-Vicente', type: 'oral', id: 106 },
         { time: '16:30–16:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 107 },
         { time: '16:45–17:00', title: 'Benchmarking single-cell FACS-assisted strategies: effects on cellular component bias and post-translational modification detection', author: 'Samuel Lozano Juárez', type: 'oral', id: 108 },
@@ -45,7 +45,7 @@ export const PROGRAMME = {
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
       { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Enrique Santamaria — Olfactory proteomics: Emerging mechanisms and translational opportunities in neurological disorders', talks: [] },
-      { time: '9:00–10:15', kind: 'section', title: 'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #2', chairs: 'Paulo Marcelo, Deborah Penque', sectionKey: 'sec3', talks: [
+      { time: '9:00–10:15', kind: 'section', title: 'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #2', chairs: 'Avais Daulat, Deborah Penque', sectionKey: 'sec3', talks: [
         { time: '9:00–9:15', title: 'Glycoproteomics uncovers a paucimannosylated proteome associated with tumour aggressiveness and poor clinical outcome in gastric cancer', author: 'Dylan Ferreira', type: 'oral', id: 201 },
         { time: '9:15–9:30', title: 'Artificial intelligence-based clinical models predict plasma proteomic endotypes enabling precision medicine in knee osteoarthritis', author: 'Patricia Quaranta Díaz', type: 'oral', id: 202 },
         { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 203 },
@@ -75,7 +75,7 @@ export const PROGRAMME = {
       ]},
       { time: '16:00–16:45', kind: 'break', title: 'Coffee Break + Poster Session 2 + Group Photo', talks: [] },
       { time: '16:45–17:15', kind: 'invited', title: 'Invited Speaker — Mélisande Blein-Nicolas — Proteomics as a cornerstone in deciphering the genotype-phenotype relationship in maize', talks: [] },
-      { time: '17:15–18:30', kind: 'section', title: 'Section 6 — Proteomics Exploration in Non-Model Systems', chairs: 'Montserrat Carrascal, Ana Varela Coelho', sectionKey: 'sec6', talks: [
+      { time: '17:15–18:30', kind: 'section', title: 'Section 6 — Proteomics Exploration in Non-Model Systems', chairs: 'Monserrat Carrascal, Ana Varela Coelho', sectionKey: 'sec6', talks: [
         { time: '17:15–17:30', title: 'Geographical origin differentiation of tiger nut (Cyperus Esculentus) through liquid chromatography-high resolution mass spectrometry analysis', author: 'Enrique Sentandreu', type: 'oral', id: 305 },
         { time: '17:30–17:45', title: 'Transforming Invasion into Innovation: Proteomics of Rugulopteryx okamurae for Monitoring, Degradation and Biomass Valorization', author: 'Almudena Escobar Niño', type: 'oral', id: 306 },
         { time: '17:45–18:00', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 307 },
@@ -100,7 +100,7 @@ export const PROGRAMME = {
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
       { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Celso Reis — Glycomics and glycoproteomics in cancer: from oncogenic mechanisms to clinical applications', talks: [] },
-      { time: '9:00–10:15', kind: 'section', title: 'Section 7 — Quantitative and Computational Proteomics', chairs: 'Delphine Pflieger, Paulo Marcelo', sectionKey: 'sec7', talks: [
+      { time: '9:00–10:15', kind: 'section', title: 'Section 7 — Quantitative and Computational Proteomics', chairs: 'Delphine Pflieger, Hugo Osório', sectionKey: 'sec7', talks: [
         { time: '9:00–9:15', title: 'Global protein turnover dynamics in pluripotency', author: 'Orhi Barroso Gomila', type: 'oral', id: 401 },
         { time: '9:15–9:30', title: 'Defining the Topology of Proteins in sEV Isolates by Protein Correlation Profiling', author: 'Joanes Etxeberria Ugartemendia', type: 'oral', id: 402 },
         { time: '9:30–9:45', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 403 },
@@ -109,7 +109,7 @@ export const PROGRAMME = {
       ]},
       { time: '10:15–11:00', kind: 'break', title: 'Coffee Break + Poster Session 2', talks: [] },
       { time: '11:00–11:30', kind: 'invited', title: 'Invited Speaker — Guadalupe Gómez Baena — Proteomics at the Service of Biodiversity Conservation', talks: [] },
-      { time: '11:30–12:30', kind: 'section', title: 'Section 8 — Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental and Ecosystem Omics', chairs: 'Félix Elortza, Paulo Marcelo', sectionKey: 'sec8', talks: [
+      { time: '11:30–12:30', kind: 'section', title: 'Section 8 — Beyond Proteins: Small Molecules, Peptides & Integrated Omics + Environmental and Ecosystem Omics', chairs: 'Feliz Elortza, Deborah Penque', sectionKey: 'sec8', talks: [
         { time: '11:30–11:45', title: 'High-Throughput PISA–TMT Proteomics Enables Target Identification of Novel Antimicrobial Small Molecules', author: 'Gonçalo Raposo Matos', type: 'oral', id: 406 },
         { time: '11:45–12:00', title: 'Molecular responses of Staphylococcus epidermidis to pH and endogenous antimicrobial fatty acids are strain-specific', author: 'Ana Maria Varela Coelho', type: 'oral', id: 407 },
         { time: '12:00–12:15', title: 'Sewage protein information mining: A new frontier in community health and industrial surveillance', author: 'Montserrat Carrascal Perez', type: 'oral', id: 408 },
