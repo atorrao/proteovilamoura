@@ -50,7 +50,7 @@ export default function Login({ ready, state, actions, onLogin }) {
       </div>
 
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '24px 20px', boxShadow: 'var(--shadow-md)' }}>
-        <div style={{ fontFamily: 'Syne', fontSize: '1.4rem', fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>Voting Access</div>
+        <div style={{ fontFamily: 'Syne', fontSize: '1.4rem', fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>Voting Access and Contact Card</div>
         <div style={{ color: 'var(--muted)', fontSize: '0.84rem', marginBottom: 20 }}>Sign in with your email to evaluate presentations</div>
 
         <div style={{ display: 'flex', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', marginBottom: 20 }}>
