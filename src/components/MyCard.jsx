@@ -46,7 +46,13 @@ function DigitalCard({ profile, qrDataUrl }) {
         </div>
         <div style={{ marginTop: 4 }}>
           <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: profile.company ? 5 : 0 }}>
-            {profile.name || '—'}
+            {(() => {
+              const parts = (profile.name || '—').trim().split(' ')
+              if (parts.length <= 2) return profile.name || '—'
+              const line1 = parts.slice(0, 2).join(' ')
+              const line2 = parts.slice(2).join(' ')
+              return <>{line1}<br />{line2}</>
+            })()}
           </div>
           {profile.company && (
             <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>{profile.company}</div>
