@@ -230,6 +230,10 @@ export default function App() {
         />
       )}
       <Toast {...toast} />
+      {/* Footer */}
+      <div style={{ textAlign: 'center', padding: '10px 0 14px', fontSize: '0.72rem', color: 'var(--muted)', borderTop: '1px solid var(--border)', marginTop: 'auto', background: 'var(--surface)' }}>
+        Powered by <a href="https://addapters.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>Addapters</a>
+      </div>
     </div>
   )
 }
