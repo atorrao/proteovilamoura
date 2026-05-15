@@ -139,13 +139,10 @@ export default function Sponsors() {
 
       {/* Thank you header */}
       <div style={{ padding: '28px 16px 8px', textAlign: 'center' }}>
-        <div style={{
-          fontFamily: 'Syne', fontSize: '1.35rem', fontWeight: 800,
-          color: 'var(--text)', lineHeight: 1.25,
-        }}>
+        <div style={{ fontFamily: 'Syne', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1.2 }}>
           Thank you to all our sponsors
         </div>
-        <div style={{ fontSize: '0.82rem', color: 'var(--muted)', marginTop: 5 }}>
+        <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginTop: 4 }}>
           for supporting ProteoVilamoura 2026
         </div>
         <div style={{ width: 48, height: 3, background: 'linear-gradient(90deg, var(--brand-mid), var(--accent2))', borderRadius: 2, margin: '12px auto 0' }} />
