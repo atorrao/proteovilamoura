@@ -133,6 +133,13 @@ export default function Voting({ session, state, actions, showToast }) {
 
  {/* Title + author */}
  <div>
+ {p.posterNum && (
+   <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--purple)', marginBottom: 4 }}>
+     <span style={{ background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', borderRadius: 5, padding: '1px 6px', letterSpacing: '0.04em' }}>
+       📌 {p.posterNum}
+     </span>
+   </div>
+ )}
  <div className="pres-title">{p.title}</div>
  <div className="pres-author" style={{ marginTop: 3 }}>{p.author}</div>
  </div>
