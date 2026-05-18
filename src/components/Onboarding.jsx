@@ -4,15 +4,15 @@ const STORAGE_KEY = 'pv2026_onboarding_done'
 
 const STEPS = [
   {
-    icon: '📅',
+    icon: '🔬',
     color: '#106080',
     gradient: 'linear-gradient(160deg, #0d3349 0%, #106080 60%, #208080 100%)',
     title: 'Welcome to ProteoApp',
     subtitle: '20–22 May 2026 · Vilamoura',
-    body: 'Your companion app for the 6th Joint Meeting of Spanish, French and Portuguese Proteomics Societies. Browse the programme, vote on presentations and share your contact.',
+    body: 'The official app for the 6th Joint Meeting of Spanish, French and Portuguese Proteomics Societies. Browse the programme, vote on presentations and share your contact.',
   },
   {
-    icon: '🗓️',
+    icon: '📋',
     color: '#1e8fab',
     gradient: 'linear-gradient(160deg, #0a2535 0%, #1e8fab 100%)',
     title: 'Programme',
@@ -20,15 +20,15 @@ const STEPS = [
     body: 'The Programme tab shows the full 3-day schedule. The current session is highlighted in real time and the view automatically moves to what\'s happening now.',
   },
   {
-    icon: '🗳️',
+    icon: '✏️',
     color: '#27b5a0',
     gradient: 'linear-gradient(160deg, #082520 0%, #0d6b5e 50%, #27b5a0 100%)',
     title: 'Voting',
     subtitle: 'Rate the presentations',
-    body: 'Sign in with your email to access the Voting tab. Score each presentation from 1 (lowest) to 10 (highest). Your votes are saved automatically — no submit needed.',
+    body: 'Sign in with your email to access the Voting tab. Score each presentation from 1 (lowest) to 10 (highest). Your votes are saved automatically.',
   },
   {
-    icon: '🪪',
+    icon: '💳',
     color: '#8b5cf6',
     gradient: 'linear-gradient(160deg, #1a0a35 0%, #4c1d95 50%, #8b5cf6 100%)',
     title: 'My Card',
@@ -36,12 +36,12 @@ const STEPS = [
     body: 'After signing in, go to the My Card tab. Your details are pre-filled and a QR code is generated automatically. Anyone can scan it to save your contact instantly.',
   },
   {
-    icon: '🏆',
+    icon: '🥇',
     color: '#e8a020',
     gradient: 'linear-gradient(160deg, #2a1800 0%, #8a4d00 50%, #e8a020 100%)',
     title: 'Awards',
     subtitle: 'Your vote counts',
-    body: 'Attendee and Evaluator votes together determine the 1st, 2nd and 3rd place winners for Best Oral Communication, Best Flash Communication and Best Poster.',
+    body: 'Your votes will determine the 1st, 2nd and 3rd place winners for Best Oral Communication, Best Flash Communication and Best Poster.',
   },
 ]
 
@@ -124,8 +124,9 @@ export default function Onboarding({ onDone }) {
 
         {/* Title */}
         <div style={{
-          fontFamily: 'Syne, sans-serif', fontSize: '1.75rem', fontWeight: 800,
-          color: '#fff', lineHeight: 1.15, marginBottom: 6,
+          fontFamily: 'DM Sans, sans-serif', fontSize: '1.6rem', fontWeight: 700,
+          color: '#fff', lineHeight: 1.2, marginBottom: 6,
+          letterSpacing: '-0.01em',
           textShadow: '0 2px 12px rgba(0,0,0,0.3)',
         }}>
           {current.title}
@@ -133,8 +134,8 @@ export default function Onboarding({ onDone }) {
 
         {/* Subtitle */}
         <div style={{
-          fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.6)',
-          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20,
+          fontSize: '0.8rem', fontWeight: 500, color: 'rgba(255,255,255,0.6)',
+          letterSpacing: '0.03em', marginBottom: 20,
         }}>
           {current.subtitle}
         </div>
