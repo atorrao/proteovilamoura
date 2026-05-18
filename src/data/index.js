@@ -25,16 +25,22 @@ export const PROGRAMME = {
         { time: '16:45–17:00', title: 'Benchmarking single-cell FACS-assisted strategies: effects on cellular component bias and post-translational modification detection', author: 'Samuel Lozano Juárez', type: 'oral', id: 108 },
         { time: '17:00–17:15', title: 'Sponsor Talk (TBD)', author: '', type: 'sponsor', id: 109 },
       ]},
-      { time: '17:15–18:10', kind: 'flash', title: 'Flash Presentations — Section 2', sectionKey: 'sec2', talks: [
-        { time: '17:15–17:19', title: "In depth-analysis of Alzheimer's disease brain tissue reveals novel Aβ interactors", author: 'Ana Montero Calle', type: 'flash', id: 110 },
-        { time: '17:19–17:23', title: 'Proteomic and functional characterization of SLC8A1 in colorectal cancer development and metastasis', author: 'Sara Batuecas Domínguez', type: 'flash', id: 111 },
-        { time: '17:23–17:27', title: 'DIV Matters: Understanding Proteomic Shifts in Neuronal Maturation for Better Ischemic Modeling', author: 'Eva Ferro', type: 'flash', id: 118 },
-        { time: '17:27–17:31', title: 'In-depth serum glycoproteomics reveals stage-dependent a2,6-sialylation and systemic prothrombotic signalling in gastric cancer', author: 'Lisandra Gabriela Fernandes Cruz', type: 'flash', id: 311 },
-        { time: '17:31–17:35', title: 'Comprehensive nucleolar proteome profiling reveals metastasis-associated remodeling in colorectal cancer', author: 'Elisa Carral Ibarra', type: 'flash', id: 310 },
-        { time: '17:35–17:39', title: 'When One is Enough: A Minimalistic "On-Pot" Proteomic Workflow for Global Profiling of Single Caenorhabditis elegans', author: 'Ibon Iloro Manzano', type: 'flash', id: 115 },
-        { time: '17:39–17:43', title: 'Scaling-up low input spatial proteomics using Evosep Whisper Zoom on the timsTOF Ultra AIP', author: 'Beatriz Rocha Loureda', type: 'flash', id: 315 },
-        { time: '17:43–17:47', title: 'Beyond Acquisition: Turning Astral-Scale Data into Discovery: A Modular GUI for DIA Proteomics Analysis in a Core Facility', author: 'Marta Isasa', type: 'flash', id: 116 },
-        { time: '17:47–17:51', title: 'Optimizing tissue disruption strategies to characterize in vivo subcellular proteome remodelling', author: 'María Cinta Picos Mora', type: 'flash', id: 316 },
+      { time: '17:15–18:10', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec1', talks: [
+        { time: '17:15–17:19', title: "In depth-analysis of Alzheimer's disease brain tissue reveals novel Aβ interactors", author: 'Ana Montero Calle', type: 'flash', id: 110, sectionKey: 'sec1' },
+        { time: '17:19–17:23', title: 'Proteomic and functional characterization of SLC8A1 in colorectal cancer development and metastasis', author: 'Sara Batuecas Domínguez', type: 'flash', id: 111, sectionKey: 'sec1' },
+        { time: '17:23–17:27', title: 'DIV Matters: Understanding Proteomic Shifts in Neuronal Maturation for Better Ischemic Modeling', author: 'Eva Maria Ferro Abril Monteiro', type: 'flash', id: 118, sectionKey: 'sec1' },
+      ]},
+      { time: '17:27–17:35', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec2', talks: [
+        { time: '17:27–17:31', title: 'When One is Enough: A Minimalistic "On-Pot" Proteomic Workflow for Global Profiling of Single Caenorhabditis elegans', author: 'Ibon Iloro Manzano', type: 'flash', id: 115, sectionKey: 'sec2' },
+        { time: '17:31–17:35', title: 'Scaling-up low input spatial proteomics using Evosep Whisper Zoom on the timsTOF Ultra AIP', author: 'Beatriz Rocha Loureda', type: 'flash', id: 315, sectionKey: 'sec2' },
+      ]},
+      { time: '17:35–17:43', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec3', talks: [
+        { time: '17:35–17:39', title: 'In-depth serum glycoproteomics reveals stage-dependent a2,6-sialylation and systemic prothrombotic signalling in gastric cancer', author: 'Lisandra Gabriela Fernandes Cruz', type: 'flash', id: 311, sectionKey: 'sec3' },
+        { time: '17:39–17:43', title: 'Comprehensive nucleolar proteome profiling reveals metastasis-associated remodeling in colorectal cancer', author: 'Elisa Carral Ibarra', type: 'flash', id: 310, sectionKey: 'sec3' },
+      ]},
+      { time: '17:43–17:51', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec4', talks: [
+        { time: '17:43–17:47', title: 'Beyond Acquisition: Turning Astral-Scale Data into Discovery: A Modular GUI for DIA Proteomics Analysis in a Core Facility', author: 'Marta Isasa', type: 'flash', id: 116, sectionKey: 'sec4' },
+        { time: '17:47–17:51', title: 'Optimizing tissue disruption strategies to characterize in vivo subcellular proteome remodelling', author: 'María Cinta Picos Mora', type: 'flash', id: 316, sectionKey: 'sec4' },
       ]},
       { time: '18:00–18:45', kind: 'social', title: 'Cocktail Reception + Sci BINGO — Young Investigators in Proteomics (SEPROT)', talks: [] },
     ]
@@ -82,14 +88,20 @@ export const PROGRAMME = {
         { time: '18:00–18:15', title: 'Proteomic characterization of baculovirus expression vector system (BEVS)-derived extracellular vesicles engineered for Gla-Rich Protein (GRP) γ-carboxylation reveals selective GRP incorporation and distinct vesicle populations', author: 'Carla Alexandra São Bento Viegas', type: 'oral', id: 308 },
         { time: '18:15–18:30', title: 'Authentication of A2 bovine milk by routine LC-MS proteomic analysis', author: 'Lorea R. Beldarrain', type: 'oral', id: 309 },
       ]},
-      { time: '18:30–19:02', kind: 'flash', title: 'Flash Presentations — Section 6', sectionKey: 'sec6', talks: [
-        { time: '18:30–18:34', title: 'Phenotypic remodelling of smooth muscle cells in atherosclerosis: a low-input and single-cell proteomics approach', author: 'David del Rio Aledo', type: 'flash', id: 112 },
-        { time: '18:34–18:38', title: 'Multi-omics characterization of SIRT3 metabolism and its adaptation to the presence of amyloid-beta oligomers in nasal epithelial cells', author: 'Paz Cartas Cejudo', type: 'flash', id: 312 },
-        { time: '18:38–18:42', title: 'Extending Proteome Profiling to Red Blood Cells using an Aptamer Platform', author: 'Luis André Botelho de Carvalho', type: 'flash', id: 313 },
-        { time: '18:42–18:46', title: 'BiasTracker: a bioinformatics tool for quantifying physicochemical and functional biases in mass spectrometry-based proteomics', author: 'Gaelle Loutfi', type: 'flash', id: 113 },
-        { time: '18:46–18:50', title: 'MALDI-MSI as a Platform for Spatial Multi-Omics in Glioblastoma Research', author: 'Cristina María López Vázquez', type: 'flash', id: 114 },
-        { time: '18:50–18:54', title: 'Comparative HLA-DR immunopeptidomics reveals disease- and genotype-associated signatures in rheumatoid arthritis', author: 'Jaxaira Maggi', type: 'flash', id: 314 },
-        { time: '18:54–18:58', title: 'From Microbes to Ecosystems: Proteomic Insights into Agro-Environmental Interactions', author: 'Francisco Javier Fernandez Acero', type: 'flash', id: 117 },
+      { time: '18:30–18:38', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec5', talks: [
+        { time: '18:30–18:34', title: 'Multi-omics characterization of SIRT3 metabolism and its adaptation to the presence of amyloid-beta oligomers in nasal epithelial cells', author: 'Paz Cartas Cejudo', type: 'flash', id: 312, sectionKey: 'sec5' },
+        { time: '18:34–18:38', title: 'Phenotypic remodelling of smooth muscle cells in atherosclerosis: a low-input and single-cell proteomics approach', author: 'David del Rio Aledo', type: 'flash', id: 112, sectionKey: 'sec5' },
+      ]},
+      { time: '18:38–18:42', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec6', talks: [
+        { time: '18:38–18:42', title: 'From Microbes to Ecosystems: Proteomic Insights into Agro-Environmental Interactions', author: 'Francisco Javier Fernandez Acero', type: 'flash', id: 117, sectionKey: 'sec6' },
+      ]},
+      { time: '18:42–18:50', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec7', talks: [
+        { time: '18:42–18:46', title: 'Extending Proteome Profiling to Red Blood Cells using an Aptamer Platform', author: 'Luis André Botelho de Carvalho', type: 'flash', id: 313, sectionKey: 'sec7' },
+        { time: '18:46–18:50', title: 'BiasTracker: a bioinformatics tool for quantifying physicochemical and functional biases in mass spectrometry-based proteomics', author: 'Gaelle Loutfi', type: 'flash', id: 113, sectionKey: 'sec7' },
+      ]},
+      { time: '18:50–18:58', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec8', talks: [
+        { time: '18:50–18:54', title: 'Comparative HLA-DR immunopeptidomics reveals disease- and genotype-associated signatures in rheumatoid arthritis', author: 'Jaxaira Maggi', type: 'flash', id: 314, sectionKey: 'sec8' },
+        { time: '18:54–18:58', title: 'MALDI-MSI as a Platform for Spatial Multi-Omics in Glioblastoma Research', author: 'Cristina María López Vázquez', type: 'flash', id: 114, sectionKey: 'sec8' },
       ]},
       { time: '20:00', kind: 'social', title: 'Conference Dinner (optional, subject to registration and payment)', talks: [] },
     ]
@@ -130,7 +142,7 @@ Object.values(PROGRAMME).forEach(day => {
       ;(block.talks || []).forEach(t => {
         if (!t.id) return
         // Include all talks except sponsor talks in the voting area
-        if (t.type !== 'sponsor') ALL_PRES[t.id] = { ...t, sectionKey: block.sectionKey }
+        if (t.type !== 'sponsor') ALL_PRES[t.id] = { ...t, sectionKey: t.sectionKey || block.sectionKey }
       })
     })
   })
