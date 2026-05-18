@@ -28,7 +28,7 @@ const STEPS = [
     body: 'Sign in with your email to access the Voting tab. Score each presentation from 1 (lowest) to 10 (highest). Your votes are saved automatically.',
   },
   {
-    icon: '💳',
+    icon: '👤',
     color: '#8b5cf6',
     gradient: 'linear-gradient(160deg, #1a0a35 0%, #4c1d95 50%, #8b5cf6 100%)',
     title: 'My Card',
