@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../supabase.js'
 
 export default function Login({ ready, state, actions, onLogin }) {
-  const [tab, setTab] = useState('evaluator')
+  const [tab, setTab] = useState('attendee')
   const [email, setEmail] = useState('')
   const [err, setErr] = useState('')
   const [loading, setLoading] = useState(false)
@@ -54,7 +54,7 @@ export default function Login({ ready, state, actions, onLogin }) {
         <div style={{ color: 'var(--muted)', fontSize: '0.84rem', marginBottom: 20 }}>Sign in with your email to evaluate presentations</div>
 
         <div style={{ display: 'flex', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', marginBottom: 20 }}>
-          {[['evaluator','Evaluator'],['attendee','Attendee']].map(([key, label]) => (
+          {[['attendee','Attendee'],['evaluator','Evaluator']].map(([key, label]) => (
             <button key={key} onClick={() => { setTab(key); setErr('') }}
               style={{ flex: 1, padding: '11px 0', border: 'none', cursor: 'pointer', fontFamily: 'DM Sans', fontSize: '0.9rem', fontWeight: 600, minHeight: 44, transition: 'all 0.18s',
                 background: tab === key ? 'linear-gradient(135deg,var(--brand-mid),var(--brand-teal))' : 'transparent',
