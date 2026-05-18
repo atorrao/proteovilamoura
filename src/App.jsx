@@ -12,6 +12,7 @@ import Admin from './components/Admin.jsx'
 import MyCard from './components/MyCard.jsx'
 import Toast from './components/Toast.jsx'
 import AdminLoginModal from './components/AdminLoginModal.jsx'
+import Onboarding, { useOnboarding } from './components/Onboarding.jsx'
 import Sponsors from './components/Sponsors.jsx'
 
 const ADMIN_PASS = 'admin123'
@@ -52,6 +53,7 @@ export default function App() {
   const [ready, setReady] = useState(false)
   const [toast, setToast] = useState({ msg: '', color: 'green', show: false })
   const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [showOnboarding, doneOnboarding] = useOnboarding()
 
   // Persist auth on every change — scoped to this tab only
   useEffect(() => {
@@ -229,6 +231,7 @@ export default function App() {
           adminPass={ADMIN_PASS}
         />
       )}
+      {showOnboarding && <Onboarding onDone={doneOnboarding} />}
       <Toast {...toast} />
       {/* Footer — fixed, sits just above the bottom nav */}
       <div className="app-footer">
