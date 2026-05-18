@@ -40,36 +40,38 @@ function DigitalCard({ profile, qrDataUrl }) {
     <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.15)', maxWidth: 400, width: '100%', margin: '0 auto' }}>
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '22px 20px 90px', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(160deg,#0d3349 0%,#106080 55%,#208080 100%)', padding: '22px 20px 24px' }}>
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', background: 'rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: 20, display: 'inline-block', marginBottom: 16 }}>
           ProteoVilamoura 2026 · Vilamoura
         </div>
-        <div style={{ marginTop: 4 }}>
-          <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: profile.company ? 5 : 0 }}>
-            {(() => {
-              const parts = (profile.name || '—').trim().split(' ')
-              if (parts.length <= 2) return profile.name || '—'
-              const line1 = parts.slice(0, 2).join(' ')
-              const line2 = parts.slice(2).join(' ')
-              return <>{line1}<br />{line2}</>
-            })()}
+        {/* Name + QR side by side */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', lineHeight: 1.25, marginBottom: profile.company ? 5 : 0 }}>
+              {(() => {
+                const parts = (profile.name || '—').trim().split(' ')
+                if (parts.length <= 2) return profile.name || '—'
+                const line1 = parts.slice(0, 2).join(' ')
+                const line2 = parts.slice(2).join(' ')
+                return <>{line1}<br />{line2}</>
+              })()}
+            </div>
+            {profile.company && (
+              <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400, marginTop: 4 }}>{profile.company}</div>
+            )}
           </div>
-          {profile.company && (
-            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>{profile.company}</div>
+          {/* QR code — inline, no absolute positioning */}
+          {qrDataUrl && (
+            <div style={{ flexShrink: 0, background: '#fff', borderRadius: 14, padding: 10, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+              <img src={qrDataUrl} width={120} height={120} alt="QR vCard" style={{ display: 'block' }} />
+              <div style={{ fontSize: 8, color: '#999', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Scan to add</div>
+            </div>
           )}
         </div>
-
-        {/* QR code */}
-        {qrDataUrl && (
-          <div style={{ position: 'absolute', bottom: -80, right: 16, background: '#fff', borderRadius: 16, padding: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-            <img src={qrDataUrl} width={160} height={160} alt="QR vCard" style={{ display: 'block' }} />
-            <div style={{ fontSize: 9, color: '#999', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Scan to add</div>
-          </div>
-        )}
       </div>
 
       {/* Info body */}
-      <div style={{ background: '#fff', padding: '92px 20px 20px' }}>
+      <div style={{ background: '#fff', padding: '20px 20px 20px' }}>
         <InfoRow label="Email" value={profile.email} />
         <InfoRow label="Institution" value={profile.company} />
         <InfoRow label="Country" value={profile.country} />
