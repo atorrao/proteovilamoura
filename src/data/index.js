@@ -49,7 +49,6 @@ export const PROGRAMME = {
     label: 'Thu', date: '21 May', full: '21 May 2026 — Thursday',
     morning: [
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
-      { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Enrique Santamaria — Olfactory proteomics: Emerging mechanisms and translational opportunities in neurological disorders', talks: [] },
       { time: '9:00–10:15', kind: 'section', title: 'Section 3 — Proteomics in the Clinic: From Biomarkers to Precision Medicine #2', chairs: 'Avais Daulat, Deborah Penque', sectionKey: 'sec3', talks: [
         { time: '9:00–9:15', title: 'Glycoproteomics uncovers a paucimannosylated proteome associated with tumour aggressiveness and poor clinical outcome in gastric cancer', author: 'Dylan Ferreira', type: 'oral', id: 201 },
@@ -110,7 +109,6 @@ export const PROGRAMME = {
     label: 'Fri', date: '22 May', full: '22 May 2026 — Friday',
     morning: [
       { time: '6:30–7:30', kind: 'social', title: 'Sunrise Run/Walk by the Beach', talks: [] },
-      { time: '8:00–8:30', kind: 'special', title: 'Sponsor Talk (TBD)', talks: [] },
       { time: '8:30–9:00', kind: 'invited', title: 'Invited Speaker — Celso Reis — Glycomics and glycoproteomics in cancer: from oncogenic mechanisms to clinical applications', talks: [] },
       { time: '9:00–10:15', kind: 'section', title: 'Section 7 — Quantitative and Computational Proteomics', chairs: 'Delphine Pflieger, Hugo Osório', sectionKey: 'sec7', talks: [
         { time: '9:00–9:15', title: 'Global protein turnover dynamics in pluripotency', author: 'Orhi Barroso Gomila', type: 'oral', id: 401 },
