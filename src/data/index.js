@@ -5,8 +5,8 @@ export const PROGRAMME = {
     label: 'Wed', date: '20 May', full: '20 May 2026 — Wednesday',
     morning: [
       { time: '9:30–12:00', kind: 'special', title: 'Pre-congress course (Optional): Practical Introduction to Python Programming — Diego Mena Santos · Samuel Lozano Juárez', talks: [] },
-      { time: '11:00', kind: 'break', title: 'Registration', talks: [] },
-      { time: '13:00', kind: 'special', title: 'Welcoming Session', talks: [] },
+      { time: '11:00–13:00', kind: 'break', title: 'Registration', talks: [] },
+      { time: '13:00–13:15', kind: 'special', title: 'Welcoming Session', talks: [] },
       { time: '13:15–13:45', kind: 'invited', title: 'Invited Speaker — Nelson Soares — Proteomics profiling of Red Blood Cells (RBCs) combined with Deep Machine Learning analysis – reveals potential Diagnostic Biomarkers for Acute Venous Thromboembolism', talks: [] },
     ],
     afternoon: [
