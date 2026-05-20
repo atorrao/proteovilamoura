@@ -115,14 +115,16 @@ export default function Programme() {
     return () => clearInterval(id)
   }, [])
 
-  // Auto-scroll to the current "Now" block
+  // Auto-scroll to the current "Now" block — only on mount and when user changes day/half
+  const hasScrolled = useRef(false)
   useEffect(() => {
-    if (nowRef.current) {
+    if (nowRef.current && !hasScrolled.current) {
+      hasScrolled.current = true
       setTimeout(() => {
         nowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }, 300)
+      }, 400)
     }
-  }, [activeDay, activeHalf, nowMin])
+  }, [activeDay, activeHalf])
 
   const day = PROGRAMME[activeDay]
   const blocks = day[activeHalf] || []
