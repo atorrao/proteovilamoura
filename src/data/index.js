@@ -23,7 +23,7 @@ export const PROGRAMME = {
         { time: '16:15–16:30', title: 'Integrative single-cell proteomics identifies pro-regenerative fingerprints in a sub-population of adult cardiomyocytes', author: 'Consuelo Marin-Vicente', type: 'oral', id: 106 },
         { time: '16:30–16:45', title: 'Preomics: Advancing Plasma Proteomics Through a Next-Generation Enrichment Workflow for Deeper and More Quantitative Biomarker Discovery', author: 'Ann-Christine König', type: 'sponsor', id: 107 },
         { time: '16:45–17:00', title: 'Benchmarking single-cell FACS-assisted strategies: effects on cellular component bias and post-translational modification detection', author: 'Samuel Lozano Juárez', type: 'oral', id: 108 },
-        { time: '17:00–17:15', title: 'Illumina: Illumina Protein Prep: high-plex NGS-based proteomics designed to integrate with the Illumina Multiomics ecosystem', author: 'Álvaro Sánchez-Bernabéu', type: 'sponsor', id: 109 },
+        { time: '17:00–17:15', title: 'Quilaban: Illumina Protein Prep: high-plex NGS-based proteomics designed to integrate with the Illumina Multiomics ecosystem', author: 'Álvaro Sánchez-Bernabéu', type: 'sponsor', id: 109 },
       ]},
       { time: '17:15–17:51', kind: 'flash', title: 'Flash Presentations', sectionKey: 'sec1', talks: [
         { time: '17:15–17:19', title: "In depth-analysis of Alzheimer's disease brain tissue reveals novel Aβ interactors", author: 'Ana Montero Calle', type: 'flash', id: 110, sectionKey: 'sec1' },
@@ -90,7 +90,7 @@ export const PROGRAMME = {
         { time: '18:50–18:54', title: 'Scaling-up low input spatial proteomics using Evosep Whisper Zoom on the timsTOF Ultra AIP', author: 'Beatriz Rocha Loureda', type: 'flash', id: 315, sectionKey: 'sec2' },
         { time: '18:54–18:58', title: 'From Microbes to Ecosystems: Proteomic Insights into Agro-Environmental Interactions', author: 'Francisco Javier Fernandez Acero', type: 'flash', id: 117, sectionKey: 'sec6' },
       ]},
-      { time: '20:00', kind: 'social', title: 'Conference Dinner (optional, subject to registration and payment)', talks: [] },
+      { time: '20:30', kind: 'social', title: 'Conference Dinner (optional, subject to registration and payment)', talks: [] },
     ]
   },
   fri: {
