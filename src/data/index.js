@@ -116,7 +116,6 @@ export const PROGRAMME = {
     ],
     afternoon: [
       { time: '12:30', kind: 'special', title: 'Closing Session / Awards', talks: [] },
-      { time: '13:00–13:30', kind: 'special', title: 'Procura Session', talks: [] },
     ]
   }
 }
