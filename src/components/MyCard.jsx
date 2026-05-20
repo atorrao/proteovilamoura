@@ -15,7 +15,7 @@ function buildVCard(p) {
     p.company ? `ORG:${esc(p.company)}` : null,
     p.email   ? `EMAIL;TYPE=INTERNET,WORK,PREF:${esc(p.email)}` : null,
     p.country ? `ADR;TYPE=WORK:;;;;;;${esc(p.country)}` : null,
-    'NOTE:ProteoVilamoura 2026',
+    `NOTE:ProteoVilamoura 2026${p.country ? ' · ' + p.country : ''}`,
     'END:VCARD',
   ].filter(Boolean).join('\r\n')
 }
