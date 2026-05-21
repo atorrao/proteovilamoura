@@ -184,7 +184,7 @@ export default function Programme() {
       {/* Morning / Afternoon + now chip */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <div style={{ display: 'flex', background: 'var(--surface)', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', flex: 1 }}>
-          {['morning','afternoon'].map(h => {
+          {['morning','afternoon'].filter(h => (day[h] || []).length > 0).map(h => {
             const isActive = activeHalf === h
             // Show "done" indicator if this half is fully past on today
             const halfBlocks = day[h] || []
