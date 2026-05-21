@@ -49,16 +49,27 @@ export async function upsertAttendee(att) {
 
 // ─── VOTES ────────────────────────────────────────────────────────────────────
 export async function getVotes() {
-  const { data, error } = await supabase.from('votes').select('*').limit(10000)
-  if (error) { console.error('getVotes:', error); return [] }
   const votes = {}, locked = {}
-  for (const row of data) {
-    if (!votes[row.user_name]) votes[row.user_name] = {}
-    votes[row.user_name][row.pres_id] = row.score
-    if (row.locked) {
-      if (!locked[row.user_name]) locked[row.user_name] = {}
-      locked[row.user_name][row.pres_id] = true
+  const PAGE = 1000
+  let from = 0
+  // Paginate to bypass PostgREST's default 1000-row limit
+  while (true) {
+    const { data, error } = await supabase
+      .from('votes')
+      .select('*')
+      .range(from, from + PAGE - 1)
+    if (error) { console.error('getVotes:', error); break }
+    if (!data || data.length === 0) break
+    for (const row of data) {
+      if (!votes[row.user_name]) votes[row.user_name] = {}
+      votes[row.user_name][row.pres_id] = row.score
+      if (row.locked) {
+        if (!locked[row.user_name]) locked[row.user_name] = {}
+        locked[row.user_name][row.pres_id] = true
+      }
     }
+    if (data.length < PAGE) break
+    from += PAGE
   }
   return { votes, locked }
 }
