@@ -51,7 +51,7 @@ export const PROGRAMME = {
         { time: '9:45–10:00', title: 'Proteomic biomarkers predictive of response to antiangiogenic treatment: toward personalized medicine in neovascular age-related macular degeneration', author: 'Antonio Cañizo Outeiriño', type: 'oral', id: 204 },
         { time: '10:00–10:15', title: 'Unravelling the proteome of human embryo implantation: new biomarkers and metabolic signatures', author: 'Girard Océane', type: 'oral', id: 205 },
       ]},
-      { time: '10:15–11:00', kind: 'break', title: 'Coffee Break + Poster Session 1', talks: [] },
+      { time: '10:15–11:00', kind: 'break', title: 'Coffee Break + Poster Session 2', talks: [] },
       { time: '11:00–11:30', kind: 'invited', title: 'Invited Speaker — Etienne Coyaud — Proximity labeling tools to investigate pathogenic protein networks', talks: [] },
       { time: '11:30–12:45', kind: 'section', title: 'Section 4 — Networks in Action: Interactomes, Signalling & Bioinformatics Innovation', chairs: 'Eduardo Chicano-Galvez, Montserrat Carrascal', sectionKey: 'sec4', talks: [
         { time: '11:30–11:45', title: 'Deciphering protein-protein interactions in live neurons using XL-MS', author: 'Hugo Gizardin-Fredon', type: 'oral', id: 206 },
@@ -113,10 +113,9 @@ export const PROGRAMME = {
         { time: '12:00–12:15', title: 'Sewage protein information mining: A new frontier in community health and industrial surveillance', author: 'Montserrat Carrascal Perez', type: 'oral', id: 408 },
         { time: '12:15–12:30', title: 'Seasonal dynamics of urinary protein profiles in the Iberian Lynx (Lynx pardinus)', author: 'Beatriz Ortiz-Guisado', type: 'oral', id: 409 },
       ]},
-    ],
-    afternoon: [
       { time: '12:30', kind: 'special', title: 'Closing Session / Awards', talks: [] },
-    ]
+    ],
+    afternoon: []
   }
 }
 
