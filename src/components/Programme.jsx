@@ -41,14 +41,16 @@ function autoState() {
 
     const day = PROGRAMME[key]
     const morningEnd = halfEndMin(day.morning || [])
-    const afternoonEnd = halfEndMin(day.afternoon || [])
+    const afternoonBlocks = day.afternoon || []
+    const afternoonEnd = halfEndMin(afternoonBlocks)
+    const hasAfternoon = afternoonBlocks.length > 0
 
     // If morning hasn't fully ended yet → show morning
     if (cur < morningEnd) return { day: key, half: 'morning' }
-    // If afternoon hasn't fully ended yet → show afternoon
-    if (cur < afternoonEnd) return { day: key, half: 'afternoon' }
-    // Day fully over → show afternoon (last half)
-    return { day: key, half: 'afternoon' }
+    // If afternoon exists and hasn't ended → show afternoon
+    if (hasAfternoon && cur < afternoonEnd) return { day: key, half: 'afternoon' }
+    // Day fully over or no afternoon → stay on morning (last content)
+    return { day: key, half: hasAfternoon ? 'afternoon' : 'morning' }
   }
 
   // Outside congress dates — default
@@ -104,8 +106,9 @@ export default function Programme() {
         setActiveHalf(prev => {
           const day = PROGRAMME[todayKey]
           const morningEnd = halfEndMin(day.morning || [])
-          // Only auto-switch if currently on morning and it has ended
-          if (prev === 'morning' && cur >= morningEnd) return 'afternoon'
+          const hasAfternoon = (day.afternoon || []).length > 0
+          // Only auto-switch if currently on morning, it has ended, and afternoon has content
+          if (prev === 'morning' && cur >= morningEnd && hasAfternoon) return 'afternoon'
           return prev
         })
       }
