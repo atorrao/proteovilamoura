@@ -49,7 +49,7 @@ export async function upsertAttendee(att) {
 
 // ─── VOTES ────────────────────────────────────────────────────────────────────
 export async function getVotes() {
-  const { data, error } = await supabase.from('votes').select('*')
+  const { data, error } = await supabase.from('votes').select('*').limit(10000)
   if (error) { console.error('getVotes:', error); return [] }
   const votes = {}, locked = {}
   for (const row of data) {
@@ -65,7 +65,7 @@ export async function getVotes() {
 
 // Fetch votes for a single user only — used after login to avoid cross-user leakage
 export async function getVotesForUser(userName) {
-  const { data, error } = await supabase.from('votes').select('*').eq('user_name', userName)
+  const { data, error } = await supabase.from('votes').select('*').eq('user_name', userName).limit(10000)
   if (error) { console.error('getVotesForUser:', error); return {} }
   const userVotes = {}
   for (const row of data) {
