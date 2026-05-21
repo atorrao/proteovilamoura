@@ -93,22 +93,25 @@ export default function Programme() {
       setNowMin(cur)
       setNowTime(`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`)
 
-      // Auto-switch half when morning ends (only on today)
+      // Auto-switch half — only switch to afternoon if it has content
       const todayKey = DAY_KEYS.find(k =>
         n.toDateString() === new Date(DAY_DATES[k] + 'T00:00:00').toDateString()
       )
       if (todayKey) {
-        setActiveDay(prev => {
-          // Only auto-switch if user is viewing today
-          if (prev !== todayKey) return prev
-          return prev
+        setActiveDay(todayKeyPrev => {
+          if (todayKeyPrev !== todayKey) return todayKeyPrev
+          return todayKeyPrev
         })
         setActiveHalf(prev => {
+          // Never auto-switch if user manually changed day
           const day = PROGRAMME[todayKey]
           const morningEnd = halfEndMin(day.morning || [])
-          const hasAfternoon = (day.afternoon || []).length > 0
-          // Only auto-switch if currently on morning, it has ended, and afternoon has content
-          if (prev === 'morning' && cur >= morningEnd && hasAfternoon) return 'afternoon'
+          const afternoonBlocks = day.afternoon || []
+          const hasAfternoon = afternoonBlocks.length > 0
+          // Only switch to afternoon if it exists AND morning ended
+          if (prev === 'morning' && hasAfternoon && cur >= morningEnd) return 'afternoon'
+          // Never switch to afternoon if it's empty
+          if (prev === 'afternoon' && !hasAfternoon) return 'morning'
           return prev
         })
       }
